@@ -1,6 +1,7 @@
 package data.coredata.com.clip.user.entity.repository;
 
 import com.clip.ApiApplication;
+import com.clip.user.entity.DeviceType;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -31,20 +32,25 @@ public class UserRepositoryTest {
 
         //then
         user = userRepository.findById(user.getId()).get();
-        assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
+        assertThat(user)
+                .extracting(User::getPhoneNumber, User::isVerified)
+                .containsExactly(phoneNumber, true);
     }
 
     @DisplayName("다른 유저가 사용중인 번호로는 업데이트 할 수 없다.")
     @Test
     void updatePhoneNumberFail() {
         //given
-        String phoneNumber = "010-1234-5678";
+        String phoneNumber = "01012345678";
         User oldUser = userRepository.save(User.builder().phoneNumber(phoneNumber).build());
         User newUser = userRepository.save(User.builder().build());
 
         //when & then
         assertThatThrownBy(() -> userRepository.updatePhoneNumber(newUser.getId(), phoneNumber))
                 .isInstanceOf(DataIntegrityViolationException.class);
+        assertThat(newUser)
+                .extracting(User::getPhoneNumber, User::isVerified)
+                .containsExactly(null, false);
     }
 
     @DisplayName("userId로 userName을 업데이트 한다.")
@@ -87,5 +93,30 @@ public class UserRepositoryTest {
 
         //when & then
         assertThatThrownBy(()->userRepository.updateNickname(newUser.getId(), nickname)).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @DisplayName("userId로 deviceType, osVersion, firebaseToken을 업데이트 한다.")
+    @Test
+    void updateDeviceInfo() {
+        //given
+        String osVersion = "14.5";
+        String firebaseToken = "firebaseToken";
+        User user = userRepository.save(User.builder().build());
+
+        //when
+        userRepository.updateDeviceInfo(user.getId(), DeviceType.IOS, osVersion, firebaseToken);
+        user = userRepository.findById(user.getId()).get();
+
+        //then
+        assertThat(user)
+                .extracting(
+                        User::getDeviceType,
+                        User::getOsVersion,
+                        User::getFirebaseToken)
+                .containsExactly(
+                        DeviceType.IOS,
+                        osVersion,
+                        firebaseToken
+                );
     }
 }
