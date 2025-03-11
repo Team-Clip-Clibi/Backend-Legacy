@@ -32,13 +32,11 @@ public class UserAccountService {
         if (optUser.isPresent()) {
             TokenProvider.Token token = tokenProvider.generateToken(optUser.get().getId(), LocalDateTime.now());
             tokenService.updateRefreshToken(optUser.get(), token.refreshToken());
+            userService.updateDeviceInfo(optUser.get().getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken());
             return token;
         }
 
-        User user = userService.save(User.builder()
-                .socialId(request.getSocialId())
-                .platform(request.getPlatform())
-                .build());
+        User user = userService.save(request.toUser());
         termsAcceptanceService.save(TermsAcceptance.builder()
                 .servicePermission(request.isServicePermission())
                 .privatePermission(request.isPrivatePermission())
@@ -61,6 +59,7 @@ public class UserAccountService {
 
         TokenProvider.Token token = tokenProvider.generateToken(optUser.get().getId(), LocalDateTime.now());
         tokenService.updateRefreshToken(optUser.get(), token.refreshToken());
+        userService.updateDeviceInfo(optUser.get().getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken());
         return token;
     }
 
