@@ -1,5 +1,6 @@
 package com.clip.user.service;
 
+import com.clip.user.entity.DeviceType;
 import com.clip.user.entity.Platform;
 import com.clip.user.entity.User;
 import com.clip.user.exception.NicknameAlreadyExistsException;
@@ -42,5 +43,9 @@ public class UserService {
         }catch (DataIntegrityViolationException e){
             throw new NicknameAlreadyExistsException();
         }
+    }
+
+    public void updateDeviceInfo(long userId, DeviceType deviceType, String osVersion, String firebaseToken) {
+        userRepository.updateDeviceInfo(userId, deviceType, osVersion, firebaseToken);
     }
 }

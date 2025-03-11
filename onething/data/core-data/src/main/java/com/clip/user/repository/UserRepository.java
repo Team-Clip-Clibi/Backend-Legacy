@@ -1,5 +1,6 @@
 package com.clip.user.repository;
 
+import com.clip.user.entity.DeviceType;
 import com.clip.user.entity.Platform;
 import com.clip.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update User u set u.phoneNumber = :phoneNumber where u.id = :userId")
+    @Query("update User u set u.phoneNumber = :phoneNumber, u.isVerified = true where u.id = :userId")
     void updatePhoneNumber(@Param("userId") long userId, @Param("phoneNumber") String phoneNumber);
 
     @Transactional
@@ -32,4 +33,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update User u set u.nickname = :nickname where u.id = :userId")
     void updateNickname(@Param("userId") long userId, @Param("nickname") String nickname);
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update User u set u.deviceType = :deviceType, u.osVersion = :osVersion, u.firebaseToken = :fireBaseToken where u.id = :userId")
+    void updateDeviceInfo(@Param("userId") Long userId, @Param("deviceType") DeviceType deviceType, @Param("osVersion") String osVersion, @Param("fireBaseToken") String firebaseToken);
 }
