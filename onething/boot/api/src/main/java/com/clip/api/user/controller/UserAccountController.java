@@ -5,8 +5,6 @@ import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.global.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +36,7 @@ public class UserAccountController implements UserAccountDocs {
         userAccountService.updateName(Long.parseLong(userDetails.getUsername()), updateNameDto.getUserName());
     }
 
+    @Override
     public void updateNickname(UpdateNicknameDto updateNicknameDto,
                                                UserDetails userDetails) {
         userAccountService.updateNickname(Long.parseLong(userDetails.getUsername()), updateNicknameDto.getNickname());
