@@ -123,4 +123,19 @@ public interface UserAccountDocs {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void updateNickname(@RequestBody UpdateNicknameDto updateNicknameDto,
                                         @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "유저 상세 정보 업데이트 API",
+            description = """
+                    유저의 성별, 생년월일, 활동지역을 업데이트합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "디테일 정보 업데이트 성공"
+    )
+    @PatchMapping("/detail")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateUserDetailInfo(@RequestBody UpdateUserDetailInfoDto updateUserDetailInfoDto,
+                        @AuthenticationPrincipal UserDetails userDetails);
 }
