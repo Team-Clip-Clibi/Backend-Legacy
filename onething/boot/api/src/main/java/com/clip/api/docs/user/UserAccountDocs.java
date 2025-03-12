@@ -123,4 +123,7 @@ public interface UserAccountDocs {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void updateNickname(@RequestBody UpdateNicknameDto updateNicknameDto,
                                         @AuthenticationPrincipal UserDetails userDetails);
+
+    @GetMapping("/{phoneNumber}/info")
+    UserInfoDto getUserInfo(@PathVariable String phoneNumber);
 }

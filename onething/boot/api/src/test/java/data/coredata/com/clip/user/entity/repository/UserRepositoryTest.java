@@ -4,6 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.user.entity.DeviceType;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    EntityManager entityManager;
 
     @DisplayName("userId로 phoneNumber를 업데이트 한다.")
     @Test
@@ -118,5 +121,19 @@ public class UserRepositoryTest {
                         osVersion,
                         firebaseToken
                 );
+    }
+
+    @DisplayName("phoneNumber으로 User를 찾는다.")
+    @Test
+    void findUser() {
+        //given
+        String phoneNumber = "01012345678";
+        User user = userRepository.save(User.builder().phoneNumber(phoneNumber).build());
+
+        //when
+        User foundUser = userRepository.findUser(phoneNumber).get();
+        entityManager.clear();
+        //then
+        assertThat(foundUser).isEqualTo(user);
     }
 }
