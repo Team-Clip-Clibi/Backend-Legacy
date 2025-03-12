@@ -41,4 +41,9 @@ public class UserAccountController implements UserAccountDocs {
                                                UserDetails userDetails) {
         userAccountService.updateNickname(Long.parseLong(userDetails.getUsername()), updateNicknameDto.getNickname());
     }
+
+    @Override
+    public void updateUserDetailInfo(UpdateUserDetailInfoDto updateUserDetailInfoDto, UserDetails userDetails) {
+        userAccountService.updateUserDetailInfo(Long.parseLong(userDetails.getUsername()), updateUserDetailInfoDto);
+    }
 }

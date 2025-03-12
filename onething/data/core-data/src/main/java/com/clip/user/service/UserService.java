@@ -1,8 +1,6 @@
 package com.clip.user.service;
 
-import com.clip.user.entity.DeviceType;
-import com.clip.user.entity.Platform;
-import com.clip.user.entity.User;
+import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
 import com.clip.user.repository.UserRepository;
@@ -10,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -47,5 +46,9 @@ public class UserService {
 
     public void updateDeviceInfo(long userId, DeviceType deviceType, String osVersion, String firebaseToken) {
         userRepository.updateDeviceInfo(userId, deviceType, osVersion, firebaseToken);
+    }
+
+    public void updateUserDetailInfo(long userId, Gender gender, LocalDate birth, City city, County county) {
+        userRepository.updateUserDetailInfo(userId, gender, birth, city, county);
     }
 }
