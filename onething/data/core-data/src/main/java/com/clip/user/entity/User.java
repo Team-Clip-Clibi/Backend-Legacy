@@ -48,8 +48,21 @@ public class User extends BaseEntity {
     @Column
     private String socialId;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private DeviceType deviceType;
+
+    @Column
+    private String firebaseToken;
+
+    @Column
+    private String osVersion;
+
+    @Column
+    private boolean isVerified;
+
     @Builder
-    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId) {
+    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
@@ -59,5 +72,8 @@ public class User extends BaseEntity {
         this.gender = gender;
         this.platform = platform;
         this.socialId = socialId;
+        this.deviceType = deviceType;
+        this.firebaseToken = firebaseToken;
+        this.osVersion = osVersion;
     }
 }
