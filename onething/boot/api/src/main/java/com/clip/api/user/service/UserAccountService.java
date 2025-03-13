@@ -2,6 +2,8 @@ package com.clip.api.user.service;
 
 import com.clip.api.user.controller.dto.LoginDto;
 import com.clip.api.user.controller.dto.SignupDto;
+import com.clip.api.user.controller.dto.UpdateNicknameDto;
+import com.clip.api.user.controller.dto.UpdateUserDetailInfoDto;
 import com.clip.api.user.controller.dto.UserInfoDto;
 import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.api.user.mapper.TermsAcceptanceMapper;
@@ -70,6 +72,16 @@ public class UserAccountService {
 
     public void updateNickname(long userId, String nickname) {
         userService.updateNickname(userId, nickname);
+    }
+
+    public void updateUserDetailInfo(long userId, UpdateUserDetailInfoDto request) {
+        userService.updateUserDetailInfo(
+                userId,
+                request.getGender(),
+                request.getBirth(),
+                request.getCity(),
+                request.getCounty()
+        );
     }
 
     public UserInfoDto getUserInfo(String phoneNumber) {
