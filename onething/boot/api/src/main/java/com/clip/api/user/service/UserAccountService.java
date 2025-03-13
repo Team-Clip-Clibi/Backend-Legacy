@@ -4,6 +4,7 @@ import com.clip.api.user.controller.dto.LoginDto;
 import com.clip.api.user.controller.dto.SignupDto;
 import com.clip.api.user.controller.dto.UpdateNicknameDto;
 import com.clip.api.user.controller.dto.UpdateUserDetailInfoDto;
+import com.clip.api.user.controller.dto.UserInfoDto;
 import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.api.user.mapper.TermsAcceptanceMapper;
 import com.clip.auth.entity.Token;
@@ -81,5 +82,14 @@ public class UserAccountService {
                 request.getCity(),
                 request.getCounty()
         );
+    }
+
+    public UserInfoDto getUserInfo(String phoneNumber) {
+        User user = userService.findUser(phoneNumber);
+        return UserInfoDto.builder()
+                .createdAt(user.getCreatedAt())
+                .userName(user.getUsername())
+                .platform(user.getPlatform())
+                .build();
     }
 }

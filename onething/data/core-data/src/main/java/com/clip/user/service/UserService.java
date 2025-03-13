@@ -3,6 +3,7 @@ package com.clip.user.service;
 import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
+import com.clip.user.exception.UserNotFoundException;
 import com.clip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -50,5 +51,10 @@ public class UserService {
 
     public void updateUserDetailInfo(long userId, Gender gender, LocalDate birth, City city, County county) {
         userRepository.updateUserDetailInfo(userId, gender, birth, city, county);
+    }
+
+    public User findUser(String phoneNumber) {
+        return userRepository.findUser(phoneNumber)
+                .orElseThrow(UserNotFoundException::new);
     }
 }

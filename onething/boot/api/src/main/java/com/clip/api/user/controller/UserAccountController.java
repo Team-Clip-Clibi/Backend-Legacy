@@ -46,4 +46,9 @@ public class UserAccountController implements UserAccountDocs {
     public void updateUserDetailInfo(UpdateUserDetailInfoDto updateUserDetailInfoDto, UserDetails userDetails) {
         userAccountService.updateUserDetailInfo(Long.parseLong(userDetails.getUsername()), updateUserDetailInfoDto);
     }
+
+    @Override
+    public UserInfoDto getUserInfo(String phoneNumber) {
+        return userAccountService.getUserInfo(phoneNumber);
+    }
 }

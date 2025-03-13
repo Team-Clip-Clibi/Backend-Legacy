@@ -150,4 +150,18 @@ public class UserRepositoryTest {
                         County.YONGIN_SI
                 );
     }
+
+    @DisplayName("phoneNumber으로 User를 찾는다.")
+    @Test
+    void findUser() {
+        //given
+        String phoneNumber = "01012345678";
+        User user = userRepository.save(User.builder().phoneNumber(phoneNumber).build());
+
+        //when
+        User foundUser = userRepository.findUser(phoneNumber).get();
+        entityManager.clear();
+        //then
+        assertThat(foundUser).isEqualTo(user);
+    }
 }

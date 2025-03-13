@@ -56,4 +56,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("city") City city,
             @Param("county") County county
     );
+
+    @Query("select u from User u where u.phoneNumber = :phoneNumber")
+    Optional<User> findUser(@Param("phoneNumber") String phoneNumber);
 }
