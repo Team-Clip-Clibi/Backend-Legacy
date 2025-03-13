@@ -5,6 +5,7 @@ import com.clip.user.entity.Platform;
 import com.clip.user.entity.User;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
+import com.clip.user.exception.UserNotFoundException;
 import com.clip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -47,5 +48,10 @@ public class UserService {
 
     public void updateDeviceInfo(long userId, DeviceType deviceType, String osVersion, String firebaseToken) {
         userRepository.updateDeviceInfo(userId, deviceType, osVersion, firebaseToken);
+    }
+
+    public User findUser(String phoneNumber) {
+        return userRepository.findUser(phoneNumber)
+                .orElseThrow(UserNotFoundException::new);
     }
 }

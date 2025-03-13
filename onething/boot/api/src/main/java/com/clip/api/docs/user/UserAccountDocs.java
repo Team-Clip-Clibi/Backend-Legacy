@@ -123,4 +123,23 @@ public interface UserAccountDocs {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void updateNickname(@RequestBody UpdateNicknameDto updateNicknameDto,
                                         @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "번호로 가입된 계정 조회 API",
+            description = """
+                    휴대폰 번호로 기존에 가입된 계정의 정보를 조회합니다.
+                    """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UserInfoDto.class)
+                    )
+            )
+    })
+    @GetMapping("/{phoneNumber}/info")
+    UserInfoDto getUserInfo(@PathVariable String phoneNumber);
 }
