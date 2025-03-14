@@ -226,7 +226,7 @@ public class UserAccountServiceTest {
         assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
     }
 
-    @DisplayName("다른 유저가 사용중인 번호로로 업데이트를 요청하면 가 발생한다.")
+    @DisplayName("다른 유저가 사용중인 번호로로 업데이트를 요청하면 PhoneNumberAlreadyExistsException가 발생한다.")
     @Test
     void updatePhoneNumberFail() {
         //given
