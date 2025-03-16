@@ -3,7 +3,7 @@ name: Deploy Common
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   deploy-Admin:
