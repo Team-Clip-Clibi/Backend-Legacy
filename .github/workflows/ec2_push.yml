@@ -109,11 +109,14 @@ jobs:
             jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > secrets.env
 
             docker pull ${{ inputs.ecr-repository }}
-
+            
+            if [ "$(docker ps -q -f name=${{ inputs.container-name }})" ]; then
+            docker stop ${{ inputs.container-name }} && docker rm ${{ inputs.container-name }}
             fi
-
+            
             docker system prune -f
 
+            docker run -d --name ${{ inputs.container-name }} \
             --env-file ./secrets.env \
             --restart always \
             -p ${{ inputs.host-port || '8080' }}:8080 \
