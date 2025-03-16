@@ -92,7 +92,7 @@ jobs:
           fi
 
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@v1.2.2
         if: steps.verify-image.outputs.status == 'success'
         with:
           host: ${{ secrets.EC2_HOST }}
