@@ -21,6 +21,9 @@ on:
       secret-manager:
         required: true
         type: string
+      container-name:
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -107,13 +110,10 @@ jobs:
 
             docker pull ${{ inputs.ecr-repository }}
 
-            if [ "$(docker ps -q -f name=${{inputs.ecr-repository-name}})" ]; then
-            docker stop ${{inputs.ecr-repository-name}} && docker rm ${{inputs.ecr-repository-name}}
             fi
 
             docker system prune -f
 
-            docker run -d --name ${{inputs.ecr-repository-name}} \
             --env-file ./secrets.env \
             --restart always \
             -p ${{ inputs.host-port || '8080' }}:8080 \

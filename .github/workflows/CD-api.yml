@@ -29,7 +29,8 @@ jobs:
       docker-file-path: ./boot/api/Dockerfile
       host-port: 8080
       ecr-repository: 442042528525.dkr.ecr.ap-northeast-2.amazonaws.com/clibi/api
-      ecr-repository-name: api
+      ecr-repository-name: clibi/api
+      container-name: api-server
       secret-manager: arn:aws:secretsmanager:ap-northeast-2:442042528525:secret:dev/clibi/rds-eCWfXL
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
