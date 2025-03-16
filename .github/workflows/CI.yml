@@ -1,0 +1,13 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    uses: ./.github/workflows/gradle_build.yml
+    with:
+      project-name: ALL
