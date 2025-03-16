@@ -92,7 +92,7 @@ jobs:
             exit 1
           fi
           
-          echo "${{ secrets.SSH_KEY }}" | wc -l
+          echo "${{ secrets.EC2_KEY }}" | wc -l
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.2.2
