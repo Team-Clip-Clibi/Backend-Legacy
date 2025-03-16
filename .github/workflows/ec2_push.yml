@@ -91,8 +91,6 @@ jobs:
             echo "Image verification failed"
             exit 1
           fi
-          
-          echo "${{ secrets.EC2_KEY }}" | wc -l
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.2.2

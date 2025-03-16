@@ -9,6 +9,12 @@ on:
         required: true
       AWS_REGION:
         required: true
+      EC2_HOST:
+        required: true
+      EC2_USER:
+        required: true
+      EC2_KEY:
+        required: true
   push:
     branches:
       - develop
