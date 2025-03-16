@@ -67,7 +67,7 @@ jobs:
         env:
           ECR_REPOSITORY_URI: ${{ inputs.ecr-repository }}
         run: |
-          docker build -t ${{ inputs.ecr-repository-name }} -f .deploy/Dockerfile .
+          docker build -t ${{ inputs.ecr-repository-name }} -f ./boot/${{ inputs.project-name }}/Dockerfile .
           docker tag ${{ inputs.ecr-repository-name }}:latest ${{ inputs.ecr-repository }}
           docker push ${{ inputs.ecr-repository }}
 
