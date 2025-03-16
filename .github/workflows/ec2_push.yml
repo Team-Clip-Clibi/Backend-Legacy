@@ -1,0 +1,123 @@
+name: Push to EC2
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        required: true
+        type: string
+      docker-file-path:
+        required: true
+        type: string
+      host-port:
+        required: false
+        type: number
+      ecr-repository:
+        required: true
+        type: string
+      ecr-repository-name:
+        required: true
+        type: string
+      secret-manager:
+        required: true
+        type: string
+      container-name:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REGION:
+        required: true
+      EC2_HOST:
+        required: true
+      EC2_USER:
+        required: true
+      EC2_KEY:
+        required: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download the gradle Build File
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{inputs.project-name}}-build
+          path: ./boot/${{inputs.project-name}}/build/libs
+
+      - name: Configure AWS credentials For ECR and Secrets Manager
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Docker Build And Push
+        env:
+          ECR_REPOSITORY_URI: ${{ inputs.ecr-repository }}
+        run: |
+          docker build -t ${{ inputs.ecr-repository-name }} -f .deploy/Dockerfile-dev .
+          docker tag ${{ inputs.ecr-repository-name }}:latest ${{ inputs.ecr-repository }}
+          docker push ${{ inputs.ecr-repository }}
+
+      - name: Verify image in ECR
+        id: verify-image
+        env:
+          ECR_REPOSITORY_URI: ${{ inputs.ecr-repository }}
+        run: |
+          REPOSITORY_NAME=${{ inputs.ecr-repository-name }}
+          REGION=${{ secrets.AWS_REGION }}
+          IMAGE_TAG="latest"
+
+          if aws ecr describe-images \
+            --repository-name ${REPOSITORY_NAME} \
+            --image-ids imageTag=${IMAGE_TAG} \
+            --region ${REGION}; then
+            echo "Image successfully verified in ECR"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "Image verification failed"
+            exit 1
+          fi
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.8
+        if: steps.verify-image.outputs.status == 'success'
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws secretsmanager get-secret-value \
+            --region ${{ secrets.AWS_REGION }} \
+            --secret-id ${{ inputs.secret-manager }} \
+            --query 'SecretString' \
+            --output text | \
+            jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > secrets.env
+
+            docker pull ${{ inputs.ecr-repository }}
+            
+            if [ "$(docker ps -q -f name=${{ inputs.container-name }})" ]; then
+            docker stop ${{ inputs.container-name }} && docker rm ${{ inputs.container-name }}
+            fi
+            
+            docker system prune -f
+
+            docker run -d --name ${{ inputs.container-name }} \
+            --env-file ./secrets.env \
+            --restart always \
+            -p ${{ inputs.host-port || '8080' }}:8080 \
+            ${{ inputs.ecr-repository }}

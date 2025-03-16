@@ -1,0 +1,41 @@
+name: Deploy api module
+
+on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REGION:
+        required: true
+  push:
+    branches:
+      - develop
+    paths:
+      - 'boot/api/**'
+
+jobs:
+  build:
+    uses: ./.github/workflows/gradle_build.yml
+    with:
+      project-name: api
+
+  push-image:
+    needs: build
+    uses: ./.github/workflows/ec2_push.yml
+    with:
+      project-name: api
+      docker-file-path: ./boot/api/Dockerfile
+      host-port: 8080
+      ecr-repository: 442042528525.dkr.ecr.ap-northeast-2.amazonaws.com/clibi/api
+      ecr-repository-name: clibi/api
+      container-name: api-server
+      secret-manager: arn:aws:secretsmanager:ap-northeast-2:442042528525:secret:dev/clibi/rds-eCWfXL
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ap-northeast-2
+      EC2_HOST: ${{ secrets.EC2_HOST }}
+      EC2_USER: ${{ secrets.EC2_USER }}
+      EC2_KEY: ${{ secrets.EC2_KEY }}

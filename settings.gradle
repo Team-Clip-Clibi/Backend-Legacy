@@ -1,0 +1,6 @@
+rootProject.name = 'onething'
+include 'data:core-data'
+include 'data:office-data'
+include 'boot:api'
+include 'boot:batch'
+include 'boot:office'
