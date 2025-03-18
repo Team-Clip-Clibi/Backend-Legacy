@@ -2,7 +2,6 @@ package com.clip.api.user.service;
 
 import com.clip.api.user.controller.dto.LoginDto;
 import com.clip.api.user.controller.dto.SignupDto;
-import com.clip.api.user.controller.dto.UpdateNicknameDto;
 import com.clip.api.user.controller.dto.UpdateUserDetailInfoDto;
 import com.clip.api.user.controller.dto.UserInfoDto;
 import com.clip.api.user.exception.NotFoundUserException;
@@ -11,6 +10,7 @@ import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.user.entity.User;
+import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.service.TermsAcceptanceService;
 import com.clip.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -91,5 +91,11 @@ public class UserAccountService {
                 .userName(user.getUsername())
                 .platform(user.getPlatform())
                 .build();
+    }
+
+    public void checkNicknameAvailable(String nickname) {
+        if (userService.isExistNickname(nickname)) {
+            throw new NicknameAlreadyExistsException();
+        }
     }
 }

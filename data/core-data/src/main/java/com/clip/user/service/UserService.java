@@ -57,4 +57,8 @@ public class UserService {
         return userRepository.findUser(phoneNumber)
                 .orElseThrow(UserNotFoundException::new);
     }
+
+    public boolean isExistNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
 }

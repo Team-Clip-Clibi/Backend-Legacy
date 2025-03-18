@@ -59,4 +59,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.phoneNumber = :phoneNumber")
     Optional<User> findUser(@Param("phoneNumber") String phoneNumber);
+
+    boolean existsByNickname(String nickname);
 }
