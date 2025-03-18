@@ -164,4 +164,18 @@ public class UserRepositoryTest {
         //then
         assertThat(foundUser).isEqualTo(user);
     }
+
+    @DisplayName("nickname이 존재하는지 확인한다.")
+    @Test
+    void existsByNickname() {
+        //given
+        String nickname = "닉네임";
+        userRepository.save(User.builder().nickname(nickname).build());
+
+        //when
+        boolean exists = userRepository.existsByNickname(nickname);
+
+        //then
+        assertThat(exists).isTrue();
+    }
 }

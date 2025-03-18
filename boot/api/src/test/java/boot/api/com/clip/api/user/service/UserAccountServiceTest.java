@@ -322,4 +322,16 @@ public class UserAccountServiceTest {
                 gender
         );
     }
+
+    @DisplayName("사용중인 닉네임이면 NicknameAlreadyExistsException이 발생한다.")
+    @Test
+    void checkNicknameAvailable() {
+        //given
+        String nickname = "닉네임";
+        userService.save(User.builder().nickname(nickname).build());
+
+        //when & then
+        assertThatThrownBy(() -> userAccountService.checkNicknameAvailable(nickname))
+                .isInstanceOf(NicknameAlreadyExistsException.class);
+    }
 }

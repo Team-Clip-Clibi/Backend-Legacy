@@ -125,6 +125,26 @@ public interface UserAccountDocs {
                                         @AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
+            summary = "사용 가능한 닉네임 확인 API",
+            description = """
+                    해당 닉네임이 사용 가능한지 확인합니다.
+                    다른 유저가 사용중인 닉네임일 경우 HTTP 400 Bad Request를 반환합니다.
+                    """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "사용 가능한 닉네임"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "사용 불가능한 닉네임"
+            )
+    })
+    @PostMapping("/nickname/available")
+    void checkNicknameAvailable(@RequestBody UpdateNicknameDto updateNicknameDto);
+
+    @Operation(
             summary = "유저 상세 정보 업데이트 API",
             description = """
                     유저의 성별, 생년월일, 활동지역을 업데이트합니다.
