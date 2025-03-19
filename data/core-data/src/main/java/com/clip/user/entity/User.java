@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Entity
@@ -60,6 +61,21 @@ public class User extends BaseEntity {
 
     @Column
     private boolean isVerified;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dietary_option_id")
+    private DietaryOption dietaryOption;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "language_id")
+    private Language language;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "relationship_status_id")
+    private RelationshipStatus relationshipStatus;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserJob> userJobList;
 
     @Builder
     public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion) {
