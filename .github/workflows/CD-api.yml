@@ -15,17 +15,13 @@ on:
         required: true
       EC2_KEY:
         required: true
-  push:
-    branches:
-      - develop
-    paths:
-      - 'boot/api/**'
 
 jobs:
   build:
     uses: ./.github/workflows/gradle_build.yml
     with:
       project-name: api
+      workflow-id: ${{ github.run_id }}
 
   push-image:
     needs: build
@@ -38,6 +34,7 @@ jobs:
       ecr-repository-name: clibi/api
       container-name: api-server
       secret-manager: arn:aws:secretsmanager:ap-northeast-2:442042528525:secret:dev/clibi/rds-eCWfXL
+      workflow-id: ${{ github.run_id }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
