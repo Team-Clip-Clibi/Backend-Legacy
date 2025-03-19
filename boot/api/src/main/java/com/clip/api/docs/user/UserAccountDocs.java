@@ -194,4 +194,34 @@ public interface UserAccountDocs {
     )
     @GetMapping("/profile")
     RetrieveUserProfileInfo getProfileInfo(@AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "FCM 업데이트 API",
+            description = """
+                    유저의 FCM을 업데이트합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "FCM 업데이트 성공"
+    )
+    @PatchMapping("/fcm")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateFCMToken(@RequestBody UpdateFCMDto updateFCMDto,
+                        @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "알림 on/off API",
+            description = """
+                    유저의 알림 설정을 업데이트합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "업데이트 성공"
+    )
+    @PatchMapping("/notify")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateNotifyAllow(@RequestBody UpdateNotifyAllowDto updateNotifyAllowDto,
+                        @AuthenticationPrincipal UserDetails userDetails);
 }
