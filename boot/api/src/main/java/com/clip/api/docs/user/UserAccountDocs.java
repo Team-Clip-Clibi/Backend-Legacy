@@ -177,4 +177,21 @@ public interface UserAccountDocs {
     })
     @GetMapping("/{phoneNumber}/info")
     UserInfoDto getUserInfo(@PathVariable String phoneNumber);
+
+    @Operation(
+            summary = "프로필 기본 정보 조회 API",
+            description = """
+                    마이페이지의 프로필 기본 정보를 조회합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = RetrieveUserProfileInfo.class)
+            )
+    )
+    @GetMapping("/profile")
+    RetrieveUserProfileInfo getProfileInfo(@AuthenticationPrincipal UserDetails userDetails);
 }

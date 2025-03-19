@@ -1,9 +1,7 @@
 package boot.api.com.clip.api.user.service;
 
 import com.clip.ApiApplication;
-import com.clip.api.user.controller.dto.LoginDto;
-import com.clip.api.user.controller.dto.SignupDto;
-import com.clip.api.user.controller.dto.UpdateUserDetailInfoDto;
+import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.entity.Token;
@@ -333,5 +331,37 @@ public class UserAccountServiceTest {
         //when & then
         assertThatThrownBy(() -> userAccountService.checkNicknameAvailable(nickname))
                 .isInstanceOf(NicknameAlreadyExistsException.class);
+    }
+
+    @DisplayName("userId로 프로필 기본 정보를 조회할 수 있다.")
+    @Test
+    void getProfileInfo() {
+        //given
+        String phoneNumber = "01012345678";
+        String username = "홍길동";
+        String nickname = "닉네임";
+        Platform platform = Platform.APPLE;
+        User user = userService.save(User.builder()
+                .username(username)
+                .nickname(nickname)
+                .platform(platform)
+                .phoneNumber(phoneNumber)
+                .build());
+
+        //when
+        RetrieveUserProfileInfo userProfileInfo = userAccountService.getUserProfileInfo(user.getId());
+
+        //then
+        assertThat(userProfileInfo).extracting(
+                RetrieveUserProfileInfo::getUsername,
+                RetrieveUserProfileInfo::getNickname,
+                RetrieveUserProfileInfo::getPhoneNumber,
+                RetrieveUserProfileInfo::getPlatform
+        ).containsExactly(
+                user.getUsername(),
+                user.getNickname(),
+                user.getPhoneNumber(),
+                user.getPlatform()
+        );
     }
 }

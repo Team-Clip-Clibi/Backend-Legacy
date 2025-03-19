@@ -58,6 +58,11 @@ public class UserService {
                 .orElseThrow(UserNotFoundException::new);
     }
 
+    public User findUser(long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
     public boolean isExistNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
