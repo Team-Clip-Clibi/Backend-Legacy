@@ -61,4 +61,14 @@ public class UserAccountController implements UserAccountDocs {
     public RetrieveUserProfileInfo getProfileInfo(UserDetails userDetails) {
         return userAccountService.getUserProfileInfo(Long.parseLong(userDetails.getUsername()));
     }
+
+    @Override
+    public void updateFCMToken(UpdateFCMDto updateFCMDto, UserDetails userDetails) {
+        userAccountService.updateFCMToken(Long.parseLong(userDetails.getUsername()), updateFCMDto.getFcmToken());
+    }
+
+    @Override
+    public void updateNotifyAllow(UpdateNotifyAllowDto updateNotifyAllowDto, UserDetails userDetails) {
+        userAccountService.updateNotifyAllow(Long.parseLong(userDetails.getUsername()), updateNotifyAllowDto.isAllowNotify());
+    }
 }
