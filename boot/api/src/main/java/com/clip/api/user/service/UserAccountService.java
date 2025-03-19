@@ -1,11 +1,9 @@
 package com.clip.api.user.service;
 
-import com.clip.api.user.controller.dto.LoginDto;
-import com.clip.api.user.controller.dto.SignupDto;
-import com.clip.api.user.controller.dto.UpdateUserDetailInfoDto;
-import com.clip.api.user.controller.dto.UserInfoDto;
+import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.api.user.mapper.TermsAcceptanceMapper;
+import com.clip.api.user.mapper.UserProfileMapper;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
@@ -28,6 +26,7 @@ public class UserAccountService {
     private final TermsAcceptanceService termsAcceptanceService;
     private final TokenService tokenService;
     private final TermsAcceptanceMapper termsAcceptanceMapper;
+    private final UserProfileMapper userProfileMapper;
 
     @Transactional
     public TokenProvider.Token signup(SignupDto request) {
@@ -97,5 +96,10 @@ public class UserAccountService {
         if (userService.isExistNickname(nickname)) {
             throw new NicknameAlreadyExistsException();
         }
+    }
+
+    public RetrieveUserProfileInfo getUserProfileInfo(long userId) {
+        User user = userService.findUser(userId);
+        return userProfileMapper.toRetrieveUserProfileInfo(user);
     }
 }
