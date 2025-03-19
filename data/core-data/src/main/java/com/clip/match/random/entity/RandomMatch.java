@@ -13,6 +13,9 @@ public class RandomMatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String topic;
+
     @OneToMany(mappedBy = "randomMatch")
     private List<RandomMatchLocation> randomMatchLocationList;
 
