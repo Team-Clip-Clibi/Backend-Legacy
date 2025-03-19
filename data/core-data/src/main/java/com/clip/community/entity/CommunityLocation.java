@@ -1,23 +1,21 @@
-package com.clip.match.random.entity;
+package com.clip.community.entity;
 
-import com.clip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserRandomMatch {
-
+public class CommunityLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "community_id")
+    private Community community;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "random_match_id")
-    private RandomMatch randomMatch;
+    @JoinColumn(name = "location_id")
+    private Location location;
 }

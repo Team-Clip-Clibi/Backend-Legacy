@@ -1,4 +1,4 @@
-package com.clip.match.random.entity;
+package com.clip.community.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,5 +17,5 @@ public class Location {
     private String region;
 
     @OneToMany(mappedBy = "location")
-    private List<RandomMatchLocation> randomMatchLocationList;
+    private List<CommunityLocation> communityLocationList;
 }
