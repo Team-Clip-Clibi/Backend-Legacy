@@ -19,3 +19,5 @@ exclude-auth-path-patterns:
       method: GET
     - path-pattern: /v3/api-docs/**
       method: GET
+    - path-pattern: /match/random/**
+      method: POST
