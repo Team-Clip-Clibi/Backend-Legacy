@@ -3,11 +3,13 @@ package com.clip.matching.entity;
 import com.clip.user.entity.City;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class RandomMatching {
@@ -38,4 +40,5 @@ public class RandomMatching {
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
     }
+
 }
