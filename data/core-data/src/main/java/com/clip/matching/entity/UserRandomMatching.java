@@ -1,4 +1,4 @@
-package com.clip.community.entity;
+package com.clip.matching.entity;
 
 import com.clip.user.entity.User;
 import jakarta.persistence.*;

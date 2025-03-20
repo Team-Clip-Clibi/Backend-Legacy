@@ -1,4 +1,4 @@
-package com.clip.community.entity;
+package com.clip.matching.entity;
 
 import com.clip.user.entity.City;
 import jakarta.persistence.*;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -28,8 +27,10 @@ public class RandomMatching {
     private String location;
 
     @Builder
-    public RandomMatching(Long id, LocalDateTime meetingTime) {
+    public RandomMatching(Long id, LocalDateTime meetingTime, City city, String location) {
         this.id = id;
         this.meetingTime = meetingTime;
+        this.city = city;
+        this.location = location;
     }
 }
