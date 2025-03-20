@@ -16,21 +16,26 @@ public class RandomMatching {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime meetingTime;
-
+    @Enumerated(EnumType.STRING)
     @Column
     private City city;
 
     @Column
     private String location;
 
+    @Column
+    private String restaurantName;
+
+    @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime meetingTime;
+
     @Builder
-    public RandomMatching(Long id, LocalDateTime meetingTime, City city, String location) {
+    public RandomMatching(Long id, City city, String location, String restaurantName, LocalDateTime meetingTime) {
         this.id = id;
-        this.meetingTime = meetingTime;
         this.city = city;
         this.location = location;
+        this.restaurantName = restaurantName;
+        this.meetingTime = meetingTime;
     }
 }
