@@ -2,15 +2,13 @@ package com.clip.user.entity;
 
 import com.clip.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
@@ -77,8 +75,11 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<UserJob> userJobList;
 
+    @Column
+    private boolean isAllowNotify;
+
     @Builder
-    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion) {
+    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isAllowNotify) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
@@ -91,5 +92,6 @@ public class User extends BaseEntity {
         this.deviceType = deviceType;
         this.firebaseToken = firebaseToken;
         this.osVersion = osVersion;
+        this.isVerified = isAllowNotify;
     }
 }

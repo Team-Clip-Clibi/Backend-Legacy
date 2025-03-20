@@ -102,4 +102,14 @@ public class UserAccountService {
         User user = userService.findUser(userId);
         return userProfileMapper.toRetrieveUserProfileInfo(user);
     }
+
+    @Transactional
+    public void updateFCMToken(long userId, String fcmToken) {
+        userService.findUser(userId).setFirebaseToken(fcmToken);
+    }
+
+    @Transactional
+    public void updateNotifyAllow(long userId, boolean isAllowNotify) {
+        userService.findUser(userId).setAllowNotify(isAllowNotify);
+    }
 }
