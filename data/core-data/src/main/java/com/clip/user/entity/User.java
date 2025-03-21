@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -58,6 +59,21 @@ public class User extends BaseEntity {
 
     @Column
     private boolean isVerified;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dietary_option_id")
+    private DietaryOption dietaryOption;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "language_id")
+    private Language language;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "relationship_status_id")
+    private RelationshipStatus relationshipStatus;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserJob> userJobList;
 
     @Column
     private boolean isAllowNotify;
