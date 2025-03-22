@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update User u set u.phoneNumber = :phoneNumber, u.isVerified = true where u.id = :userId")
+    @Query("update User u set u.phoneNumber = :phoneNumber, u.isPhoneNumVerified = true where u.id = :userId")
     void updatePhoneNumber(@Param("userId") long userId, @Param("phoneNumber") String phoneNumber);
 
     @Transactional

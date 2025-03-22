@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Job {
@@ -16,7 +14,4 @@ public class Job {
 
     @Column
     private String jobName;
-
-    @OneToMany(mappedBy = "job")
-    private List<UserJob> userJobList;
 }

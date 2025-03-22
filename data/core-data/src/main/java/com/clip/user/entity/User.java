@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -58,28 +59,26 @@ public class User extends BaseEntity {
     private String osVersion;
 
     @Column
-    private boolean isVerified;
+    private boolean isPhoneNumVerified;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dietary_option_id")
-    private DietaryOption dietaryOption;
+    @Column
+    private String language;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "language_id")
-    private Language language;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "relationship_status_id")
+    @Column
     private RelationshipStatus relationshipStatus;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserJob> userJobList;
+    @Column
+    private boolean isSameRelationshipConsidered;
+
+    @OneToMany
+    @JoinColumn(name = "job_id")
+    private List<Job> jobList = new ArrayList<>();
 
     @Column
     private boolean isAllowNotify;
 
     @Builder
-    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isAllowNotify) {
+    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isPhoneNumVerified, String language, RelationshipStatus relationshipStatus, boolean isSameRelationshipConsidered, List<Job> jobList, boolean isAllowNotify) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
@@ -92,6 +91,11 @@ public class User extends BaseEntity {
         this.deviceType = deviceType;
         this.firebaseToken = firebaseToken;
         this.osVersion = osVersion;
-        this.isVerified = isAllowNotify;
+        this.isPhoneNumVerified = isPhoneNumVerified;
+        this.language = language;
+        this.relationshipStatus = relationshipStatus;
+        this.isSameRelationshipConsidered = isSameRelationshipConsidered;
+        this.jobList = jobList;
+        this.isAllowNotify = isAllowNotify;
     }
 }
