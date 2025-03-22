@@ -37,7 +37,7 @@ public class UserRepositoryTest {
         //then
         user = userRepository.findById(user.getId()).get();
         assertThat(user)
-                .extracting(User::getPhoneNumber, User::isVerified)
+                .extracting(User::getPhoneNumber, User::isPhoneNumVerified)
                 .containsExactly(phoneNumber, true);
     }
 
@@ -53,7 +53,7 @@ public class UserRepositoryTest {
         assertThatThrownBy(() -> userRepository.updatePhoneNumber(newUser.getId(), phoneNumber))
                 .isInstanceOf(DataIntegrityViolationException.class);
         assertThat(newUser)
-                .extracting(User::getPhoneNumber, User::isVerified)
+                .extracting(User::getPhoneNumber, User::isPhoneNumVerified)
                 .containsExactly(null, false);
     }
 
