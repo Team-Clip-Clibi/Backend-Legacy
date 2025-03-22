@@ -74,7 +74,7 @@ public interface UserAccountDocs {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "번호 업데이트 성공"
             ),
             @ApiResponse(
@@ -94,7 +94,7 @@ public interface UserAccountDocs {
                     """
     )
     @ApiResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "유저 이름 업데이트 성공"
     )
     @PatchMapping("/name")
@@ -111,7 +111,7 @@ public interface UserAccountDocs {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "닉네임 업데이트 성공"
             ),
             @ApiResponse(
@@ -151,7 +151,7 @@ public interface UserAccountDocs {
                     """
     )
     @ApiResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "디테일 정보 업데이트 성공"
     )
     @PatchMapping("/detail")
@@ -202,7 +202,7 @@ public interface UserAccountDocs {
                     """
     )
     @ApiResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "FCM 업데이트 성공"
     )
     @PatchMapping("/fcm")
@@ -217,7 +217,7 @@ public interface UserAccountDocs {
                     """
     )
     @ApiResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "업데이트 성공"
     )
     @PatchMapping("/notify")
