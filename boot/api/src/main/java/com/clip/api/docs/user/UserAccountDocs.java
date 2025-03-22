@@ -224,4 +224,64 @@ public interface UserAccountDocs {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void updateNotifyAllow(@RequestBody UpdateNotifyAllowDto updateNotifyAllowDto,
                         @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "하는 일 변경 API",
+            description = """
+                    유저의 하는 일 정보를 변경합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "업데이트 성공"
+    )
+    @PatchMapping("/job")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateJob(@RequestBody UpdateJobDto updateJobDto,
+                   @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "연애 상태 변경 API",
+            description = """
+                    유저의 연애 상태 정보를 변경합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "업데이트 성공"
+    )
+    @PatchMapping("/relationship")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateRelationship(@RequestBody UpdateRelationshipDto updateRelationshipDto,
+                             @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "식단 제한 변경 API",
+            description = """
+                    유저의 식단 제한 정보를 변경합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "업데이트 성공"
+    )
+    @PatchMapping("/dietary")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateDietaryOption(@RequestBody UpdateDietaryDto updateDietaryDto,
+                   @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "사용 언어 변경 API",
+            description = """
+                    유저의 사용 언어 정보를 변경합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "업데이트 성공"
+    )
+    @PatchMapping("/language")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void updateLanguage(@RequestBody UpdateLanguageDto updateLanguageDto,
+                             @AuthenticationPrincipal UserDetails userDetails);
 }
