@@ -2,6 +2,8 @@ package com.clip.api.user.controller;
 
 import com.clip.api.docs.user.UserAccountDocs;
 import com.clip.api.user.controller.dto.*;
+import com.clip.api.user.mapper.JobMapper;
+import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.global.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserAccountController implements UserAccountDocs {
     private final UserAccountService userAccountService;
+    private final JobMapper jobMapper;
+    private final LanguageMapper languageMapper;
 
     @Override
     public TokenProvider.Token createUserAccount(SignupDto request) {
@@ -70,5 +74,25 @@ public class UserAccountController implements UserAccountDocs {
     @Override
     public void updateNotifyAllow(UpdateNotifyAllowDto updateNotifyAllowDto, UserDetails userDetails) {
         userAccountService.updateNotifyAllow(Long.parseLong(userDetails.getUsername()), updateNotifyAllowDto.isAllowNotify());
+    }
+
+    @Override
+    public void updateJob(UpdateJobDto updateJobDto, UserDetails userDetails) {
+        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobMapper.toStringJobList(updateJobDto.getJobList()));
+    }
+
+    @Override
+    public void updateRelationship(UpdateRelationshipDto updateRelationshipDto, UserDetails userDetails) {
+        userAccountService.updateRelationship(Long.parseLong(userDetails.getUsername()), updateRelationshipDto.getRelationshipStatus(), updateRelationshipDto.isSameRelationshipConsidered());
+    }
+
+    @Override
+    public void updateDietaryOption(UpdateDietaryDto updateDietaryDto, UserDetails userDetails) {
+        userAccountService.updateDietaryOption(Long.parseLong(userDetails.getUsername()), updateDietaryDto.getDietaryOption());
+    }
+
+    @Override
+    public void updateLanguage(UpdateLanguageDto updateLanguageDto, UserDetails userDetails) {
+        userAccountService.updateLanguage(Long.parseLong(userDetails.getUsername()), languageMapper.toStringLanguage(updateLanguageDto.getLanguage()));
     }
 }
