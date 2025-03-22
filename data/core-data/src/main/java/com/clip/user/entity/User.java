@@ -65,12 +65,16 @@ public class User extends BaseEntity {
     private String language;
 
     @Column
+    private String dietaryOption;
+
+    @Enumerated(EnumType.STRING)
+    @Column
     private RelationshipStatus relationshipStatus;
 
     @Column
     private boolean isSameRelationshipConsidered;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "job_id")
     private List<Job> jobList = new ArrayList<>();
 
@@ -78,7 +82,7 @@ public class User extends BaseEntity {
     private boolean isAllowNotify;
 
     @Builder
-    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isPhoneNumVerified, String language, RelationshipStatus relationshipStatus, boolean isSameRelationshipConsidered, List<Job> jobList, boolean isAllowNotify) {
+    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isPhoneNumVerified, String language,String dietaryOption, RelationshipStatus relationshipStatus, boolean isSameRelationshipConsidered, List<Job> jobList, boolean isAllowNotify) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
@@ -93,9 +97,31 @@ public class User extends BaseEntity {
         this.osVersion = osVersion;
         this.isPhoneNumVerified = isPhoneNumVerified;
         this.language = language;
+        this.dietaryOption = dietaryOption;
         this.relationshipStatus = relationshipStatus;
         this.isSameRelationshipConsidered = isSameRelationshipConsidered;
         this.jobList = jobList;
         this.isAllowNotify = isAllowNotify;
+    }
+
+    public void updateJobList(List<String> jobList) {
+        List<Job> newJobList = jobList.stream().map(name ->
+                Job.builder().jobName(name).build()
+        ).toList();
+        this.jobList.clear();
+        this.jobList.addAll(newJobList);
+    }
+
+    public void updateRelationshipAndConsidered(RelationshipStatus relationshipStatus, boolean isSameRelationshipConsidered) {
+        this.relationshipStatus = relationshipStatus;
+        this.isSameRelationshipConsidered = isSameRelationshipConsidered;
+    }
+
+    public void updateDietaryOption(String dietaryOption) {
+        this.dietaryOption = dietaryOption;
+    }
+
+    public void updateLanguage(String language) {
+        this.language = language;
     }
 }
