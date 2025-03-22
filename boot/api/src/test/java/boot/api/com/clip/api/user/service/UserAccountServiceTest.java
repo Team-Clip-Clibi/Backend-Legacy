@@ -11,6 +11,7 @@ import com.clip.global.config.jwt.TokenProvider;
 import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
+import com.clip.user.repository.JobRepository;
 import com.clip.user.repository.UserRepository;
 import com.clip.user.service.UserService;
 import io.jsonwebtoken.Jwts;
@@ -41,14 +42,17 @@ public class UserAccountServiceTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    TokenProvider tokenProvider;
+    private TokenProvider tokenProvider;
     @Autowired
-    TokenRepository tokenRepository;
+    private TokenRepository tokenRepository;
     @MockitoBean
-    JWTProperties jwtProperties;
+    private JWTProperties jwtProperties;
+    @Autowired
+    private JobRepository jobRepository;
 
     @AfterEach
     void tearDown() {
+        jobRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
@@ -363,5 +367,75 @@ public class UserAccountServiceTest {
                 user.getPhoneNumber(),
                 user.getPlatform()
         );
+    }
+
+    @DisplayName("userId로 직업 정보를 업데이트 할 수 있다.")
+    @Test
+    void updateJob() {
+        //given
+        Long userId = userService.save(User.builder().build()).getId();
+        String itJob = "IT";
+        String artJob = "ART";
+
+        //when
+        userAccountService.updateJob(userId, List.of(itJob, artJob));
+        List<Job> jobList = userService.findUser(userId).getJobList();
+
+        //then
+        assertThat(jobList)
+                .extracting(Job::getJobName)
+                .containsExactlyInAnyOrder(itJob, artJob);
+    }
+
+    @DisplayName("userId로 연애상태 정보를 업데이트 할 수 있다.")
+    @Test
+    void updateRelationship() {
+        //given
+        Long userId = userService.save(User.builder().build()).getId();
+        RelationshipStatus relationshipStatus = RelationshipStatus.SINGLE;
+        boolean isSameRelationshipConsidered = true;
+
+        //when
+        userAccountService.updateRelationship(userId, relationshipStatus, isSameRelationshipConsidered);
+        User user = userService.findUser(userId);
+
+        //then
+        assertThat(user).extracting(
+                User::getRelationshipStatus,
+                User::isSameRelationshipConsidered
+        ).containsExactly(
+                relationshipStatus,
+                isSameRelationshipConsidered
+        );
+    }
+
+    @DisplayName("userId로 식단 정보를 업데이트 할 수 있다.")
+    @Test
+    void updateDietaryOption() {
+        //given
+        Long userId = userService.save(User.builder().build()).getId();
+        String dietaryOption = "암어버섯헤이러";
+
+        //when
+        userAccountService.updateDietaryOption(userId, dietaryOption);
+        User user = userService.findUser(userId);
+
+        //then
+        assertThat(user.getDietaryOption()).isEqualTo(dietaryOption);
+    }
+
+    @DisplayName("userId로 언어 정보를 업데이트 할 수 있다.")
+    @Test
+    void updateLanguage() {
+        //given
+        Long userId = userService.save(User.builder().build()).getId();
+        String language = "ko";
+
+        //when
+        userAccountService.updateLanguage(userId, language);
+        User user = userService.findUser(userId);
+
+        //then
+        assertThat(user.getLanguage()).isEqualTo(language);
     }
 }
