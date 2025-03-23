@@ -7,6 +7,8 @@ import com.clip.api.user.mapper.UserProfileMapper;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.user.entity.Job;
+import com.clip.user.entity.RelationshipStatus;
 import com.clip.user.entity.User;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.service.TermsAcceptanceService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -111,5 +114,29 @@ public class UserAccountService {
     @Transactional
     public void updateNotifyAllow(long userId, boolean isAllowNotify) {
         userService.findUser(userId).updateIsAllowNotify(isAllowNotify);
+    }
+
+    @Transactional
+    public void updateJob(long userId, List<String> jobList) {
+        userService.findUser(userId)
+                .updateJobList(jobList);
+    }
+
+    @Transactional
+    public void updateRelationship(long userId, RelationshipStatus relationshipStatus, boolean isSameRelationshipConsidered) {
+        userService.findUser(userId)
+                .updateRelationshipAndConsidered(relationshipStatus, isSameRelationshipConsidered);
+    }
+
+    @Transactional
+    public void updateDietaryOption(long userId, String dietaryOption) {
+        userService.findUser(userId)
+                .updateDietaryOption(dietaryOption);
+    }
+
+    @Transactional
+    public void updateLanguage(long userId, String language) {
+        userService.findUser(userId)
+                .updateLanguage(language);
     }
 }
