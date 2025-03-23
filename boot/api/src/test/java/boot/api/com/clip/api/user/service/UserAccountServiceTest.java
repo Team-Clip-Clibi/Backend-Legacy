@@ -369,6 +369,36 @@ public class UserAccountServiceTest {
         );
     }
 
+    @DisplayName("userId로 FCMToken을 업데이트 한다.")
+    @Test
+    void updateFCMToken() {
+        //given
+        String oldFcmToken = "FCM_V1";
+        String newFcmToken = "FCM_V2";
+        Long userId = userRepository.save(User.builder().firebaseToken(oldFcmToken).build()).getId();
+
+        //when
+        userAccountService.updateFCMToken(userId, newFcmToken);
+
+        //then
+        assertThat(userRepository.findById(userId).get().getFirebaseToken()).isEqualTo(newFcmToken);
+    }
+
+    @DisplayName("userId로 isAllowNotify(알림 ON/OFF 여부)를 업데이트 한다.")
+    @Test
+    void updateIsAllowNotify() {
+        //given
+        boolean oldIsAllowNotify = true;
+        boolean newIsAllowNotify = false;
+        Long userId = userRepository.save(User.builder().isAllowNotify(oldIsAllowNotify).build()).getId();
+
+        //when
+        userAccountService.updateNotifyAllow(userId, newIsAllowNotify);
+
+        //then
+        assertThat(userRepository.findById(userId).get().isAllowNotify()).isEqualTo(newIsAllowNotify);
+    }
+
     @DisplayName("userId로 직업 정보를 업데이트 할 수 있다.")
     @Test
     void updateJob() {

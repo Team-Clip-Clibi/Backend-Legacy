@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
@@ -101,6 +100,14 @@ public class User extends BaseEntity {
         this.relationshipStatus = relationshipStatus;
         this.isSameRelationshipConsidered = isSameRelationshipConsidered;
         this.jobList = jobList;
+        this.isAllowNotify = isAllowNotify;
+    }
+
+    public void updateFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
+
+    public void updateIsAllowNotify(boolean isAllowNotify) {
         this.isAllowNotify = isAllowNotify;
     }
 
