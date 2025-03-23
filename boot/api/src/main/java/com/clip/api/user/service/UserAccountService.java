@@ -105,11 +105,11 @@ public class UserAccountService {
 
     @Transactional
     public void updateFCMToken(long userId, String fcmToken) {
-        userService.findUser(userId).setFirebaseToken(fcmToken);
+        userService.findUser(userId).updateFirebaseToken(fcmToken);
     }
 
     @Transactional
     public void updateNotifyAllow(long userId, boolean isAllowNotify) {
-        userService.findUser(userId).setAllowNotify(isAllowNotify);
+        userService.findUser(userId).updateIsAllowNotify(isAllowNotify);
     }
 }
