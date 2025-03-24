@@ -18,7 +18,7 @@ public class UserRandomMatching {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "community_id")
+    @JoinColumn(name = "random_matching_id")
     private RandomMatching randomMatching;
 
     @Column
