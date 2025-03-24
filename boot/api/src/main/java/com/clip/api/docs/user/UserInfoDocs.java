@@ -170,8 +170,25 @@ public interface UserInfoDocs {
     )
     @PatchMapping("/job")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateJob(@RequestBody UpdateJobDto updateJobDto,
+    void updateJob(@RequestBody JobDto jobDto,
                    @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "하는 일 조회 API",
+            description = """
+                    유저의 하는 일 정보를 조회합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = JobDto.class)
+            )
+    )
+    @GetMapping("/job")
+    JobDto getJob(@AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
             summary = "연애 상태 변경 API",
@@ -185,8 +202,25 @@ public interface UserInfoDocs {
     )
     @PatchMapping("/relationship")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateRelationship(@RequestBody UpdateRelationshipDto updateRelationshipDto,
+    void updateRelationship(@RequestBody RelationshipDto relationshipDto,
                             @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "연애 상태 변경 조회 API",
+            description = """
+                    유저의 연애 상태 정보를 조회합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = RelationshipDto.class)
+            )
+    )
+    @GetMapping("/relationship")
+    RelationshipDto getRelationship(@AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
             summary = "식단 제한 변경 API",
@@ -200,8 +234,25 @@ public interface UserInfoDocs {
     )
     @PatchMapping("/dietary")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateDietaryOption(@RequestBody UpdateDietaryDto updateDietaryDto,
+    void updateDietaryOption(@RequestBody DietaryDto dietaryDto,
                              @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "식단 제한 조회 API",
+            description = """
+                    유저의 식단 제한 정보를 조회합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = DietaryDto.class)
+            )
+    )
+    @GetMapping("/dietary")
+    DietaryDto getDietaryOption(@AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
             summary = "사용 언어 변경 API",
@@ -215,8 +266,23 @@ public interface UserInfoDocs {
     )
     @PatchMapping("/language")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void updateLanguage(@RequestBody UpdateLanguageDto updateLanguageDto,
+    void updateLanguage(@RequestBody LanguageDto languageDto,
                         @AuthenticationPrincipal UserDetails userDetails);
 
-
+    @Operation(
+            summary = "사용 언어 조회 API",
+            description = """
+                    유저의 사용 언어 정보를 조회합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = LanguageDto.class)
+            )
+    )
+    @GetMapping("/language")
+    LanguageDto getLanguage(@AuthenticationPrincipal UserDetails userDetails);
 }

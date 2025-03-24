@@ -2,8 +2,6 @@ package com.clip.api.user.controller;
 
 import com.clip.api.docs.user.UserInfoDocs;
 import com.clip.api.user.controller.dto.*;
-import com.clip.api.user.mapper.JobMapper;
-import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserInfoController implements UserInfoDocs {
     private final UserAccountService userAccountService;
-    private final JobMapper jobMapper;
-    private final LanguageMapper languageMapper;
 
     @Override
     public void updatePhoneNumber(UpdatePhoneNumberDto updatePhoneNumberDto,
@@ -60,22 +56,42 @@ public class UserInfoController implements UserInfoDocs {
     }
 
     @Override
-    public void updateJob(UpdateJobDto updateJobDto, UserDetails userDetails) {
-        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobMapper.toStringJobList(updateJobDto.getJobList()));
+    public void updateJob(JobDto jobDto, UserDetails userDetails) {
+        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobDto);
     }
 
     @Override
-    public void updateRelationship(UpdateRelationshipDto updateRelationshipDto, UserDetails userDetails) {
-        userAccountService.updateRelationship(Long.parseLong(userDetails.getUsername()), updateRelationshipDto.getRelationshipStatus(), updateRelationshipDto.isSameRelationshipConsidered());
+    public JobDto getJob(UserDetails userDetails) {
+        return userAccountService.getJob(Long.parseLong(userDetails.getUsername()));
     }
 
     @Override
-    public void updateDietaryOption(UpdateDietaryDto updateDietaryDto, UserDetails userDetails) {
-        userAccountService.updateDietaryOption(Long.parseLong(userDetails.getUsername()), updateDietaryDto.getDietaryOption());
+    public void updateRelationship(RelationshipDto relationshipDto, UserDetails userDetails) {
+        userAccountService.updateRelationship(Long.parseLong(userDetails.getUsername()), relationshipDto.getRelationshipStatus(), relationshipDto.getIsSameRelationshipConsidered());
     }
 
     @Override
-    public void updateLanguage(UpdateLanguageDto updateLanguageDto, UserDetails userDetails) {
-        userAccountService.updateLanguage(Long.parseLong(userDetails.getUsername()), languageMapper.toStringLanguage(updateLanguageDto.getLanguage()));
+    public RelationshipDto getRelationship(UserDetails userDetails) {
+        return userAccountService.getReplationship(Long.parseLong(userDetails.getUsername()));
+    }
+
+    @Override
+    public void updateDietaryOption(DietaryDto dietaryDto, UserDetails userDetails) {
+        userAccountService.updateDietaryOption(Long.parseLong(userDetails.getUsername()), dietaryDto.getDietaryOption());
+    }
+
+    @Override
+    public DietaryDto getDietaryOption(UserDetails userDetails) {
+        return userAccountService.getDietaryOption(Long.parseLong(userDetails.getUsername()));
+    }
+
+    @Override
+    public void updateLanguage(LanguageDto languageDto, UserDetails userDetails) {
+        userAccountService.updateLanguage(Long.parseLong(userDetails.getUsername()), languageDto);
+    }
+
+    @Override
+    public LanguageDto getLanguage(UserDetails userDetails) {
+        return userAccountService.getLanguage(Long.parseLong(userDetails.getUsername()));
     }
 }

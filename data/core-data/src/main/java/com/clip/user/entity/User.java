@@ -71,7 +71,7 @@ public class User extends BaseEntity {
     private RelationshipStatus relationshipStatus;
 
     @Column
-    private boolean isSameRelationshipConsidered;
+    private Boolean isSameRelationshipConsidered;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "job_id")
@@ -81,7 +81,7 @@ public class User extends BaseEntity {
     private boolean isAllowNotify;
 
     @Builder
-    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isPhoneNumVerified, String language,String dietaryOption, RelationshipStatus relationshipStatus, boolean isSameRelationshipConsidered, List<Job> jobList, boolean isAllowNotify) {
+    public User(String username, String phoneNumber, String nickname, LocalDate birth, City city, County county, Gender gender, Platform platform, String socialId, DeviceType deviceType, String firebaseToken, String osVersion, boolean isPhoneNumVerified, String language,String dietaryOption, RelationshipStatus relationshipStatus, Boolean isSameRelationshipConsidered, List<Job> jobList, boolean isAllowNotify) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
