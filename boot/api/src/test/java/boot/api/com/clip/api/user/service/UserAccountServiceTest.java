@@ -404,17 +404,17 @@ public class UserAccountServiceTest {
     void updateJob() {
         //given
         Long userId = userService.save(User.builder().build()).getId();
-        String itJob = "IT";
-        String artJob = "ART";
+        JobCategory it = JobCategory.IT;
+        JobCategory art = JobCategory.ART;
 
         //when
-        userAccountService.updateJob(userId, List.of(itJob, artJob));
+        userAccountService.updateJob(userId, JobDto.builder().jobList(List.of(it, art)).build());
         List<Job> jobList = userService.findUser(userId).getJobList();
 
         //then
         assertThat(jobList)
                 .extracting(Job::getJobName)
-                .containsExactlyInAnyOrder(itJob, artJob);
+                .containsExactlyInAnyOrder(it.getJobCategoryName(), art.getJobCategoryName());
     }
 
     @DisplayName("userId로 연애상태 정보를 업데이트 할 수 있다.")
@@ -432,7 +432,7 @@ public class UserAccountServiceTest {
         //then
         assertThat(user).extracting(
                 User::getRelationshipStatus,
-                User::isSameRelationshipConsidered
+                User::getIsSameRelationshipConsidered
         ).containsExactly(
                 relationshipStatus,
                 isSameRelationshipConsidered
@@ -459,13 +459,13 @@ public class UserAccountServiceTest {
     void updateLanguage() {
         //given
         Long userId = userService.save(User.builder().build()).getId();
-        String language = "ko";
+        Language korean = Language.KOREAN;
 
         //when
-        userAccountService.updateLanguage(userId, language);
+        userAccountService.updateLanguage(userId, LanguageDto.builder().language(korean).build());
         User user = userService.findUser(userId);
 
         //then
-        assertThat(user.getLanguage()).isEqualTo(language);
+        assertThat(user.getLanguage()).isEqualTo(korean.getValue());
     }
 }

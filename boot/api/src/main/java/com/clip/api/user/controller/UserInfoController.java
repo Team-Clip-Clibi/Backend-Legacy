@@ -2,8 +2,6 @@ package com.clip.api.user.controller;
 
 import com.clip.api.docs.user.UserInfoDocs;
 import com.clip.api.user.controller.dto.*;
-import com.clip.api.user.mapper.JobMapper;
-import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserInfoController implements UserInfoDocs {
     private final UserAccountService userAccountService;
-    private final JobMapper jobMapper;
-    private final LanguageMapper languageMapper;
 
     @Override
     public void updatePhoneNumber(UpdatePhoneNumberDto updatePhoneNumberDto,
@@ -61,7 +57,7 @@ public class UserInfoController implements UserInfoDocs {
 
     @Override
     public void updateJob(JobDto jobDto, UserDetails userDetails) {
-        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobMapper.toStringJobList(jobDto.getJobList()));
+        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobDto);
     }
 
     @Override
@@ -91,7 +87,7 @@ public class UserInfoController implements UserInfoDocs {
 
     @Override
     public void updateLanguage(LanguageDto languageDto, UserDetails userDetails) {
-        userAccountService.updateLanguage(Long.parseLong(userDetails.getUsername()), languageMapper.toStringLanguage(languageDto.getLanguage()));
+        userAccountService.updateLanguage(Long.parseLong(userDetails.getUsername()), languageDto);
     }
 
     @Override

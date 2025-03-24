@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -120,9 +119,9 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void updateJob(long userId, List<String> jobList) {
+    public void updateJob(long userId, JobDto jobDto) {
         userService.findUser(userId)
-                .updateJobList(jobList);
+                .updateJobList(jobMapper.toStringJobList(jobDto.getJobList()));
     }
 
     @Transactional
@@ -138,9 +137,9 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void updateLanguage(long userId, String language) {
+    public void updateLanguage(long userId, LanguageDto languageDto) {
         userService.findUser(userId)
-                .updateLanguage(language);
+                .updateLanguage(languageMapper.toStringLanguage(languageDto.getLanguage()));
     }
 
     public JobDto getJob(long userId) {
