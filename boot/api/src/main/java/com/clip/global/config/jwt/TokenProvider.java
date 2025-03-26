@@ -25,6 +25,10 @@ public class TokenProvider {
         return new Token(generateAccessToken(userId, currentTime), generateRefreshToken(userId, currentTime));
     }
 
+    public AdminToken generateAdminToken(long adminId, LocalDateTime currentTime) {
+        return new AdminToken(generateAccessToken(adminId, currentTime), generateRefreshToken(adminId, currentTime));
+    }
+
     public String generateAccessToken(long userId, LocalDateTime currentDateTime) {
         return generateToken(new CustomClaims(userId,TokenType.ACCESS_TOKEN), currentDateTime, currentDateTime.plusDays(jwtProperties.getAccessTokenExpirationPeriodDay()));
     }
@@ -73,5 +77,8 @@ public class TokenProvider {
     }
 
     public record Token(String accessToken, String refreshToken) {
+    }
+
+    public record AdminToken (String accessToken, String refreshToken) {
     }
 }
