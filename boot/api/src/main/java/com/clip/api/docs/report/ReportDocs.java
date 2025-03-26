@@ -22,6 +22,7 @@ public interface ReportDocs {
             summary = "신고 등록 API",
             description = """
                     마이페이지에서 작성된 신고를 등록합니다.
+                    최대 글자 수 500자입니다.
                     """
     )
     @ApiResponse(
