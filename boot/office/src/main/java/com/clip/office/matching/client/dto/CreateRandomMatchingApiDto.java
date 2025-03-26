@@ -1,4 +1,4 @@
-package com.clip.matching.client.dto;
+package com.clip.office.matching.client.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class CreateRandomMatchingDto {
+public class CreateRandomMatchingApiDto {
 
     private String city;
     private String location;
@@ -16,7 +16,7 @@ public class CreateRandomMatchingDto {
     private LocalDateTime meetingTime;
 
     @Builder
-    public CreateRandomMatchingDto(String city, String location, String restaurantName, LocalDateTime meetingTime) {
+    public CreateRandomMatchingApiDto(String city, String location, String restaurantName, LocalDateTime meetingTime) {
         this.city = city;
         this.location = location;
         this.restaurantName = restaurantName;
