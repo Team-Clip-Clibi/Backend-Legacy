@@ -4,6 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.api.report.controller.dto.ReportDto;
 import com.clip.api.report.service.UserReportService;
 import com.clip.report.entity.Report;
+import com.clip.report.entity.ReportCategory;
 import com.clip.report.repository.ReportRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
@@ -41,16 +42,23 @@ public class UserReportServiceTest {
     void saveUserReportService() {
         //given
         String reportContent = "신고합니다";
+        ReportCategory reportCategory = ReportCategory.ABUSING;
         User user = userRepository.save(User.builder().build());
 
         //when
-        userReportService.saveUserReport(user.getId(), ReportDto.builder().content(reportContent).build());
+        userReportService.saveUserReport(
+                user.getId(),
+                ReportDto.builder()
+                        .content(reportContent)
+                        .reportCategory(reportCategory)
+                        .build()
+        );
 
         //then
         List<Report> reports = reportRepository.findReports(user.getId());
         assertThat(reports.getFirst())
-                .extracting(Report::getContent)
-                .isEqualTo(reportContent);
+                .extracting(Report::getContent,Report::getReportCategory)
+                .containsExactly(reportContent,reportCategory);
 
     }
 

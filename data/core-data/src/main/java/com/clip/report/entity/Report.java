@@ -25,12 +25,17 @@ public class Report extends BaseEntity {
     @Column(length = 1500)
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ReportCategory reportCategory;
+
     @Column
     private boolean isConfirmed;
 
     @Builder
-    public Report(User user, String content) {
+    public Report(User user, String content, ReportCategory reportCategory) {
         this.user = user;
         this.content = content;
+        this.reportCategory = reportCategory;
     }
 }
