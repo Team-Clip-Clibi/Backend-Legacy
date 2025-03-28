@@ -7,10 +7,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원관리", description = "회원가입, 로그인")
@@ -68,7 +66,8 @@ public interface UserAccountDocs {
             summary = "번호로 가입된 계정 조회 API",
             description = """
                     휴대폰 번호로 기존에 가입된 계정의 정보를 조회합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponses(value = {
             @ApiResponse(
