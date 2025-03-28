@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +24,8 @@ public interface ReportDocs {
             description = """
                     마이페이지에서 작성된 신고를 등록합니다.
                     최대 글자 수 500자입니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
