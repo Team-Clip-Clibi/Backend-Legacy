@@ -187,3 +187,15 @@ tbody td {
     background-color: #391085;
     color: white;
 }
+
+.custom-login-btn {
+    background-color: #391085 !important;
+    color: white !important;
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.custom-login-btn:hover {
+    background-color: #2e0a6d !important;
+}
