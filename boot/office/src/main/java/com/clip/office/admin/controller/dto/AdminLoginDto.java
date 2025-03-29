@@ -1,4 +1,4 @@
-package com.clip.api.admin.controller.dto;
+package com.clip.office.admin.controller.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

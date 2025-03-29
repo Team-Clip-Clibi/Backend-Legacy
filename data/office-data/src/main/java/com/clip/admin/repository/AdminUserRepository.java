@@ -12,6 +12,6 @@ public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
     @Query("""
         select au from AdminUser au where au.username = :username
     """)
-    Optional<AdminUser> findByUsername(@Param("username")String username);
+    Optional<AdminUser> findByUsername(@Param("username") String username);
 
 }

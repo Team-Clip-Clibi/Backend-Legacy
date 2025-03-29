@@ -9,11 +9,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AdminService {
+public class AdminUserService {
     private final AdminUserRepository adminUserRepository;
 
 
-    public Optional<AdminUser> findOptAdminUser(String username, String password) {
+    public Optional<AdminUser> findOptAdminUser(String username) {
         return adminUserRepository.findByUsername(username);
     }
 }
