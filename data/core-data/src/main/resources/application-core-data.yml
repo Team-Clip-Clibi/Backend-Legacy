@@ -1,8 +1,4 @@
 spring:
-  flyway:
-    baseline-version: 1
-    enabled: true
-    baseline-on-migrate: true
   datasource:
     username: ${USERNAME}
     url: ${URL}
@@ -12,9 +8,7 @@ spring:
   jpa:
     defer-datasource-initialization: false
     hibernate:
-      ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: create-drop
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
