@@ -1,0 +1,60 @@
+package com.clip.order.entity;
+
+import com.clip.common.entity.BaseEntity;
+import com.clip.matching.entity.OneThingMatching;
+import com.clip.toss.entity.TossPayment;
+import com.clip.user.entity.User;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Getter
+@Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"onething_id", "user_id"})})
+@NoArgsConstructor
+public class OneThingOrder extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private OneThingOrderStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "onething_id")
+    private OneThingMatching oneThingMatching;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "tosspayment",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private List<TossPayment> tossPayment = new ArrayList<>();
+
+    @Builder
+    public OneThingOrder(User user, OneThingOrderStatus status, OneThingMatching oneThingMatching, List<TossPayment> tossPayment) {
+        this.user = user;
+        this.status = status;
+        this.oneThingMatching = oneThingMatching;
+        this.tossPayment = tossPayment;
+    }
+
+    public void addTossPayment(TossPayment tossPayment) {
+        if (Objects.isNull(this.tossPayment)) {
+            this.tossPayment = new ArrayList<>();
+        }
+        this.tossPayment.add(tossPayment);
+    }
+
+    public void updateStatus(OneThingOrderStatus status) {
+        this.status = status;
+    }
+}
