@@ -52,6 +52,7 @@ public class UserAccountServiceTest {
 
     @AfterEach
     void tearDown() {
+        tokenRepository.deleteAllInBatch();
         jobRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }

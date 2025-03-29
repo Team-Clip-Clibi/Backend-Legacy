@@ -1,0 +1,50 @@
+<div th:fragment="content">
+    <div class="content">
+        <div class="tab-container">
+            <button class="tab-button active">원띵모임</button>
+            <button class="tab-button">번개모임</button>
+            <button class="tab-button">랜덤모임</button>
+        </div>
+        <div class="table-container">
+            <!-- 테이블 컨텐츠 -->
+            <table>
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>닉네임</th>
+                    <th>전화번호</th>
+                    <th>원명</th>
+                    <th>직종</th>
+                    <th>연애상태</th>
+                    <th>식단</th>
+                    <th>선호언어</th>
+                    <th>지역</th>
+                    <th>매칭</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 반복 데이터 예시 -->
+                <tr>
+                    <td>1</td>
+                    <td>민민민민</td>
+                    <td>5469-8944</td>
+                    <td>자기개발</td>
+                    <td>직종</td>
+                    <td>싱글</td>
+                    <td>상관없음</td>
+                    <td>영어</td>
+                    <td>강남</td>
+                    <td><button class="status-button match">매칭전</button></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <button>&lt;</button>
+                <!-- 페이지 번호 -->
+                <button class="active">1</button><button>2</button><button>3</button><button>...</button><button>&gt;</button>
+            </div>
+        </div>
+    </div>
+</div>

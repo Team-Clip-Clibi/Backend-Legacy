@@ -2,9 +2,11 @@ package com.clip;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableFeignClients(basePackages = "com.clip")
+@EnableJpaAuditing
+@ConfigurationPropertiesScan
 @SpringBootApplication
 public class OfficeApplication {
 

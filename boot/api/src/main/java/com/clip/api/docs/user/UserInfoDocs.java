@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +23,8 @@ public interface UserInfoDocs {
                     유저의 번호를 업데이트합니다.
                     "꼭 공백과 - 를 제거하고 보내주세요. ex) 01012345678"
                     다른 유저가 사용중인 번호일 경우 HTTP 400 Bad Request를 반환합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -43,7 +45,8 @@ public interface UserInfoDocs {
             summary = "이름 업데이트 API",
             description = """
                     유저의 이름을 업데이트합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -59,7 +62,8 @@ public interface UserInfoDocs {
             description = """
                     유저의 닉네임을 업데이트합니다.
                     다른 유저가 사용중인 닉네임일 경우 HTTP 400 Bad Request를 반환합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -81,7 +85,8 @@ public interface UserInfoDocs {
             description = """
                     해당 닉네임이 사용 가능한지 확인합니다.
                     다른 유저가 사용중인 닉네임일 경우 HTTP 400 Bad Request를 반환합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -100,7 +105,8 @@ public interface UserInfoDocs {
             summary = "유저 상세 정보 업데이트 API",
             description = """
                     유저의 성별, 생년월일, 활동지역을 업데이트합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -115,7 +121,8 @@ public interface UserInfoDocs {
             summary = "프로필 기본 정보 조회 API",
             description = """
                     마이페이지의 프로필 기본 정보를 조회합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "200",
@@ -132,7 +139,8 @@ public interface UserInfoDocs {
             summary = "FCM 업데이트 API",
             description = """
                     유저의 FCM을 업데이트합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -147,7 +155,8 @@ public interface UserInfoDocs {
             summary = "알림 on/off API",
             description = """
                     유저의 알림 설정을 업데이트합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -162,7 +171,8 @@ public interface UserInfoDocs {
             summary = "하는 일 변경 API",
             description = """
                     유저의 하는 일 정보를 변경합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -177,7 +187,8 @@ public interface UserInfoDocs {
             summary = "하는 일 조회 API",
             description = """
                     유저의 하는 일 정보를 조회합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "200",
@@ -194,7 +205,8 @@ public interface UserInfoDocs {
             summary = "연애 상태 변경 API",
             description = """
                     유저의 연애 상태 정보를 변경합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -209,7 +221,8 @@ public interface UserInfoDocs {
             summary = "연애 상태 변경 조회 API",
             description = """
                     유저의 연애 상태 정보를 조회합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "200",
@@ -226,7 +239,8 @@ public interface UserInfoDocs {
             summary = "식단 제한 변경 API",
             description = """
                     유저의 식단 제한 정보를 변경합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -241,7 +255,8 @@ public interface UserInfoDocs {
             summary = "식단 제한 조회 API",
             description = """
                     유저의 식단 제한 정보를 조회합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "200",
@@ -258,7 +273,8 @@ public interface UserInfoDocs {
             summary = "사용 언어 변경 API",
             description = """
                     유저의 사용 언어 정보를 변경합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "204",
@@ -273,7 +289,8 @@ public interface UserInfoDocs {
             summary = "사용 언어 조회 API",
             description = """
                     유저의 사용 언어 정보를 조회합니다.
-                    """
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
     )
     @ApiResponse(
             responseCode = "200",
