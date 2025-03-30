@@ -1,8 +1,8 @@
 package com.clip.global.exception;
 
-import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
+import com.clip.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,8 +23,8 @@ public class ValidExceptionHandler {
                 .body(e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundUserException.class)
-    public ResponseEntity<?> notFoundUserException(NotFoundUserException e) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> notFoundUserException(UserNotFoundException e) {
         return ResponseEntity.badRequest()
                 .body(e.getMessage());
     }
