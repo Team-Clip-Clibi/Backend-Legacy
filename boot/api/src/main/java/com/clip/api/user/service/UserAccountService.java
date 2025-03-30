@@ -1,7 +1,6 @@
 package com.clip.api.user.service;
 
 import com.clip.api.user.controller.dto.*;
-import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.api.user.mapper.JobMapper;
 import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.mapper.TermsAcceptanceMapper;
@@ -54,15 +53,12 @@ public class UserAccountService {
 
     @Transactional
     public TokenProvider.Token login(LoginDto request) {
-        Optional<User> optUser = userService.findOptUser(request.getSocialId(), request.getPlatform());
 
-        if (optUser.isEmpty()) {
-            throw new NotFoundUserException();
-        }
+        User user = userService.findUser(request.getSocialId(), request.getPlatform());
 
-        TokenProvider.Token token = tokenProvider.generateToken(optUser.get().getId(), LocalDateTime.now());
-        tokenService.updateRefreshToken(optUser.get(), token.refreshToken());
-        userService.updateDeviceInfo(optUser.get().getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken());
+        TokenProvider.Token token = tokenProvider.generateToken(user.getId(), LocalDateTime.now());
+        tokenService.updateRefreshToken(user, token.refreshToken());
+        userService.updateDeviceInfo(user.getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken());
         return token;
     }
 
