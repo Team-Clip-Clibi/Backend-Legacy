@@ -17,6 +17,10 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    public User findUser(String socialId, Platform platform) {
+        return userRepository.findUser(socialId, platform).orElseThrow(UserNotFoundException::new);
+    }
+
     public Optional<User> findOptUser(String socialId, Platform platform) {
         return userRepository.findUser(socialId, platform);
     }

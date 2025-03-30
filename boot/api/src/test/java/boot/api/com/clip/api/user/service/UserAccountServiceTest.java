@@ -2,7 +2,6 @@ package boot.api.com.clip.api.user.service;
 
 import com.clip.ApiApplication;
 import com.clip.api.user.controller.dto.*;
-import com.clip.api.user.exception.NotFoundUserException;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.entity.Token;
 import com.clip.auth.repository.TokenRepository;
@@ -11,6 +10,7 @@ import com.clip.global.config.jwt.TokenProvider;
 import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
+import com.clip.user.exception.UserNotFoundException;
 import com.clip.user.repository.JobRepository;
 import com.clip.user.repository.UserRepository;
 import com.clip.user.service.UserService;
@@ -211,7 +211,7 @@ public class UserAccountServiceTest {
 
         //when & then
         assertThatThrownBy(() -> userAccountService.login(LoginDto.builder().platform(platform).socialId(socialId).build()))
-                .isInstanceOf(NotFoundUserException.class);
+                .isInstanceOf(UserNotFoundException.class);
     }
 
     @DisplayName("userId로 phoneNumber를 업데이트 한다.")
