@@ -35,7 +35,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         Long failCount = redisTemplate.opsForValue().increment(redisKey);
 
         if (failCount == null) {
-            System.out.println("Redis increment 실패 - failCount가 null입니다.");
             response.sendRedirect("/office/admin/login?error=true");
             return;
         }
@@ -43,9 +42,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         if (ttl == null || ttl == -1) {
             redisTemplate.expire(redisKey, Duration.ofSeconds(blockDurationSeconds));
         }
-
-        System.out.println("현재 실패 횟수: " + failCount);
-        System.out.println("현재 TTL: " + redisTemplate.getExpire(redisKey) + "초");
 
         if (failCount >= maxFailCount) {
             response.sendRedirect("/office/admin/login?locked=true");
