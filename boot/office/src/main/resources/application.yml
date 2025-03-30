@@ -1,11 +1,18 @@
 spring:
   config:
     import: optional:configserver:http://localhost:8888
+
   cloud:
     config:
       enabled: false
+
   profiles:
     include: office-data
+
+  security:
+    login:
+      max-fail-count: 5
+      block-duration-seconds: 3600 # 1 시간
 
 eureka:
   client:
