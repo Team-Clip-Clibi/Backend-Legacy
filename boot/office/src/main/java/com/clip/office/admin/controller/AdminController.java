@@ -15,9 +15,13 @@ public class AdminController {
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
+                            @RequestParam(value = "locked", required = false) String locked,
                             Model model) {
         if (error != null) {
             model.addAttribute("error", "아이디 또는 비밀번호가 잘못되었습니다.");
+        }
+        if (locked != null) {
+            model.addAttribute("error", "로그인 시도 횟수를 초과했습니다. 10분 후 다시 시도해주세요.");
         }
         return "index";
     }
