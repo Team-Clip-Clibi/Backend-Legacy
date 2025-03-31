@@ -1,7 +1,6 @@
 package com.clip.global.security;
 
 import com.clip.global.security.util.LoginAttemptManager;
-import com.clip.office.admin.exception.NotExistAdminUserException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,13 +33,8 @@ public class LoginAttemptFilter implements Filter {
                     response.sendRedirect("/office/admin/login?locked=true");
                     return;
                 }
-            } else {
-                log.atError()
-                        .setCause(new NotExistAdminUserException())
-                        .log();
             }
         }
-
         chain.doFilter(req, res);
     }
 }
