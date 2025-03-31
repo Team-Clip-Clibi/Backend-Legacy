@@ -1,14 +1,17 @@
 package com.clip.global.security;
 
+import com.clip.global.exception.NotExistAdminUserException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class LoginAttemptFilter implements Filter {
 
@@ -42,7 +45,9 @@ public class LoginAttemptFilter implements Filter {
                     return;
                 }
             } else {
-                System.out.println("필터에서 username 파라미터를 가져올 수 없습니다.");
+                log.atError()
+                        .setCause(new NotExistAdminUserException())
+                        .log();
             }
         }
 
