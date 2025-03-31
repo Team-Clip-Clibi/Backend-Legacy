@@ -1,6 +1,6 @@
 package com.clip.global.security;
 
-import com.clip.global.exception.NotExistAdminUserException;
+import com.clip.office.admin.exception.NotExistAdminUserException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
