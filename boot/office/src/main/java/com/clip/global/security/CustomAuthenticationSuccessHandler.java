@@ -1,10 +1,10 @@
 package com.clip.global.security;
 
+import com.clip.global.security.util.LoginAttemptManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -15,16 +15,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final StringRedisTemplate redisTemplate;
+    private final LoginAttemptManager loginAttemptManager;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         String username = authentication.getName();
-        String redisKey = "login:fail:" + username;
-
-        redisTemplate.delete(redisKey);
-
+        loginAttemptManager.resetFailCount(username);
         response.sendRedirect("/office/admin/home");
     }
 }
