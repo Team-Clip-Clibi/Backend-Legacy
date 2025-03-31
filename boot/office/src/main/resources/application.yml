@@ -1,11 +1,4 @@
 spring:
-  config:
-    import: optional:configserver:http://localhost:8888
-
-  cloud:
-    config:
-      enabled: false
-
   profiles:
     include: office-data
 
@@ -13,13 +6,6 @@ spring:
     login:
       max-fail-count: 5
       block-duration-seconds: 3600 # 1 시간
-
-eureka:
-  client:
-    enabled: false
-
-api:
-  url: http://localhost:8080
 
 server:
   port: 8081
