@@ -1,6 +1,8 @@
 spring:
   profiles:
-    include: core-data
+    include:
+    - core-data
+    - office-data
 
 jwt:
   access-token-expiration-period-day: 1

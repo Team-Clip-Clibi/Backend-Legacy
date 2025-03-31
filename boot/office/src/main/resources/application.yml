@@ -1,3 +1,11 @@
 spring:
   profiles:
     include: office-data
+
+  security:
+    login:
+      max-fail-count: 5
+      block-duration-seconds: 3600 # 1 시간
+
+server:
+  port: 8081
