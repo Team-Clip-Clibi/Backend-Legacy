@@ -35,12 +35,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update User u set u.deviceType = :deviceType, u.osVersion = :osVersion, u.firebaseToken = :fireBaseToken where u.id = :userId")
+    @Query("update User u set u.deviceType = :deviceType, u.osVersion = :osVersion, u.firebaseToken = :fireBaseToken, u.isAllowNotify = :isAllowNotify where u.id = :userId")
     void updateDeviceInfo(
-            @Param("userId") Long userId,
+            @Param("userId") long userId,
             @Param("deviceType") DeviceType deviceType,
             @Param("osVersion") String osVersion,
-            @Param("fireBaseToken") String firebaseToken
+            @Param("fireBaseToken") String firebaseToken,
+            @Param("isAllowNotify") boolean isAllowNotify
     );
 
     @Transactional

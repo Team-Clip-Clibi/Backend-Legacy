@@ -4,6 +4,8 @@ import com.clip.user.entity.DeviceType;
 import com.clip.user.entity.Platform;
 import com.clip.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,19 +15,26 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class SignupDto {
-    private boolean servicePermission;
-    private boolean privatePermission;
-    private boolean marketingPermission;
+    @NotNull
+    private Boolean servicePermission;
+    @NotNull
+    private Boolean privatePermission;
+    @NotNull
+    private Boolean marketingPermission;
+    @NotBlank
     private String socialId;
+    @NotNull
     private Platform platform;
+    @NotNull
     private DeviceType deviceType;
+    @NotBlank
     private String osVersion;
     private String firebaseToken;
-    @JsonProperty("isAllowNotify")
-    private boolean isAllowNotify;
+    @NotNull
+    private Boolean isAllowNotify;
 
     @Builder
-    public SignupDto(boolean servicePermission, boolean privatePermission, boolean marketingPermission, String socialId, Platform platform, DeviceType deviceType, String osVersion, String firebaseToken, boolean isAllowNotify) {
+    public SignupDto(Boolean servicePermission, Boolean privatePermission, Boolean marketingPermission, String socialId, Platform platform, DeviceType deviceType, String osVersion, String firebaseToken, Boolean isAllowNotify) {
         this.servicePermission = servicePermission;
         this.privatePermission = privatePermission;
         this.marketingPermission = marketingPermission;
@@ -44,7 +53,7 @@ public class SignupDto {
                 .deviceType(this.getDeviceType())
                 .osVersion(this.getOsVersion())
                 .firebaseToken(this.getFirebaseToken())
-                .isAllowNotify(this.isAllowNotify())
+                .isAllowNotify(this.getIsAllowNotify())
                 .build();
     }
 }

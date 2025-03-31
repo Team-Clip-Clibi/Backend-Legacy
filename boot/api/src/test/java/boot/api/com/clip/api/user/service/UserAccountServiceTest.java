@@ -70,6 +70,7 @@ public class UserAccountServiceTest {
                 .privatePermission(true)
                 .socialId(socialId)
                 .platform(platform)
+                .isAllowNotify(true)
                 .build();
         given(jwtProperties.getSecretKey()).willReturn(secretKey);
         given(jwtProperties.getAccessTokenExpirationPeriodDay()).willReturn(1);
@@ -108,6 +109,7 @@ public class UserAccountServiceTest {
                     .deviceType(deviceType)
                     .osVersion(osVersion)
                     .firebaseToken(firebaseToken)
+                    .isAllowNotify(true)
                     .build();
 
             //when
@@ -146,6 +148,7 @@ public class UserAccountServiceTest {
                     .deviceType(deviceType)
                     .osVersion(osVersion)
                     .firebaseToken(firebaseToken)
+                    .isAllowNotify(true)
                     .build();
 
             //when
@@ -190,7 +193,15 @@ public class UserAccountServiceTest {
         given(jwtProperties.getAccessTokenExpirationPeriodDay()).willReturn(1);
 
         //when
-        TokenProvider.Token token = userAccountService.login(LoginDto.builder().platform(platform).socialId(socialId).build());
+        TokenProvider.Token token = userAccountService.login(LoginDto.builder()
+                .platform(platform)
+                .socialId(socialId)
+                .deviceType(DeviceType.IOS)
+                .osVersion("1.1.1")
+                .firebaseToken("firebaseToken")
+                .isAllowNotify(true)
+                .build()
+        );
         String userId = tokenProvider.extractUserId(token.accessToken());
         User user = userService.findOptUser(socialId, platform).get();
 
