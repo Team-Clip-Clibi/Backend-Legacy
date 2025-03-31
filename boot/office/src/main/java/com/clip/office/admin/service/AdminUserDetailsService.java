@@ -2,7 +2,6 @@ package com.clip.office.admin.service;
 
 import com.clip.admin.entity.AdminUser;
 import com.clip.admin.service.AdminUserService;
-import com.clip.office.admin.exception.NotFoundAdminUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +17,7 @@ public class AdminUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AdminUser admin = adminUserService.findOptAdminUser(username)
-                .orElseThrow(NotFoundAdminUserException::new);
+        AdminUser admin = adminUserService.findOptAdminUser(username);
 
         return User.builder() //security.core.userdetails.User
                 .username(admin.getUsername())
