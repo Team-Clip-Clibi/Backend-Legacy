@@ -105,10 +105,11 @@ public class UserRepositoryTest {
         //given
         String osVersion = "14.5";
         String firebaseToken = "firebaseToken";
+        boolean isAllowNotify = true;
         User user = userRepository.save(User.builder().build());
 
         //when
-        userRepository.updateDeviceInfo(user.getId(), DeviceType.IOS, osVersion, firebaseToken);
+        userRepository.updateDeviceInfo(user.getId(), DeviceType.IOS, osVersion, firebaseToken, isAllowNotify);
         user = userRepository.findById(user.getId()).get();
 
         //then

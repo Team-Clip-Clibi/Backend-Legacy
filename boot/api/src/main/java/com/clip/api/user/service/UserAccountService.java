@@ -39,7 +39,7 @@ public class UserAccountService {
         if (optUser.isPresent()) {
             TokenProvider.Token token = tokenProvider.generateToken(optUser.get().getId(), LocalDateTime.now());
             tokenService.updateRefreshToken(optUser.get(), token.refreshToken());
-            userService.updateDeviceInfo(optUser.get().getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken());
+            userService.updateDeviceInfo(optUser.get().getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken(), request.getIsAllowNotify());
             return token;
         }
 
@@ -58,7 +58,7 @@ public class UserAccountService {
 
         TokenProvider.Token token = tokenProvider.generateToken(user.getId(), LocalDateTime.now());
         tokenService.updateRefreshToken(user, token.refreshToken());
-        userService.updateDeviceInfo(user.getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken());
+        userService.updateDeviceInfo(user.getId(), request.getDeviceType(), request.getOsVersion(), request.getFirebaseToken(), request.getIsAllowNotify());
         return token;
     }
 

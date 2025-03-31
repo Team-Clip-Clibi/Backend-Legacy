@@ -49,8 +49,8 @@ public class UserService {
         }
     }
 
-    public void updateDeviceInfo(long userId, DeviceType deviceType, String osVersion, String firebaseToken) {
-        userRepository.updateDeviceInfo(userId, deviceType, osVersion, firebaseToken);
+    public void updateDeviceInfo(long userId, DeviceType deviceType, String osVersion, String firebaseToken, boolean isAllowNotify) {
+        userRepository.updateDeviceInfo(userId, deviceType, osVersion, firebaseToken, isAllowNotify);
     }
 
     public void updateUserDetailInfo(long userId, Gender gender, LocalDate birth, City city, County county) {
