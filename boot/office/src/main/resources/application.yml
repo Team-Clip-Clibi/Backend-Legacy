@@ -23,3 +23,7 @@ api:
 
 server:
   port: 8081
+
+logging:
+  level:
+    org.thymeleaf: DEBUG # 타임리프 관련 로그 보이도록 설정
