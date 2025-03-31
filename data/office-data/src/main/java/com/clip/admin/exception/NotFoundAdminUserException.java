@@ -1,4 +1,4 @@
-package com.clip.office.admin.exception;
+package com.clip.admin.exception;
 
 public class NotFoundAdminUserException extends RuntimeException {
     public NotFoundAdminUserException() {
