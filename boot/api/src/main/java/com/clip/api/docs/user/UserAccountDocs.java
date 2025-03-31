@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원관리", description = "회원가입, 로그인")
@@ -32,7 +33,7 @@ public interface UserAccountDocs {
             )
     )
     @PostMapping("/signup")
-    TokenProvider.Token createUserAccount(@RequestBody SignupDto request);
+    TokenProvider.Token createUserAccount(@RequestBody @Valid SignupDto request);
 
     @Operation(
             summary = "로그인 API",
@@ -60,7 +61,7 @@ public interface UserAccountDocs {
             )
     })
     @PostMapping("/signin")
-    TokenProvider.Token loginUserAccount(@RequestBody LoginDto request);
+    TokenProvider.Token loginUserAccount(@RequestBody @Valid LoginDto request);
 
     @Operation(
             summary = "번호로 가입된 계정 조회 API",
