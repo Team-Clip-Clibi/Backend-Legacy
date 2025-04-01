@@ -18,10 +18,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private final LoginAttemptManager loginAttemptManager;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        String username = authentication.getName();
-        loginAttemptManager.resetFailCount(username);
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        String requestId = authentication.getName();
+        loginAttemptManager.deleteFailCount(requestId);
         response.sendRedirect("/office/admin/home");
     }
 }

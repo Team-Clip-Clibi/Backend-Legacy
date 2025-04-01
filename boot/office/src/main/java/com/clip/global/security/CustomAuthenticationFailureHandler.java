@@ -18,16 +18,15 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     private final LoginAttemptManager loginAttemptManager;
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException {
-        String username = request.getParameter("username");
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
-        loginAttemptManager.recordFail(username);
+        String requestId = request.getParameter("username");
+        loginAttemptManager.increaseFailCount(requestId);
 
-        if (loginAttemptManager.isBlocked(username)) {
+        if (loginAttemptManager.isBlockedUserId(requestId)) {
             response.sendRedirect("/office/admin/login?locked=true");
-        } else {
-            response.sendRedirect("/office/admin/login?error=true");
+            return;
         }
+        response.sendRedirect("/office/admin/login?error=true");
     }
 }

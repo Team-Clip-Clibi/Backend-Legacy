@@ -12,7 +12,7 @@ public class AdminUserService {
     private final AdminUserRepository adminUserRepository;
 
 
-    public AdminUser findOptAdminUser(String username) {
+    public AdminUser findAdminUser(String username) {
         return adminUserRepository.findByUsername(username)
                 .orElseThrow(NotFoundAdminUserException::new);
     }
