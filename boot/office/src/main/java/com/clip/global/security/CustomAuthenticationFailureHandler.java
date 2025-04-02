@@ -1,5 +1,6 @@
 package com.clip.global.security;
 
+import com.clip.global.security.util.DistributeLockService;
 import com.clip.global.security.util.LoginAttemptManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,12 +17,13 @@ import java.io.IOException;
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     private final LoginAttemptManager loginAttemptManager;
-
+    private final DistributeLockService distributeLockService;
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
         String requestId = request.getParameter("username");
-        loginAttemptManager.increaseFailCount(requestId);
+
+        distributeLockService.executeWithLock(requestId, () -> loginAttemptManager.increaseFailCount(requestId));
 
         if (loginAttemptManager.isBlockedUserId(requestId)) {
             response.sendRedirect("/office/admin/login?locked=true");
