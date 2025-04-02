@@ -2,6 +2,11 @@ spring:
   profiles:
     include: office-data
 
+  datasource:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
   security:
     login:
       max-fail-count: 10
