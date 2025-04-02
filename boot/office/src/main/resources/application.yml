@@ -4,6 +4,6 @@ spring:
 
   security:
     login:
-      max-fail-count: 5
+      max-fail-count: 10
       block-duration-seconds: 3600 # 1 시간
 

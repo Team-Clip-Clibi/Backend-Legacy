@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -17,28 +17,33 @@ public class LoginAttemptManager {
     private int maxFailCount;
 
     @Value("${spring.security.login.block-duration-seconds}")
-
     private long blockDurationSeconds;
 
-    public String getRedisKey(String username) {
-        return "login:fail:" + username;
+    public boolean isBlockedUserId(String userId) {
+        String failCntInfoKey = getFailCntInfoKey(userId);
+        int failCnt = getFailCnt(failCntInfoKey);
+        return failCnt > maxFailCount;
     }
 
-    public boolean isBlocked(String username) {
-        String key = getRedisKey(username);
-        String value = redisTemplate.opsForValue().get(key);
-        return value != null && Integer.parseInt(value) >= maxFailCount;
+    public void increaseFailCount(String userId) {
+        String failCntInfoKey = getFailCntInfoKey(userId);
+        String incrementedFailCount = Integer.toString(getFailCnt(failCntInfoKey) + 1);
+        redisTemplate.opsForValue().set(failCntInfoKey,incrementedFailCount,blockDurationSeconds, TimeUnit.SECONDS);
     }
 
-    public void recordFail(String username) {
-        String key = getRedisKey(username);
-        Long count = redisTemplate.opsForValue().increment(key);
-        if (count != null && redisTemplate.getExpire(key) == -1) {
-            redisTemplate.expire(key, Duration.ofSeconds(blockDurationSeconds));
+    public void deleteFailCount(String username) {
+        redisTemplate.delete(getFailCntInfoKey(username));
+    }
+
+    private String getFailCntInfoKey(String userId) {
+        return "login:fail:" + userId;
+    }
+
+    private int getFailCnt(String failCntInfoKey) {
+        String failCnt = redisTemplate.opsForValue().get(failCntInfoKey);
+        if (failCnt == null) {
+            return 0;
         }
-    }
-
-    public void resetFailCount(String username) {
-        redisTemplate.delete(getRedisKey(username));
+        return Integer.parseInt(failCnt);
     }
 }

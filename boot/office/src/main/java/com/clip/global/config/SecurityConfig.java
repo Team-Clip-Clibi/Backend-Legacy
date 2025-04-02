@@ -3,6 +3,7 @@ package com.clip.global.config;
 import com.clip.global.security.CustomAuthenticationFailureHandler;
 import com.clip.global.security.CustomAuthenticationSuccessHandler;
 import com.clip.global.security.LoginAttemptFilter;
+import com.clip.global.security.util.LoginAttemptManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +23,7 @@ public class SecurityConfig {
 
     private final CustomAuthenticationFailureHandler failureHandler;
     private final CustomAuthenticationSuccessHandler successHandler;
-    private final LoginAttemptFilter loginAttemptFilter;
-
+    private final LoginAttemptManager loginAttemptManager;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,16 +32,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/office/admin/login",
                                 "/office/admin/register",
                                 "/css/**", "/js/**", "/icon/**", "/images/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated());
+
+        http.addFilterBefore(loginAttemptFilter(loginAttemptManager), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/office/admin/login")
                         .loginProcessingUrl("/office/admin/login")
@@ -54,9 +54,12 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/office/admin/login")
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
-                )
-                .addFilterBefore(loginAttemptFilter, UsernamePasswordAuthenticationFilter.class);
-
+                );
         return http.build();
+    }
+
+    @Bean
+    public LoginAttemptFilter loginAttemptFilter(LoginAttemptManager loginAttemptManager) {
+        return new LoginAttemptFilter(loginAttemptManager);
     }
 }
