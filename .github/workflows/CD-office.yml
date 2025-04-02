@@ -35,10 +35,10 @@ jobs:
       secret-manager: arn:aws:secretsmanager:ap-northeast-2:442042528525:secret:dev/clibi/rds-eCWfXL
       container-name: office-server
       workflow-id: ${{ github.run_id }}
+      ec2-host: ${{ secrets.EC2_OFFICE_HOST }}
+      ec2-user: ${{ secrets.EC2_USER }}
+      ec2-key: ${{ secrets.EC2_OFFICE_KEY }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ap-northeast-2
-      EC2_HOST: ${{ secrets.EC2_OFFICE_HOST }}
-      EC2_USER: ${{ secrets.EC2_USER }}
-      EC2_KEY: ${{ secrets.EC2_OFFICE_KEY }}
