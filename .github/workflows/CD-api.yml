@@ -39,6 +39,6 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ap-northeast-2
-      EC2_HOST: ${{ secrets.EC2_HOST }}
+      EC2_HOST: ${{ secrets.EC2_API_HOST }}
       EC2_USER: ${{ secrets.EC2_USER }}
-      EC2_KEY: ${{ secrets.EC2_KEY }}
+      EC2_KEY: ${{ secrets.EC2_API_KEY }}
