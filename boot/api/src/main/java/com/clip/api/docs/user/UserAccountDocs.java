@@ -83,6 +83,25 @@ public interface UserAccountDocs {
     @GetMapping("/{phoneNumber}/info")
     UserInfoDto getUserInfo(@PathVariable String phoneNumber);
 
+    @Operation(
+            summary = "Access Token 재발급 API",
+            description = """
+                    Refresh Token으로 Access Token을 재발급한다.
+                    """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = TokenProvider.AccessToken.class)
+                    )
+            )
+    })
+    @PostMapping("/tokens")
+    TokenProvider.AccessToken getAccessToken(@RequestBody TokenProvider.RefreshToken refreshToken);
+
 
 
 
