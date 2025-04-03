@@ -21,6 +21,18 @@ public class TokenProvider {
     private final ZoneId ZONE_ID = ZoneId.of("Asia/Seoul");
     private final JWTProperties jwtProperties;
 
+    public boolean isValidRefreshToken(String token) {
+        try {
+            JwtParser jwtParser = initParser();
+            String tokenType = jwtParser.parseSignedClaims(token)
+                    .getPayload()
+                    .get("tokenType",String.class);
+            return tokenType.equals(TokenType.REFRESH_TOKEN.toString());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Token generateToken(long userId, LocalDateTime currentTime) {
         return new Token(generateAccessToken(userId, currentTime), generateRefreshToken(userId, currentTime));
     }
@@ -73,5 +85,11 @@ public class TokenProvider {
     }
 
     public record Token(String accessToken, String refreshToken) {
+    }
+
+    public record AccessToken(String accessToken) {
+    }
+
+    public record RefreshToken(String refreshToken) {
     }
 }
