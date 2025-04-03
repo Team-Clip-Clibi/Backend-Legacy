@@ -23,3 +23,5 @@ exclude-auth-path-patterns:
       method: GET
     - path-pattern: /users/tokens
       method: POST
+    - path-pattern: /health-check
+      method: GET
