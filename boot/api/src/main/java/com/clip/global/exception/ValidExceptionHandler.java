@@ -1,9 +1,11 @@
 package com.clip.global.exception;
 
+import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
 import com.clip.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +28,12 @@ public class ValidExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> notFoundUserException(UserNotFoundException e) {
         return ResponseEntity.badRequest()
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(TokenValidationException.class)
+    public ResponseEntity<?> tokenValidationException(TokenValidationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(e.getMessage());
     }
 }
