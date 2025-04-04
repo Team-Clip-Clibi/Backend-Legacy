@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 String token = getToken(request);
                 setAuthentication(token);
-            } catch (NotFoundTokenException e) {
+            } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
