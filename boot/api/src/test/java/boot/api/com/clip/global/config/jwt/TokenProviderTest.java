@@ -77,6 +77,65 @@ class TokenProviderTest {
                 .getPayload().getExpiration();
 
         assertThat(expiration).isEqualTo(Date.from(currentDateTime.plusMonths(refreshTokenExpirationPeriodDay).atZone(ZoneId.of("Asia/Seoul")).toInstant()));
+    }
 
+    @DisplayName("RefreshToken의 기간이 유요하며 TokenType이 RefreshToken이면 true를 반환한다.")
+    @Test
+    void isValidRefreshToken() {
+        //given
+        int refreshTokenExpirationPeriodDay = 1;
+        long userId = 852741963L;
+        String secretKey = Base64.getEncoder().encodeToString(Jwts.SIG.HS256.key().build().getEncoded());
+        LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+        given(jwtProperties.getRefreshTokenExpirationPeriodMonth()).willReturn(refreshTokenExpirationPeriodDay);
+        given(jwtProperties.getSecretKey()).willReturn(secretKey);
+        String refreshToken = tokenProvider.generateRefreshToken(userId, currentDateTime);
+
+        //when
+        boolean isValidRefreshToken = tokenProvider.isValidRefreshToken(refreshToken);
+        //then
+        assertThat(isValidRefreshToken).isTrue();
+    }
+
+    @DisplayName("RefreshToken의 기간이 유효하지 않으면 false를 반환한다.")
+    @Test
+    void expiredRefreshToken() {
+        //given
+        int refreshTokenExpirationPeriodMonth = 1;
+        long userId = 852741963L;
+        String secretKey = Base64.getEncoder().encodeToString(Jwts.SIG.HS256.key().build().getEncoded());
+        LocalDateTime oneMonthAgo = LocalDateTime.now()
+                .minusMonths(1L)
+                .minusHours(1L)
+                .truncatedTo(ChronoUnit.SECONDS);
+
+        given(jwtProperties.getRefreshTokenExpirationPeriodMonth()).willReturn(refreshTokenExpirationPeriodMonth);
+        given(jwtProperties.getSecretKey()).willReturn(secretKey);
+        String refreshToken = tokenProvider.generateRefreshToken(userId, oneMonthAgo);
+
+        //when
+        boolean isValidRefreshToken = tokenProvider.isValidRefreshToken(refreshToken);
+        //then
+        assertThat(isValidRefreshToken).isFalse();
+    }
+
+    @DisplayName("AccessToken의 기간이 유요하며 TokenType이 AccessToken이면 false를 반환한다.")
+    @Test
+    void accessToken() {
+        //given
+        int accessTokenExpirationPeriodDay = 1;
+        long userId = 852741963L;
+        String secretKey = Base64.getEncoder().encodeToString(Jwts.SIG.HS256.key().build().getEncoded());
+        LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+        given(jwtProperties.getAccessTokenExpirationPeriodDay()).willReturn(accessTokenExpirationPeriodDay);
+        given(jwtProperties.getSecretKey()).willReturn(secretKey);
+        String accessToken = tokenProvider.generateAccessToken(userId, currentDateTime);
+
+        //when
+        boolean isValidRefreshToken = tokenProvider.isValidRefreshToken(accessToken);
+        //then
+        assertThat(isValidRefreshToken).isFalse();
     }
 }
