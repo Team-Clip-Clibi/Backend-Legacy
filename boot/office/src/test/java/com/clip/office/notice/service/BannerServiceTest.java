@@ -1,19 +1,19 @@
 package com.clip.office.notice.service;
 
 import com.clip.OfficeApplication;
+import com.clip.global.service.S3Service;
 import com.clip.notice.repository.BannerRepository;
 import com.clip.office.notice.controller.dto.CreateBannerDto;
-import com.clip.global.service.S3Service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -42,7 +42,7 @@ class BannerServiceTest {
     @Autowired
     private BannerRepository bannerRepository;
 
-    @MockBean // 다른방법 고안해보겠습니담.
+    @MockitoBean
     private S3Service s3Service;
 
     @AfterEach
