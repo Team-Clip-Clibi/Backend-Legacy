@@ -13,4 +13,8 @@ public class TermsAcceptanceService {
     public TermsAcceptance save(TermsAcceptance termsAcceptance) {
         return termsAcceptanceRepository.save(termsAcceptance);
     }
+
+    public void deleteTermsAcceptance(long userId) {
+        termsAcceptanceRepository.deleteTermsAcceptance(userId);
+    }
 }

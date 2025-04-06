@@ -70,4 +70,8 @@ public class UserService {
     public boolean isExistNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
+
+    public void deleteUser(long userId) {
+        userRepository.deleteUser(userId);
+    }
 }

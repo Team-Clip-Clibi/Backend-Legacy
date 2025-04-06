@@ -35,4 +35,9 @@ public class UserAccountController implements UserAccountDocs {
     public TokenProvider.AccessToken getAccessToken(TokenProvider.RefreshToken refreshToken) {
         return userAccountService.getAccessToken(refreshToken);
     }
+
+    @Override
+    public void deleteUser(String authorizationHeader) {
+        userAccountService.deleteUser(authorizationHeader);
+    }
 }

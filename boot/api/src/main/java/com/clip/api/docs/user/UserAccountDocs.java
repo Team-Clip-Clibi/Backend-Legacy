@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원관리", description = "회원가입, 로그인")
@@ -102,7 +103,19 @@ public interface UserAccountDocs {
     @PostMapping("/tokens")
     TokenProvider.AccessToken getAccessToken(@RequestBody TokenProvider.RefreshToken refreshToken);
 
-
-
-
+    @Operation(
+            summary = "회원 탈퇴 API",
+            description = """
+                    Refresh Token으로 회원탈퇴를 진행한다. Authorization에 Refresh Token을 넣어준다.
+                    """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "탈퇴 성공"
+            )
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/me")
+    void deleteUser(@RequestHeader("Authorization") String authorizationHeader);
 }
