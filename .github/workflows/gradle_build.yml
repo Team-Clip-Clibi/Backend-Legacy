@@ -50,12 +50,13 @@ jobs:
 
       - name: ${{ inputs.project-name }} build
         id: gradle-build
+        continue-on-error: true
         run: ./gradlew build
 
       - name: Determine build success
         id: build-result
         run: |
-          if [ "${{ steps.gradle-build.conclusion }}" == "success" ]; then
+          if [ "${{ steps.gradle-build.outcome }}" == "success" ]; then
             echo "success=true" >> $GITHUB_OUTPUT
           else
             echo "success=false" >> $GITHUB_OUTPUT
