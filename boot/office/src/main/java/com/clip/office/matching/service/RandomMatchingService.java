@@ -17,6 +17,7 @@ public class RandomMatchingService {
     public CreateRandomMatchingDto createRandomMatching(CreateRandomMatchingDto createRandomMatchingDto) {
 
         RandomMatching randomMatching = RandomMatching.builder()
+                .randomDistrict(createRandomMatchingDto.getRandomDistrict())
                 .location(createRandomMatchingDto.getLocation())
                 .restaurantName(createRandomMatchingDto.getRestaurantName())
                 .meetingTime(createRandomMatchingDto.getMeetingTime())
@@ -25,6 +26,7 @@ public class RandomMatchingService {
         randomMatchingDataService.save(randomMatching);
 
         return CreateRandomMatchingDto.builder()
+                .randomDistrict(randomMatching.getRandomDistrict())
                 .location(createRandomMatchingDto.getLocation())
                 .restaurantName(createRandomMatchingDto.getRestaurantName())
                 .meetingTime(createRandomMatchingDto.getMeetingTime())

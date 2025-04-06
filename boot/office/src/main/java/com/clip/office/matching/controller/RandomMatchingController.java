@@ -1,8 +1,7 @@
 package com.clip.office.matching.controller;
 
-import com.clip.matching.entity.RandomMatching;
-import com.clip.matching.service.RandomMatchingDataService;
 import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
+import com.clip.office.matching.service.RandomMatchingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/office/matching")
 public class RandomMatchingController {
 
-    private final RandomMatchingDataService randomMatchingDataService;
+    private final RandomMatchingService randomMatchingService;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateRandomMatchingDto> createRandomMatching(@RequestBody RandomMatching randomMatching) {
-        randomMatchingDataService.save(randomMatching);
-        return ResponseEntity.ok(new CreateRandomMatchingDto());
+    public ResponseEntity<CreateRandomMatchingDto> createRandomMatching(@RequestBody CreateRandomMatchingDto createRandomMatchingDto) {
+        return ResponseEntity.ok(randomMatchingService.createRandomMatching(createRandomMatchingDto));
     }
 }
