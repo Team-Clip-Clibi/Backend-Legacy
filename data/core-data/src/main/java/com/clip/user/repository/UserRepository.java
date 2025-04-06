@@ -62,4 +62,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUser(@Param("phoneNumber") String phoneNumber);
 
     boolean existsByNickname(String nickname);
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from User u where u.id = :userId")
+    void deleteUser(@Param("userId") long userId);
 }

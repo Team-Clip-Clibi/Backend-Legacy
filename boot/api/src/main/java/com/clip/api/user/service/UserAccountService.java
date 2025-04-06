@@ -172,4 +172,15 @@ public class UserAccountService {
                 tokenProvider.generateAccessToken(user.getId(), LocalDateTime.now())
         );
     }
+
+    @Transactional
+    public void deleteUser(String authorizationHeader) {
+        String refreshToken = authorizationHeader.replace("Bearer ", "");
+        if (!tokenProvider.isValidRefreshToken(refreshToken)) {
+            throw new TokenValidationException();
+        }
+        long userId = Long.parseLong(tokenProvider.extractUserId(refreshToken));
+        termsAcceptanceService.deleteTermsAcceptance(userId);
+        userService.deleteUser(userId);
+    }
 }
