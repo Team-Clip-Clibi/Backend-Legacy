@@ -1,5 +1,6 @@
 package com.clip.matching.entity;
 
+import com.clip.common.entity.BaseEntity;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"random_matching_id", "user_id"})})
 @NoArgsConstructor
-public class RandomMatchingReview {
+public class RandomMatchingReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
