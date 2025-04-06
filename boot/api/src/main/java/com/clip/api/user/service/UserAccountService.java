@@ -5,6 +5,7 @@ import com.clip.api.user.mapper.JobMapper;
 import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.mapper.TermsAcceptanceMapper;
 import com.clip.api.user.mapper.UserProfileMapper;
+import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
@@ -160,5 +161,15 @@ public class UserAccountService {
 
     public LanguageDto getLanguage(long userId) {
         return languageMapper.toLanguageDto(userService.findUser(userId).getLanguage());
+    }
+
+    public TokenProvider.AccessToken getAccessToken(TokenProvider.RefreshToken refreshToken) {
+        if (!tokenProvider.isValidRefreshToken(refreshToken.refreshToken())) {
+            throw new TokenValidationException();
+        }
+        User user = tokenService.findRefreshToken(refreshToken.refreshToken());
+        return new TokenProvider.AccessToken(
+                tokenProvider.generateAccessToken(user.getId(), LocalDateTime.now())
+        );
     }
 }
