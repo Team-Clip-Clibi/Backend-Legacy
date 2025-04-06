@@ -1,10 +1,10 @@
 package boot.api.com.clip.api.matching.service;
 
 import com.clip.ApiApplication;
-import com.clip.api.matching.controller.dto.CreateRandomMatchingDto;
-import com.clip.api.matching.service.RandomMatchingService;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.repository.RandomMatchingRepository;
+import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
+import com.clip.office.matching.service.RandomMatchingService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
