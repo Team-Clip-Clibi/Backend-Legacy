@@ -17,6 +17,10 @@ public class RandomMatching {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private RandomDistrict randomDistrict;
+
     @Column
     private String location;
 
@@ -28,11 +32,11 @@ public class RandomMatching {
     private LocalDateTime meetingTime;
 
     @Builder
-    public RandomMatching(Long id, String location, String restaurantName, LocalDateTime meetingTime) {
+    public RandomMatching(Long id,RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime) {
         this.id = id;
+        this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
     }
-
 }
