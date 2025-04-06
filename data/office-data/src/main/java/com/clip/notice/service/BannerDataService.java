@@ -1,7 +1,7 @@
-package com.clip.notification.service;
+package com.clip.notice.service;
 
-import com.clip.notification.entity.Banner;
-import com.clip.notification.repository.BannerRepository;
+import com.clip.notice.entity.Banner;
+import com.clip.notice.repository.BannerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

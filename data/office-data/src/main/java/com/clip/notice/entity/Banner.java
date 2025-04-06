@@ -1,4 +1,4 @@
-package com.clip.notification.entity;
+package com.clip.notice.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

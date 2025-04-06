@@ -1,8 +1,8 @@
 package com.clip.office.notice.service;
 
 import com.clip.global.service.S3Service;
-import com.clip.notification.entity.Banner;
-import com.clip.notification.service.BannerDataService;
+import com.clip.notice.entity.Banner;
+import com.clip.notice.service.BannerDataService;
 import com.clip.office.notice.controller.dto.CreateBannerDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

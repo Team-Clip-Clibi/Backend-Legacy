@@ -1,7 +1,7 @@
 package com.clip.office.notice.service;
 
 import com.clip.OfficeApplication;
-import com.clip.notification.repository.BannerRepository;
+import com.clip.notice.repository.BannerRepository;
 import com.clip.office.notice.controller.dto.CreateBannerDto;
 import com.clip.global.service.S3Service;
 import org.junit.jupiter.api.AfterEach;
