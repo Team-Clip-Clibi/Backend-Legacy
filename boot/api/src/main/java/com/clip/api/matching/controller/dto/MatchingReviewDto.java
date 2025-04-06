@@ -14,12 +14,12 @@ public class MatchingReviewDto {
     private String negativePoints;
     private String reviewContent;
     @JsonProperty("is_member_all_attended")
-    private boolean isMemberAllAttended;
+    private Boolean isMemberAllAttended;
     private String noShowMembers;
 
     @Builder
     public MatchingReviewDto(Mood mood, String positivePoints, String negativePoints,
-                             String reviewContent, boolean isMemberAllAttended, String noShowMembers) {
+                             String reviewContent, Boolean isMemberAllAttended, String noShowMembers) {
         this.mood = mood;
         this.positivePoints = positivePoints;
         this.negativePoints = negativePoints;
