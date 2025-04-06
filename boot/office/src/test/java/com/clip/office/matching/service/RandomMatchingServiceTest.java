@@ -1,24 +1,32 @@
-package boot.api.com.clip.api.matching.service;
+package com.clip.office.matching.service;
 
-import com.clip.ApiApplication;
+import com.clip.OfficeApplication;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
-import com.clip.office.matching.service.RandomMatchingService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@ContextConfiguration(classes = ApiApplication.class)
+@ContextConfiguration(classes = OfficeApplication.class)
 @SpringBootTest
+@TestPropertySource(properties = {
+        "spring.datasource.redis.host=localhost",
+        "spring.datasource.redis.port=6379",
+        "spring.security.login.max-fail-count=5",
+        "spring.security.login.block-duration-seconds=3600",
+        "cloud.aws.credentials.access-key=1010",
+        "cloud.aws.credentials.secret-key=1010",
+        "cloud.aws.region.static=ap-northeast-2",
+        "cloud.aws.s3.bucket=clip-office",
+})
 class RandomMatchingServiceTest {
 
     @Autowired
@@ -27,12 +35,13 @@ class RandomMatchingServiceTest {
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
 
+
     @AfterEach
     void tearDown() {
         randomMatchingRepository.deleteAllInBatch();
     }
 
-    @DisplayName("모임 생성 테스트")
+    @DisplayName("모임을 생성할 수 있다.")
     @Test
     void createRandomMatching() {
         // given
