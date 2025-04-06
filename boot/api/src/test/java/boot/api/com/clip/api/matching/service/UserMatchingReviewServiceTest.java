@@ -79,7 +79,7 @@ public class UserMatchingReviewServiceTest {
         assertThat(randomMatchingReview)
                 .extracting(RandomMatchingReview::getMood, RandomMatchingReview::getPositivePoints,
                         RandomMatchingReview::getNegativePoints, RandomMatchingReview::getReviewContent,
-                        RandomMatchingReview::getIsMemberAllAttended, RandomMatchingReview::getNoShowMembers)
+                        RandomMatchingReview::isMemberAllAttended, RandomMatchingReview::getNoShowMembers)
                 .containsExactly(mood, positivePoints, negativePoints, "Review Content", true, "No Show Members");
 
     }

@@ -1,6 +1,7 @@
 package com.clip.api.matching.controller.dto;
 
 import com.clip.matching.entity.Mood;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,13 @@ public class MatchingReviewDto {
     private String positivePoints;
     private String negativePoints;
     private String reviewContent;
-    private Boolean isMemberAllAttended;
+    @JsonProperty("is_member_all_attended")
+    private boolean isMemberAllAttended;
     private String noShowMembers;
 
     @Builder
     public MatchingReviewDto(Mood mood, String positivePoints, String negativePoints,
-                             String reviewContent, Boolean isMemberAllAttended, String noShowMembers) {
+                             String reviewContent, boolean isMemberAllAttended, String noShowMembers) {
         this.mood = mood;
         this.positivePoints = positivePoints;
         this.negativePoints = negativePoints;
