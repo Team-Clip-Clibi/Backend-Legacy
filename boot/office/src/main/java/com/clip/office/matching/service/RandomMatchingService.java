@@ -1,8 +1,8 @@
-package com.clip.api.matching.service;
+package com.clip.office.matching.service;
 
-import com.clip.api.matching.controller.dto.CreateRandomMatchingDto;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.service.RandomMatchingDataService;
+import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
