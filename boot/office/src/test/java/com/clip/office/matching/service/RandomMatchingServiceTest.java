@@ -1,6 +1,7 @@
 package com.clip.office.matching.service;
 
 import com.clip.OfficeApplication;
+import com.clip.matching.entity.RandomDistrict;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
@@ -46,8 +47,9 @@ class RandomMatchingServiceTest {
     void createRandomMatching() {
         // given
         CreateRandomMatchingDto createRandomMatchingDto = CreateRandomMatchingDto.builder()
-                .location("부산광역시 금정구 부산대학로63번길 21")
-                .restaurantName("톤쇼우")
+                .randomDistrict(RandomDistrict.GANGNAM)
+                .location("서울특별시 강남구 강남대로 421")
+                .restaurantName("쉐이크쉑버거")
                 .meetingTime(LocalDateTime.of(2025, 3, 20, 22, 45, 0))
                 .build();
 
@@ -60,13 +62,14 @@ class RandomMatchingServiceTest {
 
         RandomMatching randomMatching = savedTestMatching.get();
         assertThat(randomMatching.getId()).isNotNull();
-        assertThat(randomMatching.getLocation()).isEqualTo("부산광역시 금정구 부산대학로63번길 21");
-        assertThat(randomMatching.getRestaurantName()).isEqualTo("톤쇼우");
+        assertThat(randomMatching.getRandomDistrict()).isEqualTo(RandomDistrict.GANGNAM);
+        assertThat(randomMatching.getLocation()).isEqualTo("서울특별시 강남구 강남대로 421");
+        assertThat(randomMatching.getRestaurantName()).isEqualTo("쉐이크쉑버거");
         assertThat(randomMatching.getMeetingTime()).isEqualTo(LocalDateTime.of(2025, 3, 20, 22, 45, 0));
 
-
-        assertThat(savedTestDto.getLocation()).isEqualTo("부산광역시 금정구 부산대학로63번길 21");
-        assertThat(savedTestDto.getRestaurantName()).isEqualTo("톤쇼우");
+        assertThat(savedTestDto.getRandomDistrict()).isEqualTo(RandomDistrict.GANGNAM);
+        assertThat(savedTestDto.getLocation()).isEqualTo("서울특별시 강남구 강남대로 421");
+        assertThat(savedTestDto.getRestaurantName()).isEqualTo("쉐이크쉑버거");
         assertThat(savedTestDto.getMeetingTime()).isEqualTo(LocalDateTime.of(2025, 3, 20, 22, 45, 0));
     }
 }
