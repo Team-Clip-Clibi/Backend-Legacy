@@ -109,7 +109,7 @@ public class UserRepositoryTest {
         User user = userRepository.save(User.builder().build());
 
         //when
-        userRepository.updateDeviceInfo(user.getId(), DeviceType.IOS, osVersion, firebaseToken, isAllowNotify);
+        userRepository.updateDeviceInfo(user.getId(), DeviceType.iOS, osVersion, firebaseToken, isAllowNotify);
         user = userRepository.findById(user.getId()).get();
 
         //then
@@ -119,7 +119,7 @@ public class UserRepositoryTest {
                         User::getOsVersion,
                         User::getFirebaseToken)
                 .containsExactly(
-                        DeviceType.IOS,
+                        DeviceType.iOS,
                         osVersion,
                         firebaseToken
                 );

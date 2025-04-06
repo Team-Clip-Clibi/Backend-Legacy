@@ -30,4 +30,9 @@ public class UserAccountController implements UserAccountDocs {
     public UserInfoDto getUserInfo(String phoneNumber) {
         return userAccountService.getUserInfo(phoneNumber);
     }
+
+    @Override
+    public TokenProvider.AccessToken getAccessToken(TokenProvider.RefreshToken refreshToken) {
+        return userAccountService.getAccessToken(refreshToken);
+    }
 }

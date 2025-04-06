@@ -19,4 +19,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
     @Query("select t from Token t where t.user.id = :userId")
     Optional<Token> findToken(@Param("userId") Long userId);
+
+    @Query("select t.user from Token t where t.refreshToken = :refreshToken")
+    Optional<User> findUser(@Param("refreshToken") String refreshToken);
 }

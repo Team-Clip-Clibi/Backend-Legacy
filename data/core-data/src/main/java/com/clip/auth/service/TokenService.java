@@ -1,6 +1,7 @@
 package com.clip.auth.service;
 
 import com.clip.auth.entity.Token;
+import com.clip.auth.exception.TokenNotFoundException;
 import com.clip.auth.repository.TokenRepository;
 import com.clip.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -17,5 +18,10 @@ public class TokenService {
 
     public void updateRefreshToken(User user, String refreshToken) {
         tokenRepository.updateRefreshToken(user, refreshToken);
+    }
+
+    public User findRefreshToken(String refreshToken) {
+        return tokenRepository.findUser(refreshToken)
+                .orElseThrow(TokenNotFoundException::new);
     }
 }

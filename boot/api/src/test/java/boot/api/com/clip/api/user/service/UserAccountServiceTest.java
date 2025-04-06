@@ -5,6 +5,7 @@ import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.entity.Token;
 import com.clip.auth.repository.TokenRepository;
+import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.user.entity.*;
@@ -47,6 +48,8 @@ public class UserAccountServiceTest {
     private TokenRepository tokenRepository;
     @MockitoBean
     private JWTProperties jwtProperties;
+    @Autowired
+    private TokenService tokenService;
     @Autowired
     private JobRepository jobRepository;
 
@@ -97,7 +100,7 @@ public class UserAccountServiceTest {
 
         return List.of(dynamicTest("가입되지 않은 유저가 회원가입 요청 시 해당 회원 정보를 저장한다. ",()->{
             //given
-            DeviceType deviceType = DeviceType.IOS;
+            DeviceType deviceType = DeviceType.iOS;
             String osVersion = "14.0";
             String firebaseToken = "firebaseToken";
             SignupDto signupDto = SignupDto.builder()
@@ -196,7 +199,7 @@ public class UserAccountServiceTest {
         TokenProvider.Token token = userAccountService.login(LoginDto.builder()
                 .platform(platform)
                 .socialId(socialId)
-                .deviceType(DeviceType.IOS)
+                .deviceType(DeviceType.iOS)
                 .osVersion("1.1.1")
                 .firebaseToken("firebaseToken")
                 .isAllowNotify(true)
