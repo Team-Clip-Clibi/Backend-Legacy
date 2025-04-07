@@ -1,8 +1,8 @@
-package com.clip.api.matching.service;
+package com.clip.office.matching.service;
 
-import com.clip.api.matching.controller.dto.CreateRandomMatchingDto;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.service.RandomMatchingDataService;
+import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ public class RandomMatchingService {
     public CreateRandomMatchingDto createRandomMatching(CreateRandomMatchingDto createRandomMatchingDto) {
 
         RandomMatching randomMatching = RandomMatching.builder()
-                .city(createRandomMatchingDto.getCity())
+                .randomDistrict(createRandomMatchingDto.getRandomDistrict())
                 .location(createRandomMatchingDto.getLocation())
                 .restaurantName(createRandomMatchingDto.getRestaurantName())
                 .meetingTime(createRandomMatchingDto.getMeetingTime())
@@ -26,7 +26,7 @@ public class RandomMatchingService {
         randomMatchingDataService.save(randomMatching);
 
         return CreateRandomMatchingDto.builder()
-                .city(createRandomMatchingDto.getCity())
+                .randomDistrict(randomMatching.getRandomDistrict())
                 .location(createRandomMatchingDto.getLocation())
                 .restaurantName(createRandomMatchingDto.getRestaurantName())
                 .meetingTime(createRandomMatchingDto.getMeetingTime())

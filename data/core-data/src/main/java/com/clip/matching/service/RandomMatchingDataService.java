@@ -14,4 +14,5 @@ public class RandomMatchingDataService {
     public RandomMatching save(RandomMatching randomMatching) {
         return randomMatchingRepository.save(randomMatching);
     }
+
 }

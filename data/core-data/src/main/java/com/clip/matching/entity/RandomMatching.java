@@ -1,6 +1,5 @@
 package com.clip.matching.entity;
 
-import com.clip.user.entity.City;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class RandomMatching {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private City city;
+    private RandomDistrict randomDistrict;
 
     @Column
     private String location;
@@ -33,12 +32,11 @@ public class RandomMatching {
     private LocalDateTime meetingTime;
 
     @Builder
-    public RandomMatching(Long id, City city, String location, String restaurantName, LocalDateTime meetingTime) {
+    public RandomMatching(Long id,RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime) {
         this.id = id;
-        this.city = city;
+        this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
     }
-
 }
