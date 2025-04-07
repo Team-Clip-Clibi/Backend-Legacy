@@ -8,10 +8,12 @@ import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -35,6 +37,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 })
 class RandomMatchingServiceTest {
+
+    @MockitoBean
+    private RedissonClient redissonClient;
 
     @Autowired
     private RandomMatchingService randomMatchingService;
