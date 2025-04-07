@@ -24,7 +24,7 @@ public class BannerService {
                 .head(dto.getHead())
                 .sub(dto.getSub())
                 .imageUrl(imageUrl)
-                .exposureLocation(dto.getExposureLocation())
+                .bannerType(dto.getBannerType())
                 .exposureDate(dto.getExposureDate())
                 .isExposure(dto.isExposure())
                 .build();
@@ -35,7 +35,7 @@ public class BannerService {
                 .head(banner.getHead())
                 .sub(banner.getSub())
                 .imageUrl(banner.getImageUrl())
-                .exposureLocation(banner.getExposureLocation())
+                .bannerType(banner.getBannerType())
                 .exposureDate(banner.getExposureDate())
                 .isExposure(banner.isExposure())
                 .build();
