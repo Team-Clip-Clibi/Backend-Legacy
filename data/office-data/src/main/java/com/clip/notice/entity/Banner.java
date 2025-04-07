@@ -1,5 +1,6 @@
 package com.clip.notice.entity;
 
+import com.clip.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +11,12 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Banner {
+public class Banner extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String exposureLocation;
+    private BannerType bannerType;
     private String head;
     private String sub;
     private String imageUrl;
@@ -23,8 +24,8 @@ public class Banner {
     private boolean isExposure;
 
     @Builder
-    public Banner(String exposureLocation, String head, String sub, String imageUrl, LocalDate exposureDate, boolean isExposure) {
-        this.exposureLocation = exposureLocation;
+    public Banner(BannerType bannerType, String head, String sub, String imageUrl, LocalDate exposureDate, boolean isExposure) {
+        this.bannerType = bannerType;
         this.head = head;
         this.sub = sub;
         this.imageUrl = imageUrl;
