@@ -8,6 +8,7 @@ import com.clip.office.notice.controller.dto.CreateBannerDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -39,6 +40,9 @@ import static org.mockito.Mockito.when;
         "cloud.aws.s3.region=ap-northeast-2",
 })
 class BannerServiceTest {
+
+    @MockitoBean
+    private RedissonClient redissonClient;
 
     @Autowired
     private BannerService bannerService;
