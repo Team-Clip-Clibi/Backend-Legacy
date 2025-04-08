@@ -18,11 +18,11 @@ public interface UserNotificationDocs {
     @Operation(
             summary = "새로운 알림 조회 API",
             description = """
-                    최초 조회 시 /notifications/unread 로 호출하며, 이후부터는 /notifications/unread/{lastNotificationId}로 호출합니다.
-                    이때 lastNotificationId는 마지막 번째 알림의 ID입니다.
-                    알림은 한번 조회 시 최대 50개를 반환하며, 50개 미만을 경우 다음 페이지의 알림은 존재하지 않습니다.
-                    다음 페이지의 알림이 존재하지 않는 경우에 마지막 notificationId로 조회하면 않으면 204 No Content를 반환합니다.
-                    또한 알림은 최신순으로 정렬되어 반환됩니다.
+                    - 최초 조회 시 /notifications/unread 로 호출하며, 이후부터는 /notifications/unread/{lastNotificationId}로 호출합니다.
+                    - 이때 lastNotificationId는 마지막 번째 알림의 ID입니다.
+                    - 알림은 한번 조회 시 최대 50개를 반환하며, 50개 미만을 경우 다음 페이지의 알림은 존재하지 않습니다.
+                    - 다음 페이지의 알림이 존재하지 않는 경우에 마지막 notificationId로 조회하면 않으면 204 No Content를 반환합니다.
+                    - 또한 알림은 최신순으로 정렬되어 반환됩니다.
                     """,
             security = @SecurityRequirement(name = "Bearer Token")
     )
@@ -38,11 +38,11 @@ public interface UserNotificationDocs {
     @Operation(
             summary = "읽은 알림 조회 API",
             description = """
-                    최초 조회 시 /notifications/read 로 호출하며, 이후부터는 /notifications/read/{lastNotificationId}로 호출합니다.
-                    이때 lastNotificationId는 마지막 번째 알림의 ID입니다.
-                    알림은 한번 조회 시 최대 50개를 반환하며, 50개 미만을 경우 다음 페이지의 알림은 존재하지 않습니다.
-                    다음 페이지의 알림이 존재하지 않는 경우에 마지막 notificationId로 조회하면 204 No Content를 반환합니다.
-                    또한 알림은 최신순으로 정렬되어 반환됩니다.
+                    - 최초 조회 시 /notifications/read 로 호출하며, 이후부터는 /notifications/read/{lastNotificationId}로 호출합니다.
+                    - 이때 lastNotificationId는 마지막 번째 알림의 ID입니다.
+                    - 알림은 한번 조회 시 최대 50개를 반환하며, 50개 미만을 경우 다음 페이지의 알림은 존재하지 않습니다.
+                    - 다음 페이지의 알림이 존재하지 않는 경우에 마지막 notificationId로 조회하면 204 No Content를 반환합니다.
+                    - 또한 알림은 최신순으로 정렬되어 반환됩니다.
                     """,
             security = @SecurityRequirement(name = "Bearer Token")
     )
@@ -57,7 +57,7 @@ public interface UserNotificationDocs {
     @Operation(
             summary = "알림 읽음 상태 업데이트 API",
             description = """
-                    유저가 해당 알림에 해당하는 알림을 읽은 경우 해당 API를 호출하여 알림을 읽음 처리합니다.
+                    유저가 notificationId에 해당하는 알림을 읽은 경우 해당 API를 호출하여 알림을 읽음 처리합니다.
                     """,
             security = @SecurityRequirement(name = "Bearer Token")
     )
