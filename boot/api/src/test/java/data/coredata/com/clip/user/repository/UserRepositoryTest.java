@@ -1,4 +1,4 @@
-package data.coredata.com.clip.user.entity.repository;
+package data.coredata.com.clip.user.repository;
 
 import com.clip.ApiApplication;
 import com.clip.user.entity.*;
