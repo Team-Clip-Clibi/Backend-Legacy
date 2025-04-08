@@ -1,4 +1,4 @@
-package com.clip.api.notification.service.exception;
+package com.clip.notification.exception;
 
 public class NotExistNotificationException extends RuntimeException {
     public NotExistNotificationException() {
