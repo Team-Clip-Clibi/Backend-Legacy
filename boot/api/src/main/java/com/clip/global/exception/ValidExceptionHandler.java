@@ -1,5 +1,6 @@
 package com.clip.global.exception;
 
+import com.clip.api.notification.service.exception.NotExistNotificationException;
 import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
@@ -34,6 +35,12 @@ public class ValidExceptionHandler {
     @ExceptionHandler(TokenValidationException.class)
     public ResponseEntity<?> tokenValidationException(TokenValidationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotExistNotificationException.class)
+    public ResponseEntity<?> notExistNotificationException(NotExistNotificationException e) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(e.getMessage());
     }
 }
