@@ -19,7 +19,6 @@ import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+        log.info("URL: {} , User-Agent: {}", request.getRequestURI(), request.getHeader("User-Agent"));
         if (!isExcludedPath(request)) {
             try {
                 String token = getToken(request);
@@ -49,7 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(String token) {
-        log.info(token);
         tokenProvider.validateToken(token);
         String userId = tokenProvider.extractUserId(token);
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
