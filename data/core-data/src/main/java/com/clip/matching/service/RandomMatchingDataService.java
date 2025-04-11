@@ -15,4 +15,7 @@ public class RandomMatchingDataService {
         return randomMatchingRepository.save(randomMatching);
     }
 
+    public void delete(Long randomMatchingId) {
+        randomMatchingRepository.deleteRandomMatching(randomMatchingId);
+    }
 }
