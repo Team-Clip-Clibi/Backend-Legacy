@@ -71,7 +71,7 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    public void deleteUser(long userId) {
-        userRepository.deleteUser(userId);
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }
