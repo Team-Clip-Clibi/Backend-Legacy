@@ -4,7 +4,9 @@ import com.clip.OfficeApplication;
 import com.clip.matching.entity.RandomDistrict;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.repository.RandomMatchingRepository;
+import com.clip.matching.service.MatchingService;
 import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
+import com.clip.office.matching.controller.dto.UpdateRandomMatchingDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,8 @@ class RandomMatchingServiceTest {
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
 
+    @Autowired
+    private MatchingService matchingService;
 
     @AfterEach
     void tearDown() {
@@ -96,5 +100,65 @@ class RandomMatchingServiceTest {
                 "쉐이크쉑버거",
                 LocalDateTime.of(2025, 3, 20, 22, 45, 0)
         );
+    }
+
+    @DisplayName("모임을 수정할 수 있다.")
+    @Test
+    void updateRandomMatching() {
+        // given
+        RandomMatching randomMatching = RandomMatching.builder()
+                .randomDistrict(RandomDistrict.GANGNAM)
+                .location("서울특별시 강남구 강남대로 421")
+                .restaurantName("쉐이크쉑버거")
+                .meetingTime(LocalDateTime.of(2025, 3, 20, 22, 45, 0))
+                .build();
+
+        randomMatchingRepository.save(randomMatching);
+
+        // when
+        UpdateRandomMatchingDto updateRandomMatchingDto = UpdateRandomMatchingDto.builder()
+                .randomDistrict(RandomDistrict.GANGNAM)
+                .location("서울특별시 강남구 테헤란로 123")
+                .restaurantName("버거킹")
+                .meetingTime(LocalDateTime.of(2025, 3, 21, 22, 45, 0))
+                .build();
+
+        randomMatchingService.updateRandomMatching(randomMatching.getId(), updateRandomMatchingDto);
+
+        // then
+        RandomMatching updaterandomMatching = matchingService.findRandomMatching(randomMatching.getId());
+
+        assertThat(updaterandomMatching).extracting(
+                RandomMatching::getRandomDistrict,
+                RandomMatching::getLocation,
+                RandomMatching::getRestaurantName,
+                RandomMatching::getMeetingTime
+        ).containsExactly(
+                RandomDistrict.GANGNAM,
+                "서울특별시 강남구 테헤란로 123",
+                "버거킹",
+                LocalDateTime.of(2025, 3, 21, 22, 45, 0)
+        );
+    }
+
+    @DisplayName("모임을 삭제할 수 있다.")
+    @Test
+    void deleteRandomMatching() {
+        // given
+        RandomMatching randomMatching = RandomMatching.builder()
+                .randomDistrict(RandomDistrict.GANGNAM)
+                .location("서울특별시 강남구 강남대로 421")
+                .restaurantName("쉐이크쉑버거")
+                .meetingTime(LocalDateTime.of(2025, 3, 20, 22, 45, 0))
+                .build();
+
+        randomMatchingRepository.save(randomMatching);
+
+        // when
+        randomMatchingService.deleteRandomMatching(randomMatching.getId());
+
+        // then
+        Optional<RandomMatching> deletedTestMatching = randomMatchingRepository.findById(randomMatching.getId());
+        assertThat(deletedTestMatching).isEmpty();
     }
 }
