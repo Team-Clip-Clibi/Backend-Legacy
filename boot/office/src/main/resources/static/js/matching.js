@@ -8,9 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
             {nickname: "승범", phone: "010-1111-1111",region: "강남", job: "개발자", status: "싱글", diet: "상관없음", lang: "영어",  match: "BEFORE"},
             {nickname: "혜민", phone: "010-2222-2222", region: "홍대", job: "기획자", status: "연애중", diet: "채식", lang: "일본어",  match: "DONE"}
         ],
-        "번개모임": [
-            {nickname: "철수", phone: "010-3333-3333", purpose: "번개", job: "PM", status: "싱글", diet: "고기", lang: "영어", region: "용산", match: "BEFORE"}
-        ],
         "랜덤모임": [
             {nickname: "영희", phone: "010-4444-4444", purpose: "랜덤", job: "디자이너", status: "기혼", diet: "채식", lang: "중국어", region: "성수", match: "DONE"}
         ]
