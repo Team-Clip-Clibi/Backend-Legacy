@@ -16,7 +16,7 @@ public class NewsController {
 
     @PostMapping("/create")
     public ResponseEntity<CreateNewsDto> createNews(
-            @RequestPart(value = "data", required = true) CreateNewsDto createNewsDto
+            @RequestBody CreateNewsDto createNewsDto
     ) {
         return ResponseEntity.ok(newsService.createNews(createNewsDto));
     }
@@ -24,7 +24,7 @@ public class NewsController {
     @PutMapping("/{newsId}/update")
     public ResponseEntity<UpdateNewsDto> updateNews(
             @PathVariable(value = "newsId") Long newsId,
-            @RequestPart(value = "data", required = true) UpdateNewsDto updateNewsDto
+            @RequestBody UpdateNewsDto updateNewsDto
     ) {
         return ResponseEntity.ok(newsService.updateNews(newsId, updateNewsDto));
     }
