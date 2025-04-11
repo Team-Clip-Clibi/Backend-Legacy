@@ -8,10 +8,12 @@ import com.clip.office.notice.controller.dto.UpdateNewsDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
 
@@ -33,6 +35,9 @@ import static org.assertj.core.api.Assertions.assertThat;
         "cloud.aws.s3.region=ap-northeast-2",
 })
 class NewsServiceTest {
+
+    @MockitoBean
+    private RedissonClient redissonClient;
 
     @Autowired
     private NewsService newsService;
