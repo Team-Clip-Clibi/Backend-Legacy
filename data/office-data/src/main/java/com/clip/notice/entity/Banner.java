@@ -16,6 +16,8 @@ public class Banner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private BannerType bannerType;
     private String head;
     private String sub;
@@ -31,5 +33,17 @@ public class Banner extends BaseEntity {
         this.imageUrl = imageUrl;
         this.exposureDate = exposureDate;
         this.isExposure = isExposure;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void update(BannerType bannerType, String head, String sub, LocalDate exposureDate, boolean exposure) {
+        this.bannerType = bannerType;
+        this.head = head;
+        this.sub = sub;
+        this.exposureDate = exposureDate;
+        this.isExposure = exposure;
     }
 }

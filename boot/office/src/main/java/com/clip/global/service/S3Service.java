@@ -96,4 +96,9 @@ public class S3Service {
                 || lowerCaseFilename.endsWith(".gif")
                 || lowerCaseFilename.endsWith(".bmp");
     }
+
+    public void deleteImage(String imageUrl) {
+        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+        s3Client.deleteObject(b -> b.bucket(BUCKET).key(fileName));
+    }
 }

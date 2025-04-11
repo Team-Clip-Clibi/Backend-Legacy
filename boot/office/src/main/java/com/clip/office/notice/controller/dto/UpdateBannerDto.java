@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class CreateBannerDto {
+public class UpdateBannerDto {
 
     private Long id;
     private BannerType bannerType;
@@ -20,7 +20,7 @@ public class CreateBannerDto {
     private boolean isExposure;
 
     @Builder
-    public CreateBannerDto(Long id,BannerType bannerType, String head, String sub,String imageUrl, LocalDate exposureDate, boolean isExposure) {
+    public UpdateBannerDto(Long id,BannerType bannerType, String head, String sub,String imageUrl, LocalDate exposureDate, boolean isExposure) {
         this.id = id;
         this.bannerType = bannerType;
         this.head = head;
@@ -29,5 +29,4 @@ public class CreateBannerDto {
         this.exposureDate = exposureDate;
         this.isExposure = isExposure;
     }
-
 }

@@ -32,4 +32,11 @@ public class News extends BaseEntity {
         this.exposureDate = exposureDate;
         this.isExposure = isExposure;
     }
+
+    public void updateNews(String content, String link, LocalDate exposureDate, boolean isExposure) {
+        this.content = content;
+        this.link = link;
+        this.exposureDate = exposureDate;
+        this.isExposure = isExposure;
+    }
 }

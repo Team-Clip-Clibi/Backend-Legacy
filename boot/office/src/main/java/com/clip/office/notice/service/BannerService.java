@@ -4,6 +4,7 @@ import com.clip.global.service.S3Service;
 import com.clip.notice.entity.Banner;
 import com.clip.notice.service.BannerDataService;
 import com.clip.office.notice.controller.dto.CreateBannerDto;
+import com.clip.office.notice.controller.dto.UpdateBannerDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +22,10 @@ public class BannerService {
         String imageUrl = s3Service.imageUpload(file);
 
         Banner banner = Banner.builder()
+                .bannerType(dto.getBannerType())
                 .head(dto.getHead())
                 .sub(dto.getSub())
                 .imageUrl(imageUrl)
-                .bannerType(dto.getBannerType())
                 .exposureDate(dto.getExposureDate())
                 .isExposure(dto.isExposure())
                 .build();
@@ -32,12 +33,47 @@ public class BannerService {
         bannerDataService.save(banner);
 
         return CreateBannerDto.builder()
+                .id(banner.getId())
+                .bannerType(banner.getBannerType())
                 .head(banner.getHead())
                 .sub(banner.getSub())
                 .imageUrl(banner.getImageUrl())
-                .bannerType(banner.getBannerType())
                 .exposureDate(banner.getExposureDate())
                 .isExposure(banner.isExposure())
                 .build();
+    }
+
+    @Transactional
+    public UpdateBannerDto updateBanner(Long bannerId, UpdateBannerDto updateBannerDto, MultipartFile file) {
+        Banner banner = bannerDataService.findBanner(bannerId);
+
+        if (file != null && !file.isEmpty()) {
+            String imageUrl = s3Service.imageUpload(file);
+            banner.updateImageUrl(imageUrl);
+        }
+
+        banner.update(
+                updateBannerDto.getBannerType(),
+                updateBannerDto.getHead(),
+                updateBannerDto.getSub(),
+                updateBannerDto.getExposureDate(),
+                updateBannerDto.isExposure()
+        );
+
+        return UpdateBannerDto.builder()
+                .id(banner.getId())
+                .bannerType(banner.getBannerType())
+                .head(banner.getHead())
+                .sub(banner.getSub())
+                .imageUrl(banner.getImageUrl())
+                .exposureDate(banner.getExposureDate())
+                .isExposure(banner.isExposure())
+                .build();
+    }
+
+    public void deleteBanner(Long bannerId) {
+        Banner banner = bannerDataService.findBanner(bannerId);
+        s3Service.deleteImage(banner.getImageUrl());
+        bannerDataService.delete(bannerId);
     }
 }
