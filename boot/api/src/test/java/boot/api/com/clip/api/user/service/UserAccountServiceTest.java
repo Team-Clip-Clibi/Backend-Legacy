@@ -311,8 +311,8 @@ public class UserAccountServiceTest {
         //given
         String phoneNumber = "01012345678";
         LocalDate birth = LocalDate.now();
-        City city = City.GYEONGGI;
-        County county = County.ANDONG_SI;
+        City city = City.Geongi;
+        County county = County.sacheon;
         Gender gender = Gender.MALE;
         UpdateUserDetailInfoDto userDetailInfoDto = UpdateUserDetailInfoDto.builder()
                 .birth(birth)
