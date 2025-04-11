@@ -180,7 +180,8 @@ public class UserAccountService {
             throw new TokenValidationException();
         }
         long userId = Long.parseLong(tokenProvider.extractUserId(refreshToken));
+        User user = userService.findUser(userId);
         termsAcceptanceService.deleteTermsAcceptance(userId);
-        userService.deleteUser(userId);
+        userService.deleteUser(user);
     }
 }
