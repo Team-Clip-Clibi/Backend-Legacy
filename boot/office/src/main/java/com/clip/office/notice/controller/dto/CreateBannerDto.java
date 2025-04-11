@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateBannerDto {
 
+    private Long id;
     private BannerType bannerType;
     private String head;
     private String sub;
@@ -19,7 +20,8 @@ public class CreateBannerDto {
     private boolean isExposure;
 
     @Builder
-    public CreateBannerDto(BannerType bannerType, String head, String sub,String imageUrl, LocalDate exposureDate, boolean isExposure) {
+    public CreateBannerDto(Long id,BannerType bannerType, String head, String sub,String imageUrl, LocalDate exposureDate, boolean isExposure) {
+        this.id = id;
         this.bannerType = bannerType;
         this.head = head;
         this.sub = sub;
