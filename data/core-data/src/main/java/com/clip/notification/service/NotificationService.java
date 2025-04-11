@@ -21,7 +21,12 @@ public class NotificationService {
     }
 
     public List<Notification> findUnreadNotifications(long userId, Long lastId) {
-        List<Notification> unreadNotifications = notificationRepository.findUnreadNotifications(userId, lastId, LocalDateTime.now().minusWeeks(2), PageRequest.ofSize(PAGE_SIZE));
+        List<Notification> unreadNotifications = notificationRepository.findUnreadNotifications(
+                userId,
+                lastId,
+                LocalDateTime.now().minusWeeks(2),
+                PageRequest.ofSize(PAGE_SIZE)
+        );
         if (unreadNotifications.isEmpty()) {
             throw new NotExistNotificationException();
         }
@@ -29,7 +34,13 @@ public class NotificationService {
     }
 
     public List<Notification> findReadNotifications(long userId, Long lastId) {
-        List<Notification> readNotifications = notificationRepository.findReadNotifications(userId, lastId, LocalDateTime.now().minusWeeks(2), PageRequest.ofSize(PAGE_SIZE));
+        List<Notification> readNotifications = notificationRepository.findReadNotifications(
+                userId,
+                lastId,
+                LocalDateTime.now().minusWeeks(2),
+                LocalDateTime.now().minusDays(30),
+                PageRequest.ofSize(PAGE_SIZE)
+        );
         if (readNotifications.isEmpty()) {
             throw new NotExistNotificationException();
         }

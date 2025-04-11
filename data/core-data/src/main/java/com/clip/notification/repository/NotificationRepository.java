@@ -35,6 +35,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                 n.isRead = true
                 or n.createdAt < :twoWeeksAgo
             )
+            and n.createdAt >= :oneMonthAgo
             and (:lastId is null or n.id < :lastId)
         order by n.id desc 
     """)
@@ -42,6 +43,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             @Param("userId") long userId,
             @Param("lastId") Long lastId,
             @Param("twoWeeksAgo") LocalDateTime twoWeeksAgo,
+            @Param("oneMonthAgo") LocalDateTime oneMonthAgo,
             Pageable page
     );
 
