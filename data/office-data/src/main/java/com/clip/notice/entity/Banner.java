@@ -16,6 +16,8 @@ public class Banner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private BannerType bannerType;
     private String head;
     private String sub;
