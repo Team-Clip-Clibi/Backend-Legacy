@@ -39,4 +39,11 @@ public class RandomMatching {
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
     }
+
+    public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime) {
+        this.randomDistrict = randomDistrict;
+        this.location = location;
+        this.restaurantName = restaurantName;
+        this.meetingTime = meetingTime;
+    }
 }
