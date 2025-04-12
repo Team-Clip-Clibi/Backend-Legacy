@@ -30,7 +30,7 @@ public interface BannerRepository extends JpaRepository<Banner, Long> {
             where b.isExposure = true
             and b.bannerType = :bannerType
             and b.exposureDate <= :exposureDate
-            order by function('DATEDIFF', :exposureDate, b.exposureDate)
+            order by b.exposureDate desc
             limit 3
             """)
     List<Banner> findByBannerType(
