@@ -1,20 +1,18 @@
 package com.clip.matching.entity;
 
 import com.clip.common.entity.BaseEntity;
+import com.clip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class OneThingMatching extends BaseEntity {
+public class UserOneThingMatching extends BaseEntity {
 
     /***
-     * 원띵 주문서 엔티티 연관관계 및 홈화면 조회를 위해 미리 생성한 클래스입니다.
+     * 홈 화면 조회를 위해 미리 생성한 클래스입니다.
      * 추후 구현 시 기본 생성자 접근 제어자를 protected로 변경 후 필요한 컬럼 추가하시고 해당 주석 삭제해주세요.
      */
 
@@ -22,9 +20,12 @@ public class OneThingMatching extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String location;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column
-    private LocalDateTime meetingTime;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "onething_matching_id")
+    private OneThingMatching oneThingMatching;
+
 }

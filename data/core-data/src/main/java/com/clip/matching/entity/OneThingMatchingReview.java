@@ -3,6 +3,7 @@ package com.clip.matching.entity;
 import com.clip.common.entity.BaseEntity;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"onething_matching_id", "user_id"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OneThingMatchingReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
