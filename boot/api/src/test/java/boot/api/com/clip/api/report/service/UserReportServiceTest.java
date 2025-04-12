@@ -3,6 +3,8 @@ package boot.api.com.clip.api.report.service;
 import com.clip.ApiApplication;
 import com.clip.api.report.controller.dto.ReportDto;
 import com.clip.api.report.service.UserReportService;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.report.entity.Report;
 import com.clip.report.entity.ReportCategory;
 import com.clip.report.repository.ReportRepository;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
@@ -30,6 +33,10 @@ public class UserReportServiceTest {
     private ReportRepository reportRepository;
     @Autowired
     private UserRepository userRepository;
+    @MockitoBean
+    private S3ImgService s3ImgService;
+    @MockitoBean
+    private S3Config s3Config;
 
     @AfterEach
     void tearDown() {

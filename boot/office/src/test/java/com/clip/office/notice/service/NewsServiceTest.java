@@ -1,6 +1,8 @@
 package com.clip.office.notice.service;
 
 import com.clip.OfficeApplication;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.notice.entity.News;
 import com.clip.notice.repository.NewsRepository;
 import com.clip.office.notice.controller.dto.CreateNewsDto;
@@ -44,6 +46,10 @@ class NewsServiceTest {
 
     @Autowired
     private NewsRepository newsRepository;
+    @MockitoBean
+    private S3ImgService s3ImgService;
+    @MockitoBean
+    private S3Config s3Config;
 
     @AfterEach
     void tearDown(){

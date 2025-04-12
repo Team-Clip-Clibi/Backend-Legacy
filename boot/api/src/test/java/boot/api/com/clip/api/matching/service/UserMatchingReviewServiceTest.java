@@ -3,6 +3,8 @@ package boot.api.com.clip.api.matching.service;
 import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
 import com.clip.api.matching.service.UserMatchingReviewService;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.matching.entity.Mood;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.entity.RandomMatchingReview;
@@ -19,7 +21,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,6 +46,10 @@ public class UserMatchingReviewServiceTest {
     private RandomMatchingReviewRepository randomMatchingReviewRepository;
     @Autowired
     private UserRepository userRepository;
+    @MockitoBean
+    private S3ImgService s3ImgService;
+    @MockitoBean
+    private S3Config s3Config;
 
     @AfterEach
     void tearDown() {

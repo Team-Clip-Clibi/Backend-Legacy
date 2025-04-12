@@ -5,6 +5,8 @@ import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -40,6 +42,10 @@ public class UserAccountServiceTokenTest {
     private JWTProperties jwtProperties;
     @MockitoBean
     private TokenService tokenService;
+    @MockitoBean
+    private S3ImgService s3ImgService;
+    @MockitoBean
+    private S3Config s3Config;
 
 
     @DisplayName("RefreshToken의 기간이 유요하며 TokenType이 RefreshToken이면 1일간 유효한 AccessToken이 발급된다.")

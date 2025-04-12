@@ -8,6 +8,8 @@ import com.clip.auth.repository.TokenRepository;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
@@ -52,6 +54,10 @@ public class UserAccountServiceTest {
     private TokenService tokenService;
     @Autowired
     private JobRepository jobRepository;
+    @MockitoBean
+    private S3ImgService s3ImgService;
+    @MockitoBean
+    private S3Config s3Config;
 
     @AfterEach
     void tearDown() {
