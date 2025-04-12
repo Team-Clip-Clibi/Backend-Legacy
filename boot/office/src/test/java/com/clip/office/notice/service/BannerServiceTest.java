@@ -1,7 +1,8 @@
 package com.clip.office.notice.service;
 
 import com.clip.OfficeApplication;
-import com.clip.global.service.S3Service;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.notice.entity.BannerType;
 import com.clip.notice.repository.BannerRepository;
 import com.clip.office.notice.controller.dto.CreateBannerDto;
@@ -31,14 +32,7 @@ import static org.mockito.Mockito.when;
         "spring.datasource.redis.host=localhost",
         "spring.datasource.redis.port=6379",
         "spring.security.login.max-fail-count=5",
-        "spring.security.login.block-duration-seconds=3600",
-        "spring.servlet.multipart.max-file-size=10485760",
-        "spring.servlet.multipart.max-request-size=10485760",
-        "cloud.aws.credentials.access-key=1010",
-        "cloud.aws.credentials.secret-key=1010",
-        "cloud.aws.region.static=ap-northeast-2",
-        "cloud.aws.s3.bucket=clip-office",
-        "cloud.aws.s3.region=ap-northeast-2",
+        "spring.security.login.block-duration-seconds=3600"
 })
 class BannerServiceTest {
 
@@ -52,7 +46,10 @@ class BannerServiceTest {
     private BannerRepository bannerRepository;
 
     @MockitoBean
-    private S3Service s3Service;
+    private S3ImgService s3ImgService;
+
+    @MockitoBean
+    private S3Config s3Config;
 
     @AfterEach
     void tearDown() {
@@ -79,7 +76,7 @@ class BannerServiceTest {
                 .build();
 
         // S3Service 모킹
-        when(s3Service.imageUpload(any(MultipartFile.class)))
+        when(s3ImgService.imageUpload(any(MultipartFile.class)))
                 .thenReturn("ff/test.jpg");
 
         // when
@@ -124,7 +121,7 @@ class BannerServiceTest {
                 .build();
 
         // S3Service 모킹
-        when(s3Service.imageUpload(any(MultipartFile.class)))
+        when(s3ImgService.imageUpload(any(MultipartFile.class)))
                 .thenReturn("ff/test.jpg");
 
         // 배너 생성
@@ -182,7 +179,7 @@ class BannerServiceTest {
                 .build();
 
         // 최초 업로드 이미지 URL
-        when(s3Service.imageUpload(any(MultipartFile.class)))
+        when(s3ImgService.imageUpload(any(MultipartFile.class)))
                 .thenReturn("ff/original.jpg");
 
         CreateBannerDto savedBanner = bannerService.createBanner(createBannerDto, originalImage);
@@ -196,7 +193,7 @@ class BannerServiceTest {
         );
 
         // 이미지 변경 시 업로드된 URL
-        when(s3Service.imageUpload(any(MultipartFile.class)))
+        when(s3ImgService.imageUpload(any(MultipartFile.class)))
                 .thenReturn("ff/updated.jpg");
 
         // when
@@ -250,7 +247,7 @@ class BannerServiceTest {
                 .isExposure(true)
                 .build();
 
-        when(s3Service.imageUpload(any(MultipartFile.class)))
+        when(s3ImgService.imageUpload(any(MultipartFile.class)))
                 .thenReturn("ff/test.jpg");
 
         CreateBannerDto savedBanner = bannerService.createBanner(createBannerDto, mockMultipartFile);
