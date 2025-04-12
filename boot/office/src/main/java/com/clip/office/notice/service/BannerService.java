@@ -1,6 +1,6 @@
 package com.clip.office.notice.service;
 
-import com.clip.global.service.S3Service;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.notice.entity.Banner;
 import com.clip.notice.service.BannerDataService;
 import com.clip.office.notice.controller.dto.CreateBannerDto;
@@ -15,11 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class BannerService {
 
     private final BannerDataService bannerDataService;
-    private final S3Service s3Service;
+    private final S3ImgService s3ImgService;
 
     @Transactional
     public CreateBannerDto createBanner(CreateBannerDto dto, MultipartFile file) {
-        String imageUrl = s3Service.imageUpload(file);
+        String imageUrl = s3ImgService.imageUpload(file);
 
         Banner banner = Banner.builder()
                 .bannerType(dto.getBannerType())
@@ -48,7 +48,7 @@ public class BannerService {
         Banner banner = bannerDataService.findBanner(bannerId);
 
         if (file != null && !file.isEmpty()) {
-            String imageUrl = s3Service.imageUpload(file);
+            String imageUrl = s3ImgService.imageUpload(file);
             banner.updateImageUrl(imageUrl);
         }
 
@@ -73,7 +73,7 @@ public class BannerService {
 
     public void deleteBanner(Long bannerId) {
         Banner banner = bannerDataService.findBanner(bannerId);
-        s3Service.deleteImage(banner.getImageUrl());
+        s3ImgService.deleteImage(banner.getImageUrl());
         bannerDataService.delete(bannerId);
     }
 }

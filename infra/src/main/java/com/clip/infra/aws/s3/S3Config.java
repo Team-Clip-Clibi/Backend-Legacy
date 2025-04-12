@@ -1,4 +1,4 @@
-package com.clip.global.config;
+package com.clip.infra.aws.s3;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -7,28 +7,37 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class S3Config {
 
     @Value("${cloud.aws.credentials.access-key}")
-    private String ACCESSKEY;
+    private String accessKey;
 
     @Value("${cloud.aws.credentials.secret-key}")
-    private String SECRETKEY;
+    private String secretKey;
 
     @Value("${cloud.aws.region.static}")
-    private String REGION;
+    private String region;
 
     @Bean
     public S3Client s3Client() {
         return S3Client.builder()
-                .region(Region.of(REGION))
+                .region(Region.of(region))
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(ACCESSKEY, SECRETKEY)
+                                AwsBasicCredentials.create(accessKey, secretKey)
                         )
                 )
+                .build();
+    }
+
+    @Bean
+    public S3Presigner s3Presigner() {
+        return S3Presigner.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey,secretKey)))
+                .region(Region.AP_NORTHEAST_2)
                 .build();
     }
 }

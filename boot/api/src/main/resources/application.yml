@@ -3,6 +3,7 @@ spring:
     include:
     - core-data
     - office-data
+    - infra
 
 jwt:
   access-token-expiration-period-day: 1

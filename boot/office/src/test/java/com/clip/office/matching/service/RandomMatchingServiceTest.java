@@ -1,6 +1,8 @@
 package com.clip.office.matching.service;
 
 import com.clip.OfficeApplication;
+import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.matching.entity.RandomDistrict;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.repository.RandomMatchingRepository;
@@ -48,6 +50,10 @@ class RandomMatchingServiceTest {
 
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
+    @MockitoBean
+    private S3ImgService s3ImgService;
+    @MockitoBean
+    private S3Config s3Config;
 
     @Autowired
     private MatchingService matchingService;
