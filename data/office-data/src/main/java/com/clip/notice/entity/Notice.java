@@ -1,10 +1,7 @@
 package com.clip.notice.entity;
 
 import com.clip.common.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +17,9 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private NoticeType noticeType;
+
     private String content;
 
     private String link;
@@ -29,7 +29,16 @@ public class Notice extends BaseEntity {
     private boolean isExposure;
 
     @Builder
-    public Notice(String content, String link, LocalDate exposureDate, boolean isExposure) {
+    public Notice(NoticeType noticeType,String content, String link, LocalDate exposureDate, boolean isExposure) {
+        this.noticeType = noticeType;
+        this.content = content;
+        this.link = link;
+        this.exposureDate = exposureDate;
+        this.isExposure = isExposure;
+    }
+
+    public void updateNotice(NoticeType noticeType,String content, String link, LocalDate exposureDate, boolean isExposure) {
+        this.noticeType = noticeType;
         this.content = content;
         this.link = link;
         this.exposureDate = exposureDate;

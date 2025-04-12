@@ -133,7 +133,7 @@ public class UserRepositoryTest {
         User user = userRepository.save(User.builder().build());
 
         //when
-        userRepository.updateUserDetailInfo(user.getId(), Gender.FEMALE, currentDate, City.GYEONGGI, County.YONGIN_SI);
+        userRepository.updateUserDetailInfo(user.getId(), Gender.FEMALE, currentDate, City.Geongi, County.sacheon);
         user = userRepository.findById(user.getId()).get();
 
         //then
@@ -147,8 +147,8 @@ public class UserRepositoryTest {
                 .containsExactly(
                         Gender.FEMALE,
                         currentDate,
-                        City.GYEONGGI,
-                        County.YONGIN_SI
+                        City.Geongi,
+                        County.sacheon
                 );
     }
 
