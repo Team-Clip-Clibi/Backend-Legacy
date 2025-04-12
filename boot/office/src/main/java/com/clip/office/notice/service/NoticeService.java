@@ -48,7 +48,7 @@ public class NoticeService {
                 updateNoticeDto.isExposure()
         );
 
-        return updateNoticeDto.builder()
+        return UpdateNoticeDto.builder()
                 .id(notice.getId())
                 .noticeType(notice.getNoticeType())
                 .content(notice.getContent())
