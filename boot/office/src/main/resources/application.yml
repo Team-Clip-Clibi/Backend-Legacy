@@ -3,6 +3,7 @@ spring:
     include:
     - office-data
     - core-date
+    - infra
 
   datasource:
     redis:
@@ -13,21 +14,3 @@ spring:
     login:
       max-fail-count: 10
       block-duration-seconds: 3600 # 1 시간
-
-  servlet:
-    multipart:
-      max-file-size: 5MB
-      max-request-size: 10MB
-
-cloud:
-  aws:
-    credentials:
-      access-key: ${S3_ACCESS_KEY}
-      secret-key: ${S3_SECRET_KEY}
-    region:
-      static: ap-northeast-2
-    s3:
-      bucket: ${S3_BUCKET_NAME}
-      region: ap-northeast-2
-    stack:
-      auto: false
