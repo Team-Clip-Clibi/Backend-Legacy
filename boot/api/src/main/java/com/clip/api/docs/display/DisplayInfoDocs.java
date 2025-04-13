@@ -1,6 +1,7 @@
 package com.clip.api.docs.display;
 
 import com.clip.api.display.controller.dto.BannerInfoDto;
+import com.clip.api.display.controller.dto.NoticeInfoDto;
 import com.clip.notice.entity.BannerType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +35,24 @@ public interface DisplayInfoDocs {
     )
     @GetMapping("/banners/{bannerType}")
     List<BannerInfoDto> getBanners(@PathVariable final BannerType bannerType);
+
+    @Operation(
+            summary = "공지/새소식 조회 API",
+            description = """
+                    - 홈화면 스낵바에 있는 공지/새소식 조회 API입니다.
+                    - 공지/새소식은 NOTICE, ARTICLE 으로 구분됩니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = NoticeInfoDto.class)
+            )
+    )
+    @GetMapping("/notices")
+    List<NoticeInfoDto> getNotices();
 
 
 }
