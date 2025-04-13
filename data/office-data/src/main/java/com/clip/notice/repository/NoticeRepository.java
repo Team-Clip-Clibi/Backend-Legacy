@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
@@ -18,5 +20,14 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     @Query("select n from Notice n where n.id = :noticeId")
     Optional<Notice> findNotice(Long noticeId);
+
+    @Query("""
+            select n from Notice n
+            where n.exposureDate <= :exposureDate
+            and n.isExposure = true
+            order by n.exposureDate desc
+            limit 3
+            """)
+    List<Notice> findAllNotices(@Param("exposureDate") LocalDate exposureDate);
 
 }
