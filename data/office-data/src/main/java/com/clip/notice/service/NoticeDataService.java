@@ -6,6 +6,9 @@ import com.clip.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NoticeDataService {
@@ -23,5 +26,9 @@ public class NoticeDataService {
 
     public void deleteNotice(Long noticeId) {
         noticeRepository.deleteNotice(noticeId);
+    }
+
+    public List<Notice> findNotices() {
+        return noticeRepository.findAllNotices(LocalDate.now());
     }
 }
