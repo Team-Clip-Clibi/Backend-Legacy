@@ -1,20 +1,5 @@
 package com.clip.user.entity;
 
 public enum City {
-    Seoul,
-    Incheon,
-    Daegu,
-    Gwangju,
-    Daejeon,
-    Jeju,
-    Busan,
-    Ulsan,
-    Sejong,
-    Gyeongsangnamdo,
-    Geongi,
-    Jeollanamdo,
-    Chungcheongnamdo,
-    Gyeongsangbukdo,
-    Jeollabukdo,
-    Chungcheongbukdo
+    SEOUL, INCHEON, DAEGU, GWANGJU, DAEJEON, BUSAN, ULSAN, SEJONG, GEONGI, GANGWONDO, GYEONGSANGBUKDO, GYEONGSANGNAMDO, CHUNGSHEONGBUKDO, CHUNGCHEONGNAMDO, JEOLLABUKDO, JEOLLANAMDO, JEJU
 }
