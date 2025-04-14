@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
@@ -33,6 +34,12 @@ public class S3ImgService {
     private static final Duration PRESIGNED_URL_EXPIRY_TIME = Duration.ofHours(24);
     private static final List<String> ALLOWED_EXTENSIONS = List.of(".jpg", ".jpeg", ".png", ".gif", ".bmp");
     private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
+
+    public String getPublicReadUrlAfterUpload(MultipartFile img) {
+        validateFile(img);
+        String uniqueFileName = "zzilit/" + generateUniqueFileName(img.getOriginalFilename());
+        return uploadToS3ByPublicRead(img, uniqueFileName);
+    }
 
     /**
      * 이미지 파일을 S3에 업로드하고 URL을 반환
@@ -116,6 +123,26 @@ public class S3ImgService {
         } catch (IOException e) {
             throw new RuntimeException("S3 업로드 실패", e);
         }
+    }
+
+    private String uploadToS3ByPublicRead(MultipartFile file, String fileName) {
+        try {
+            PutObjectRequest request = createPutPublicReadObjectRequest(fileName, file.getContentType());
+            s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+            return "https://" + bucket + ".s3.amazonaws.com/" + fileName;
+        } catch (IOException e) {
+            throw new RuntimeException("S3 업로드 실패", e);
+        }
+    }
+
+    private PutObjectRequest createPutPublicReadObjectRequest(String key, String contentType) {
+        return PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .contentType(Optional.ofNullable(contentType).orElse(DEFAULT_CONTENT_TYPE))
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
     }
 
     private PutObjectRequest createPutObjectRequest(String fileName, String contentType) {
