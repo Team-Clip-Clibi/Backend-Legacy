@@ -4,36 +4,64 @@ import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
 import com.clip.office.matching.controller.dto.UpdateRandomMatchingDto;
 import com.clip.office.matching.service.RandomMatchingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-@RequestMapping("/office/matching")
+@RequestMapping("/office/admin/home/randomMatching")
 public class RandomMatchingController {
 
     private final RandomMatchingService randomMatchingService;
 
+
+    @GetMapping("/create")
+    public String createRandomMatchingForm(Model model) {
+        model.addAttribute("createRandomMatchingDto", new CreateRandomMatchingDto());
+        return "fragments/content :: content";
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<CreateRandomMatchingDto> createRandomMatching(
-            @RequestBody CreateRandomMatchingDto createRandomMatchingDto
-    ) {
-        return ResponseEntity.ok(randomMatchingService.createRandomMatching(createRandomMatchingDto));
+    public String createRandomMatching(
+            @ModelAttribute CreateRandomMatchingDto createRandomMatchingDto,
+            RedirectAttributes redirectAttributes
+    ){
+        randomMatchingService.createRandomMatching(createRandomMatchingDto);
+        redirectAttributes.addFlashAttribute("successMessage", "랜덤 매칭이 성공적으로 생성되었습니다.");
+        return "redirect:/office/admin/home/randomMatching";
     }
 
-    @PutMapping("/{randomMatchingId}")
-    public ResponseEntity<UpdateRandomMatchingDto> updateRandomMatching(
-            @PathVariable Long randomMatchingId,
-            @RequestBody UpdateRandomMatchingDto updateRandomMatchingDto
-    ) {
-        return ResponseEntity.ok(randomMatchingService.updateRandomMatching(randomMatchingId ,updateRandomMatchingDto));
+    @GetMapping("/update/{randomMatchingId}")
+    public String updateRandomMatchingForm(
+            @PathVariable(value = "randomMatchingId") Long randomMatchingId,
+            Model model
+    ){
+        UpdateRandomMatchingDto updateDto = randomMatchingService.getUpdateRandomMatchingDto(randomMatchingId);
+        model.addAttribute("updateRandomMatchingDto", updateDto);
+        model.addAttribute("randomMatchingId", randomMatchingId);
+        return "/office/admin/home/randomMatching/edit";
     }
 
-    @DeleteMapping("/{randomMatchingId}")
-    public ResponseEntity<Void> deleteRandomMatching(
-            @PathVariable Long randomMatchingId
-    ) {
+    @PostMapping("/update/{randomMatchingId}")
+    public String updateRandomMatching(
+            @PathVariable(value = "randomMatchingId") Long randomMatchingId,
+            @ModelAttribute UpdateRandomMatchingDto updateRandomMatchingDto,
+            RedirectAttributes redirectAttributes
+    ){
+        randomMatchingService.updateRandomMatching(randomMatchingId, updateRandomMatchingDto);
+        redirectAttributes.addFlashAttribute("successMessage", "랜덤 매칭이 성공적으로 수정되었습니다.");
+        return "redirect:/office/admin/home/matching";
+    }
+
+    @PostMapping("/delete/{randomMatchingId}")
+    public String deleteRandomMatching(
+            @PathVariable(value = "randomMatchingId") Long randomMatchingId,
+            RedirectAttributes redirectAttributes
+    ){
         randomMatchingService.deleteRandomMatching(randomMatchingId);
-        return ResponseEntity.noContent().build();
+        redirectAttributes.addFlashAttribute("successMessage", "랜덤 매칭이 성공적으로 삭제되었습니다.");
+        return "redirect:/office/admin/home/matching";
     }
 }
