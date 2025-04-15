@@ -5,6 +5,8 @@ import com.clip.matching.repository.RandomMatchingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RandomMatchingDataService {
@@ -14,6 +16,8 @@ public class RandomMatchingDataService {
     public RandomMatching save(RandomMatching randomMatching) {
         return randomMatchingRepository.save(randomMatching);
     }
+
+    public List<RandomMatching> findAllRandomMatchings() {return randomMatchingRepository.findAll();}
 
     public void delete(Long randomMatchingId) {
         randomMatchingRepository.deleteRandomMatching(randomMatchingId);
