@@ -1,14 +1,42 @@
 package com.clip.office.content;
 
+import com.clip.matching.entity.OneThingMatching;
+import com.clip.matching.entity.RandomMatching;
+import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
+import com.clip.office.matching.controller.dto.OneThingMatchingDto;
+import com.clip.office.matching.service.OneThingMatchingService;
+import com.clip.office.matching.service.RandomMatchingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/")
+@RequestMapping("/office/admin/home")
+@RequiredArgsConstructor
 public class ContentController {
 
-    public String home() {
-        return "index";
+    private final OneThingMatchingService onethingMatchingService;
+    private final RandomMatchingService randomMatchingService;
+
+    @GetMapping("/oneThingMatching")
+    public String oneThingMatchingList(Model model) {
+        List<OneThingMatching> oneThingMatchingList = onethingMatchingService.findAllOneThingMatchings();
+        model.addAttribute("oneThingMatchings", oneThingMatchingList);
+        model.addAttribute("oneThingMatchingDto", new OneThingMatchingDto());
+        return "fragments/content :: #dynamicContent";
     }
-}
+
+    @GetMapping("/randomMatching")
+    public String randomMatchingList(Model model) {
+        List<RandomMatching> randomMatchingList = randomMatchingService.findAllRandomMatchings();
+        model.addAttribute("randomMatchings", randomMatchingList);
+        model.addAttribute("createRandomMatchingDto", new CreateRandomMatchingDto());
+        return "fragments/content :: #dynamicContent";
+    }}
+
+
+
