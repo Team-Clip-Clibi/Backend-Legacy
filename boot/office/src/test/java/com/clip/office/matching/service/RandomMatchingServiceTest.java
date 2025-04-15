@@ -18,11 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ContextConfiguration(classes = OfficeApplication.class)
 @SpringBootTest
@@ -75,38 +76,28 @@ class RandomMatchingServiceTest {
                 .build();
 
         // when
-        CreateRandomMatchingDto savedTestDto = randomMatchingService.createRandomMatching(createRandomMatchingDto);
+        randomMatchingService.createRandomMatching(createRandomMatchingDto);
 
         // then
-        Optional<RandomMatching> savedTestMatching = randomMatchingRepository.findAll().stream().findFirst();
-        assertThat(savedTestMatching).isPresent();
+        List<RandomMatching> all = randomMatchingRepository.findAll();
+        assertThat(all).hasSize(1); // 저장된 데이터가 정확히 1개인지 확인 (createRandomMatchingDto와 동일한 데이터)
 
-        RandomMatching randomMatching = savedTestMatching.get();
-        assertThat(randomMatching.getId()).isNotNull();
-        assertThat(randomMatching).extracting(
-                RandomMatching::getRandomDistrict,
-                RandomMatching::getLocation,
-                RandomMatching::getRestaurantName,
-                RandomMatching::getMeetingTime
-        ).containsExactly(
-                RandomDistrict.GANGNAM,
-                "서울특별시 강남구 강남대로 421",
-                "쉐이크쉑버거",
-                LocalDateTime.of(2025, 3, 20, 22, 45, 0)
-        );
-
-        assertThat(savedTestDto).extracting(
-                CreateRandomMatchingDto::getRandomDistrict,
-                CreateRandomMatchingDto::getLocation,
-                CreateRandomMatchingDto::getRestaurantName,
-                CreateRandomMatchingDto::getMeetingTime
-        ).containsExactly(
-                RandomDistrict.GANGNAM,
-                "서울특별시 강남구 강남대로 421",
-                "쉐이크쉑버거",
-                LocalDateTime.of(2025, 3, 20, 22, 45, 0)
-        );
+        RandomMatching saved = all.get(0);
+        assertThat(saved)
+                .extracting(
+                        RandomMatching::getRandomDistrict,
+                        RandomMatching::getLocation,
+                        RandomMatching::getRestaurantName,
+                        RandomMatching::getMeetingTime
+                )
+                .containsExactly(
+                        RandomDistrict.GANGNAM,
+                        "서울특별시 강남구 강남대로 421",
+                        "쉐이크쉑버거",
+                        LocalDateTime.of(2025, 3, 20, 22, 45, 0)
+                );
     }
+
 
     @DisplayName("모임을 수정할 수 있다.")
     @Test
