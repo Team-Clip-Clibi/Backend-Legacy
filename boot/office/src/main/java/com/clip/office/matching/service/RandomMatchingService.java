@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RandomMatchingService {
@@ -17,8 +19,13 @@ public class RandomMatchingService {
 
     private final MatchingService matchingService;
 
+    @Transactional(readOnly = true)
+    public List<RandomMatching> findAllRandomMatchings() {
+        return randomMatchingDataService.findAllRandomMatchings();
+    }
+
     @Transactional
-    public CreateRandomMatchingDto createRandomMatching(CreateRandomMatchingDto createRandomMatchingDto) {
+    public void createRandomMatching(CreateRandomMatchingDto createRandomMatchingDto) {
 
         RandomMatching randomMatching = RandomMatching.builder()
                 .randomDistrict(createRandomMatchingDto.getRandomDistrict())
@@ -28,17 +35,10 @@ public class RandomMatchingService {
                 .build();
 
         randomMatchingDataService.save(randomMatching);
-
-        return CreateRandomMatchingDto.builder()
-                .randomDistrict(randomMatching.getRandomDistrict())
-                .location(createRandomMatchingDto.getLocation())
-                .restaurantName(createRandomMatchingDto.getRestaurantName())
-                .meetingTime(createRandomMatchingDto.getMeetingTime())
-                .build();
     }
 
     @Transactional
-    public UpdateRandomMatchingDto updateRandomMatching(Long randomMatchingId,UpdateRandomMatchingDto updateRandomMatchingDto) {
+    public void updateRandomMatching(Long randomMatchingId, UpdateRandomMatchingDto updateRandomMatchingDto) {
         RandomMatching randomMatching = matchingService.findRandomMatching(randomMatchingId);
 
         randomMatching.update(
@@ -48,12 +48,17 @@ public class RandomMatchingService {
                 updateRandomMatchingDto.getMeetingTime());
 
         randomMatchingDataService.save(randomMatching);
+    }
+
+    @Transactional(readOnly = true)
+    public UpdateRandomMatchingDto getUpdateRandomMatchingDto(Long randomMatchingId) {
+        RandomMatching randomMatching = matchingService.findRandomMatching(randomMatchingId);
 
         return UpdateRandomMatchingDto.builder()
                 .randomDistrict(randomMatching.getRandomDistrict())
-                .location(updateRandomMatchingDto.getLocation())
-                .restaurantName(updateRandomMatchingDto.getRestaurantName())
-                .meetingTime(updateRandomMatchingDto.getMeetingTime())
+                .location(randomMatching.getLocation())
+                .restaurantName(randomMatching.getRestaurantName())
+                .meetingTime(randomMatching.getMeetingTime())
                 .build();
     }
 
