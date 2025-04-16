@@ -28,4 +28,7 @@ public class UserOneThingMatching extends BaseEntity {
     @JoinColumn(name = "onething_matching_id")
     private OneThingMatching oneThingMatching;
 
+    @Column
+    private String MyOneThingContent;
+
 }
