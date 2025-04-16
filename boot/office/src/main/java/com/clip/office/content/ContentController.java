@@ -1,18 +1,20 @@
 package com.clip.office.content;
 
-import com.clip.matching.entity.OneThingMatching;
-import com.clip.matching.entity.RandomMatching;
-import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
-import com.clip.office.matching.controller.dto.OneThingMatchingDto;
-import com.clip.office.matching.service.OneThingMatchingService;
-import com.clip.office.matching.service.RandomMatchingService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
+import com.clip.matching.entity.OneThingMatching;
+import com.clip.matching.entity.RandomMatching;
+import com.clip.office.matching.controller.dto.CreateOneThingMatchingDto;
+import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
+import com.clip.office.matching.service.OneThingMatchingService;
+import com.clip.office.matching.service.RandomMatchingService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/office/admin/home")
@@ -26,7 +28,8 @@ public class ContentController {
     public String oneThingMatchingList(Model model) {
         List<OneThingMatching> oneThingMatchingList = onethingMatchingService.findAllOneThingMatchings();
         model.addAttribute("oneThingMatchings", oneThingMatchingList);
-        model.addAttribute("oneThingMatchingDto", new OneThingMatchingDto());
+        model.addAttribute("createOneThingMatchingDto", new CreateOneThingMatchingDto());
+        model.addAttribute("isOnething", true);
         return "fragments/content :: #dynamicContent";
     }
 
@@ -35,8 +38,7 @@ public class ContentController {
         List<RandomMatching> randomMatchingList = randomMatchingService.findAllRandomMatchings();
         model.addAttribute("randomMatchings", randomMatchingList);
         model.addAttribute("createRandomMatchingDto", new CreateRandomMatchingDto());
+        model.addAttribute("isOnething", false);
         return "fragments/content :: #dynamicContent";
-    }}
-
-
-
+    }
+}
