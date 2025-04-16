@@ -20,17 +20,17 @@ public class RandomMatchingController {
     @GetMapping("/create")
     public String createRandomMatchingForm(Model model) {
         model.addAttribute("createRandomMatchingDto", new CreateRandomMatchingDto());
-        return "fragments/content :: content";
+        return "redirect:/office/admin/home";
     }
 
     @PostMapping("/create")
     public String createRandomMatching(
-            @ModelAttribute CreateRandomMatchingDto createRandomMatchingDto,
-            RedirectAttributes redirectAttributes
+        @ModelAttribute CreateRandomMatchingDto createRandomMatchingDto,
+        RedirectAttributes redirectAttributes
     ){
         randomMatchingService.createRandomMatching(createRandomMatchingDto);
         redirectAttributes.addFlashAttribute("successMessage", "랜덤 매칭이 성공적으로 생성되었습니다.");
-        return "redirect:/office/admin/home/randomMatching";
+        return "redirect:/office/admin/home";
     }
 
     @GetMapping("/update/{randomMatchingId}")
@@ -52,7 +52,7 @@ public class RandomMatchingController {
     ){
         randomMatchingService.updateRandomMatching(randomMatchingId, updateRandomMatchingDto);
         redirectAttributes.addFlashAttribute("successMessage", "랜덤 매칭이 성공적으로 수정되었습니다.");
-        return "redirect:/office/admin/home/matching";
+        return "redirect:/office/admin/home";
     }
 
     @PostMapping("/delete/{randomMatchingId}")
@@ -62,6 +62,6 @@ public class RandomMatchingController {
     ){
         randomMatchingService.deleteRandomMatching(randomMatchingId);
         redirectAttributes.addFlashAttribute("successMessage", "랜덤 매칭이 성공적으로 삭제되었습니다.");
-        return "redirect:/office/admin/home/matching";
+        return "redirect:/office/admin/home";
     }
 }
