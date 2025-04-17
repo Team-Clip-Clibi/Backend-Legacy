@@ -99,17 +99,20 @@ public class UserMatchingServiceTest {
         MatchingProgressStatusDto userMatchingStatus = userMatchingService.getUserMatchingStatus(requester.getId());
 
         //then
-        Assertions.assertThat(userMatchingStatus)
-                .extracting(
-                        MatchingProgressStatusDto::getMatchingId,
+        Assertions.assertThat(userMatchingStatus.getMatchingId()).isEqualTo(userOneThingMatching.getId());
+        Assertions.assertThat(userMatchingStatus.getMatchingType()).isEqualTo(MatchingType.ONE_THING);
+        Assertions.assertThat(userMatchingStatus.getLatestMatchingDateTime()).isEqualTo(oneThingTime);
+//        Assertions.assertThat(userMatchingStatus)
+//                .extracting(
+//                        MatchingProgressStatusDto::getMatchingId,
 //                        MatchingProgressStatusDto::getMatchingType,
-                        MatchingProgressStatusDto::getLatestMatchingDateTime
-                )
-                .containsExactly(
-                        userOneThingMatching.getId(),
+//                        MatchingProgressStatusDto::getLatestMatchingDateTime
+//                )
+//                .containsExactly(
+//                        userOneThingMatching.getId(),
 //                        MatchingType.ONE_THING,
-                        oneThingTime
-                );
+//                        oneThingTime
+//                );
     }
 
     @Test
