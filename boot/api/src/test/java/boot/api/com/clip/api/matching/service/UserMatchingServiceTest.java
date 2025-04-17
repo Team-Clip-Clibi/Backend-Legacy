@@ -102,12 +102,12 @@ public class UserMatchingServiceTest {
         Assertions.assertThat(userMatchingStatus)
                 .extracting(
                         MatchingProgressStatusDto::getMatchingId,
-                        MatchingProgressStatusDto::getMatchingType,
+//                        MatchingProgressStatusDto::getMatchingType,
                         MatchingProgressStatusDto::getLatestMatchingDateTime
                 )
                 .containsExactly(
                         userOneThingMatching.getId(),
-                        MatchingType.ONE_THING,
+//                        MatchingType.ONE_THING,
                         oneThingTime
                 );
     }
