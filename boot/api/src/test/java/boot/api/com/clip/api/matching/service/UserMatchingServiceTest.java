@@ -103,18 +103,7 @@ public class UserMatchingServiceTest {
         //then
         Assertions.assertThat(userMatchingStatus.getMatchingId()).isEqualTo(userOneThingMatching.getId());
         Assertions.assertThat(userMatchingStatus.getMatchingType()).isEqualTo(MatchingType.ONE_THING);
-        Assertions.assertThat(userMatchingStatus.getLatestMatchingDateTime()).isCloseTo(oneThingTime, Assertions.within(1L, ChronoUnit.SECONDS));
-//        Assertions.assertThat(userMatchingStatus)
-//                .extracting(
-//                        MatchingProgressStatusDto::getMatchingId,
-//                        MatchingProgressStatusDto::getMatchingType,
-//                        MatchingProgressStatusDto::getLatestMatchingDateTime
-//                )
-//                .containsExactly(
-//                        userOneThingMatching.getId(),
-//                        MatchingType.ONE_THING,
-//                        oneThingTime
-//                );
+        Assertions.assertThat(userMatchingStatus.getLatestMatchingDateTime()).isCloseTo(oneThingTime, Assertions.within(1L, ChronoUnit.MILLIS));
     }
 
     @Test
