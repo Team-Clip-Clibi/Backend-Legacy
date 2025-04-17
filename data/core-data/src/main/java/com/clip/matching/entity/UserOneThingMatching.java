@@ -34,9 +34,6 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private boolean isCheckedMatchingStart;
 
-    @Column
-    private String MyOneThingContent;
-
     @Builder
     public UserOneThingMatching(User user, OneThingMatching oneThingMatching, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart) {
         this.user = user;
@@ -45,6 +42,4 @@ public class UserOneThingMatching extends BaseEntity {
         this.myQuizContent = myQuizContent;
         this.isCheckedMatchingStart = isCheckedMatchingStart;
     }
-
-
 }

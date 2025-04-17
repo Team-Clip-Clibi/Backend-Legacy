@@ -3,7 +3,6 @@ package com.clip.matching.entity;
 import java.time.LocalDateTime;
 
 import com.clip.common.entity.BaseEntity;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 
@@ -14,11 +13,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -50,6 +46,7 @@ public class OneThingMatching extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OneThingPrice oneThingPrice;
 
+
     @Builder
     public OneThingMatching(OneThingDistrict oneThingDistrict, OneThingKeyword oneThingKeyword, String location, String restaurantName, LocalDateTime meetingTime, OneThingPrice oneThingPrice) {
         this.oneThingDistrict = oneThingDistrict;
@@ -66,11 +63,5 @@ public class OneThingMatching extends BaseEntity {
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
         this.oneThingPrice = oneThingPrice;
-    }
-
-    @Builder
-    public OneThingMatching(String location, LocalDateTime meetingTime) {
-        this.location = location;
-        this.meetingTime = meetingTime;
     }
 }
