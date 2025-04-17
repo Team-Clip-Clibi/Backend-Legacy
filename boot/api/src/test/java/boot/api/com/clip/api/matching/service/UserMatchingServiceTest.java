@@ -24,6 +24,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +103,7 @@ public class UserMatchingServiceTest {
         //then
         Assertions.assertThat(userMatchingStatus.getMatchingId()).isEqualTo(userOneThingMatching.getId());
         Assertions.assertThat(userMatchingStatus.getMatchingType()).isEqualTo(MatchingType.ONE_THING);
-//        Assertions.assertThat(userMatchingStatus.getLatestMatchingDateTime()).isEqualTo(oneThingTime);
+        Assertions.assertThat(userMatchingStatus.getLatestMatchingDateTime()).isCloseTo(oneThingTime, Assertions.within(1L, ChronoUnit.SECONDS));
 //        Assertions.assertThat(userMatchingStatus)
 //                .extracting(
 //                        MatchingProgressStatusDto::getMatchingId,
