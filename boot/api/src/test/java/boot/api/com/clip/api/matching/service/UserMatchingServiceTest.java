@@ -99,17 +99,17 @@ public class UserMatchingServiceTest {
         MatchingProgressStatusDto userMatchingStatus = userMatchingService.getUserMatchingStatus(requester.getId());
 
         //then
-//        Assertions.assertThat(userMatchingStatus)
-//                .extracting(
-//                        MatchingProgressStatusDto::getMatchingId,
-//                        MatchingProgressStatusDto::getMatchingType,
-//                        MatchingProgressStatusDto::getLatestMatchingDateTime
-//                )
-//                .containsExactly(
-//                        userOneThingMatching.getId(),
-//                        MatchingType.ONE_THING,
-//                        oneThingTime
-//                );
+        Assertions.assertThat(userMatchingStatus)
+                .extracting(
+                        MatchingProgressStatusDto::getMatchingId,
+                        MatchingProgressStatusDto::getMatchingType,
+                        MatchingProgressStatusDto::getLatestMatchingDateTime
+                )
+                .containsExactly(
+                        userOneThingMatching.getId(),
+                        MatchingType.ONE_THING,
+                        oneThingTime
+                );
     }
 
     @Test
