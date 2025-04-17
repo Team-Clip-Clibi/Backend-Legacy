@@ -1,86 +1,230 @@
-<div th:fragment="content">
-
-    <div class="btn-group" role="group" id="tabButtons">
-        <button class="btn btn-outline-primary active">원띵모임</button>
-        <button class="btn btn-outline-primary">랜덤모임</button>
+<div th:fragment="buttons" class="mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group" role="group" id="tabButtons">
+            <button class="btn btn-outline-primary load-content" data-url="/office/admin/home/oneThingMatching">원띵모임</button>
+            <button class="btn btn-outline-primary load-content" data-url="/office/admin/home/randomMatching">랜덤모임</button>
+        </div>
     </div>
+</div>
 
-    <div class="mt-3 text-end">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createMatchingModal">
-            랜덤 매칭 생성
-        </button>
+<div id="dynamicContent" th:fragment="dynamicContent">
+    <!-- 모임 생성 버튼 -->
+    <div class="mb-3 text-end">
+        <th:block th:if="${isOnething}">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#oneThingModal">원띵 매칭 생성</button>
+        </th:block>
+        <th:block th:unless="${isOnething}">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#randomModal">랜덤 매칭 생성</button>
+        </th:block>
     </div>
-
-    <div class="table-responsive mt-3" id="matchingTableContainer">
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
+    <div class="table-responsive">
+        <!-- 원띵모임 테이블 -->
+        <table th:if="${isOnething}" class="table table-hover align-middle">
+            <thead>
             <tr>
-                <th class="text-center">No</th>
-                <th class="text-center">닉네임</th>
-                <th class="text-center">전화번호</th>
-                <th class="text-center">지역</th>
-                <th class="text-center">날짜</th>
-                <th class="text-center">주제</th>
-                <th class="text-center">식단</th>
-                <th class="text-center">선호언어</th>
-                <th class="text-center">매칭</th>
+                <th>No</th>
+                <th>지역</th>
+                <th>장소</th>
+                <th>식당명</th>
+                <th>모임 시간</th>
+                <th>비고</th>
             </tr>
-
             </thead>
-            <tbody id="matchingTableBody">
+            <tbody>
+            <tr th:each="matching, stat : ${oneThingMatchings}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${matching.oneThingDistrict}"></td>
+                <td th:text="${matching.location}"></td>
+                <td th:text="${matching.restaurantName}"></td>
+                <td th:text="${#temporals.format(matching.meetingTime, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <button class="btn btn-sm btn-primary view-detail" th:data-id="${matching.id}"
+                            th:data-district="${matching.oneThingDistrict}"
+                            th:data-location="${matching.location}"
+                            th:data-restaurant="${matching.restaurantName}"
+                            th:data-time="${#temporals.format(matching.meetingTime, 'yyyy-MM-dd HH:mm')}">상세</button>
+                    <form th:action="@{/office/admin/home/oneThingMatching/delete/{id}(id=${matching.id})}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(oneThingMatchings)}">
+                <td colspan="6" class="text-center">등록된 원띵모임이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 랜덤모임 테이블 -->
+        <table th:unless="${isOnething}" class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>지역</th>
+                <th>장소</th>
+                <th>식당명</th>
+                <th>미팅 시간</th>
+                <th>비고</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="matching, stat : ${randomMatchings}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${matching.randomDistrict}"></td>
+                <td th:text="${matching.location}"></td>
+                <td th:text="${matching.restaurantName}"></td>
+                <td th:text="${#temporals.format(matching.meetingTime, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <button class="btn btn-sm btn-primary view-detail" th:data-id="${matching.id}"
+                            th:data-district="${matching.randomDistrict}"
+                            th:data-location="${matching.location}"
+                            th:data-restaurant="${matching.restaurantName}"
+                            th:data-time="${#temporals.format(matching.meetingTime, 'yyyy-MM-dd HH:mm')}">상세</button>
+                    <form th:action="@{/office/admin/home/randomMatching/delete/{randomMatchingId}(randomMatchingId=${matching.id})}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(randomMatchings)}">
+                <td colspan="6" class="text-center">등록된 랜덤 매칭이 없습니다.</td>
+            </tr>
             </tbody>
         </table>
     </div>
-
-    <nav class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-            <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
-        </ul>
-    </nav>
-
-    <div class="modal fade" id="createMatchingModal" tabindex="-1" aria-labelledby="createMatchingModalLabel" aria-hidden="true">
+    <!-- 원띵모임 모달 -->
+    <div class="modal fade" id="oneThingModal" tabindex="-1" aria-labelledby="oneThingModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form id="matchingForm" class="modal-content">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createMatchingModalLabel">랜덤 매칭 생성</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                    <h5 class="modal-title" id="oneThingModalLabel">원띵모임 생성</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <form th:action="@{/office/admin/home/oneThingMatching/create}" method="post">
                     <div class="mb-3">
-                        <label for="randomDistrict" class="form-label">선호지역</label>
-                        <select class="form-select" id="randomDistrict" name="randomDistrict" required>
+                        <label class="form-label">지역</label>
+                        <select class="form-control" name="oneThingDistrict" required>
                             <option value="GANGNAM">강남</option>
                             <option value="YOUNGSAN_ITAEWON">용산/이태원</option>
                             <option value="GUNDAE_SEONGSU">건대/성수</option>
-                            <option value="YEOUIDO_YEONGDEUNGPO">여의도/영등포</option>
+                            <option value="MOONREA_YEONGDEUNGPO">문래/영등포</option>
+                            <option value="SADANG">사당</option>
+                            <option value="MAGOK">마곡</option>
                             <option value="HONGDAE_HAPJEONG">홍대/합정</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="location" class="form-label">장소</label>
-                        <input type="text" class="form-control" id="location" name="location" required>
+                        <label class="form-label">키워드</label>
+                        <select class="form-control" name="oneThingKeyword" required>
+                            <option value="BEAUTY">뷰티</option>
+                            <option value="JOB">직업</option>
+                            <option value="POLITICS">정치</option>
+                            <option value="TRAVEL">여행</option>
+                            <option value="BOOK">책</option>
+                            <option value="MOVIE">영화</option>
+                            <option value="MUSIC">음악</option>
+                            <option value="FOOD">음식</option>
+                            <option value="FASHION">패션</option>
+                            <option value="ART">예술</option>
+                            <option value="PET">반려동물</option>
+                            <option value="SPORTS">스포츠</option>
+                            <option value="GAME">게임</option>
+                            <option value="HOBBY">취미</option>
+                            <option value="STUDY">공부</option>
+                            <option value="COIN">코인</option>
+                            <option value="PICTURE">사진</option>
+                            <option value="VOLUNTEER_WORK">봉사활동</option>
+                            <option value="PROPERTY">부동산</option>
+                            <option value="RELATIONSHIP">인간관계</option>
+                            <option value="GRAD_SCHOOL">대학원</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="restaurantName" class="form-label">식당명</label>
-                        <input type="text" class="form-control" id="restaurantName" name="restaurantName" required>
+                        <label class="form-label">장소</label>
+                        <input type="text" class="form-control" name="location" required>
                     </div>
                     <div class="mb-3">
-                        <label for="meetingTime" class="form-label">시간</label>
-                        <input type="datetime-local" class="form-control" id="meetingTime" name="meetingTime" required step="60">
+                        <label class="form-label">식당명</label>
+                        <input type="text" class="form-control" name="restaurantName" required>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <div class="mb-3">
+                        <label class="form-label">모임 시간</label>
+                        <input type="datetime-local" class="form-control" name="meetingTime" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">가격 범위</label>
+                        <select class="form-control" name="oneThingPrice" required>
+                            <option value="LOW">저가</option>
+                            <option value="MEDIUM">중가</option>
+                            <option value="HIGH">고가</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">생성</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-    <script th:src="@{/js/matching.js}"></script>
+    <!-- 랜덤모임 모달 -->
+    <div class="modal fade" id="randomModal" tabindex="-1" aria-labelledby="randomModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="randomModalLabel">랜덤모임 생성</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/office/admin/home/randomMatching/create}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">지역</label>
+                            <select class="form-control" name="randomDistrict" required>
+                                <option value="GANGNAM">강남</option>
+                                <option value="YOUNGSAN_ITAEWON">용산/이태원</option>
+                                <option value="GUNDAE_SEONGSU">건대/성수</option>
+                                <option value="YEOUIDO_YEONGDEUNGPO">영등포/여의도</option>
+                                <option value="HONGDAE_HAPJEONG">홍대/합정</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">장소</label>
+                            <input type="text" class="form-control" name="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">식당명</label>
+                            <input type="text" class="form-control" name="restaurantName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">모임 시간</label>
+                            <input type="datetime-local" class="form-control" name="meetingTime" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">생성</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상세보기 모달 -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">모임 상세 정보</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalDistrict" class="mb-2"></div>
+                    <div id="modalLocation" class="mb-2"></div>
+                    <div id="modalRestaurant" class="mb-2"></div>
+                    <div id="modalTime" class="mb-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

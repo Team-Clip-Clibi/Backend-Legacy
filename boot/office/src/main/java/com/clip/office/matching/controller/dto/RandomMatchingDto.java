@@ -4,14 +4,12 @@ import com.clip.matching.entity.RandomDistrict;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
-public class UpdateRandomMatchingDto {
+public class RandomMatchingDto {
 
     private RandomDistrict randomDistrict;
     private String location;
@@ -19,7 +17,7 @@ public class UpdateRandomMatchingDto {
     private LocalDateTime meetingTime;
 
     @Builder
-    public UpdateRandomMatchingDto(RandomDistrict randomDistrict,String location, String restaurantName, LocalDateTime meetingTime) {
+    public RandomMatchingDto(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime) {
         this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
