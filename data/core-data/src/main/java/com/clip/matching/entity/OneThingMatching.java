@@ -2,21 +2,17 @@ package com.clip.matching.entity;
 
 import com.clip.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OneThingMatching extends BaseEntity {
-
-    /***
-     * 원띵 주문서 엔티티 연관관계 및 홈화면 조회를 위해 미리 생성한 클래스입니다.
-     * 추후 구현 시 기본 생성자 접근 제어자를 protected로 변경 후 필요한 컬럼 추가하시고 해당 주석 삭제해주세요.
-     */
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +23,10 @@ public class OneThingMatching extends BaseEntity {
 
     @Column
     private LocalDateTime meetingTime;
+
+    @Builder
+    public OneThingMatching(String location, LocalDateTime meetingTime) {
+        this.location = location;
+        this.meetingTime = meetingTime;
+    }
 }
