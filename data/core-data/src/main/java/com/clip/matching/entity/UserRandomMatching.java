@@ -1,15 +1,17 @@
 package com.clip.matching.entity;
 
+import com.clip.common.entity.BaseEntity;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserRandomMatching {
+public class UserRandomMatching extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +26,16 @@ public class UserRandomMatching {
     private RandomMatching randomMatching;
 
     @Column
-    private String question;
+    private String myOneThingContent;
+
+    @Column
+    private boolean isCheckedMatchingStart;
+
+    @Builder
+    public UserRandomMatching(User user, RandomMatching randomMatching, String myOneThingContent, boolean isCheckedMatchingStart) {
+        this.user = user;
+        this.randomMatching = randomMatching;
+        this.myOneThingContent = myOneThingContent;
+        this.isCheckedMatchingStart = isCheckedMatchingStart;
+    }
 }

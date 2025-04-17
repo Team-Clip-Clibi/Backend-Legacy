@@ -46,7 +46,7 @@ public class OneThingOrderRepositoryTest {
     void saveReadyOneThingOrder() {
         //given
         User user = userRepository.save(User.builder().build());
-        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(new OneThingMatching());
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().build());
 
         //when
         OneThingOrder oneThingOrder = OneThingOrder.builder()
@@ -74,7 +74,7 @@ public class OneThingOrderRepositoryTest {
     void failSaveOneThingMatchingOrder() {
         //given
         User user = userRepository.save(User.builder().build());
-        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(new OneThingMatching());
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().build());
 
         //when
         OneThingOrder oneThingOrder1 = OneThingOrder.builder()
@@ -103,7 +103,7 @@ public class OneThingOrderRepositoryTest {
         Integer amount = 4500;
 
         User user = userRepository.save(User.builder().build());
-        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(new OneThingMatching());
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().build());
 
         return List.of(DynamicTest.dynamicTest("유저가 원띵 모임을 신청하면 READY 상태의 주문서가 발행된다.",()->{
             //when

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +38,29 @@ public class MatchingService {
 
     public List<UserRandomMatching> findUserRandomMatchings(final Long userId) {
         return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now());
+    }
+
+    public Optional<UserOneThingMatching> findOptLatestUserOneThingMatching(long userId) {
+        return userOneThingMatchingRepository.findLatestUserOneThingMatching(userId, LocalDateTime.now().minusHours(2));
+    }
+
+    public Optional<UserRandomMatching> findOptLatestUserRandomMatching(long userId) {
+        return userRandomMatchingRepository.findLatestUserRandomMatching(userId, LocalDateTime.now().minusHours(2));
+    }
+
+    public List<UserRandomMatching> findAllUserRandomMatchings(long randomMatchingId) {
+        return userRandomMatchingRepository.findUserRandomMatching(randomMatchingId);
+    }
+
+    public List<UserOneThingMatching> findAllUserOneThingMatchings(long oneThingMatchingId) {
+        return userOneThingMatchingRepository.findUserOneThingMatching(oneThingMatchingId);
+    }
+
+    public void updateUserOneThingMatchingStatusChecked(long userId, long userOneThingMatchingId) {
+        userOneThingMatchingRepository.updateStatusChecked(userId, userOneThingMatchingId);
+    }
+
+    public void updateUserRandomMatchingStatusChecked(long userId, long userRandomMatchingId) {
+        userRandomMatchingRepository.updateStatusChecked(userId, userRandomMatchingId);
     }
 }

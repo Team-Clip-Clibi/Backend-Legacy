@@ -1,5 +1,6 @@
 package com.clip.global.exception;
 
+import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
 import com.clip.notification.exception.NotExistNotificationException;
 import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.user.exception.NicknameAlreadyExistsException;
@@ -40,6 +41,11 @@ public class ValidExceptionHandler {
 
     @ExceptionHandler(NotExistNotificationException.class)
     public ResponseEntity<?> notExistNotificationException(NotExistNotificationException e) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ExceptionHandler(NotExistAnyMatchingException.class)
+    public ResponseEntity<?> notExistAnyMatchingException(NotExistAnyMatchingException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

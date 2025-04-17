@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("URL: {} , User-Agent: {}", request.getRequestURI(), request.getHeader("User-Agent"));
+        log.info("URL: {} , User-Agent: {}", request.getMethod() + ": " + request.getRequestURI(), request.getHeader("User-Agent"));
         if (!isExcludedPath(request)) {
             try {
                 String token = getToken(request);
