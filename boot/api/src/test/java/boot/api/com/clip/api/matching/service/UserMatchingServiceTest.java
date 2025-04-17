@@ -43,6 +43,7 @@ public class UserMatchingServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
     @MockitoBean
     private S3ImgService s3ImgService;
     @MockitoBean
