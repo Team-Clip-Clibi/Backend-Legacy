@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 @Service
@@ -29,64 +30,57 @@ public class MatchingNotificationService {
             List<UserOneThingMatching> items,
             MessageTemplateType templateType
     ) {
-        List<Notification> notifications = new ArrayList<>();
-        List<FcmNotificationEvent.UserFcmData> fcmDataList = new ArrayList<>();
-
-        for (UserOneThingMatching item : items) {
-            // FCM 데이터 준비
-            User user = item.getUser();
-            String token = user.getFirebaseToken();
-            String dayOfWeek = item.getOneThingMatching().getMeetingTime().getDayOfWeek().name();
-            String time = String.valueOf(item.getOneThingMatching().getMeetingTime().getHour());
-            String deviceType = user.getDeviceType().name();
-
-            // MessageParams 객체 생성
-            MessageParams.DayOfWeekAndTimeParams messageParams =
-                    new MessageParams.DayOfWeekAndTimeParams(dayOfWeek, time);
-
-            // NotificationType을 사용하여 메시지 생성
-            String message = templateType.generateMessage(messageParams);
-
-            notifications.add(new Notification(
-                    NotificationType.MEETING,
-                    false,
-                    message,
-                    user
-            ));
-
-            fcmDataList.add(new FcmNotificationEvent.UserFcmData(
-                    item.getOneThingMatching().getId(),
-                    deviceType,
-                    token,
-                    messageParams
-            ));
-        }
-
-        sendNotificationsAndPublishEvent(notifications, fcmDataList, templateType, "ONE_THING");
+        processMatchingNotifications(
+                items,
+                templateType,
+                "ONE_THING",
+                item -> item.getUser(),
+                item -> item.getOneThingMatching().getMeetingTime().getDayOfWeek().name(),
+                item -> String.valueOf(item.getOneThingMatching().getMeetingTime().getHour()),
+                item -> item.getOneThingMatching().getId()
+        );
     }
 
     public void processRandomMatchingNotifications(
             List<UserRandomMatching> items,
             MessageTemplateType templateType
     ) {
-        if (items.isEmpty()) return;
+        processMatchingNotifications(
+                items,
+                templateType,
+                "RANDOM",
+                item -> item.getUser(),
+                item -> item.getRandomMatching().getMeetingTime().getDayOfWeek().name(),
+                item -> String.valueOf(item.getRandomMatching().getMeetingTime().getHour()),
+                item -> item.getRandomMatching().getId()
+        );
+    }
 
+    private <T> void processMatchingNotifications(
+            List<T> items,
+            MessageTemplateType templateType,
+            String matchingType,
+            Function<T, User> userExtractor,
+            Function<T, String> dayOfWeekExtractor,
+            Function<T, String> timeExtractor,
+            Function<T, Long> matchingIdExtractor
+    ) {
         List<Notification> notifications = new ArrayList<>();
         List<FcmNotificationEvent.UserFcmData> fcmDataList = new ArrayList<>();
 
-        for (UserRandomMatching item : items) {
+        for (T item : items) {
             // FCM 데이터 준비
-            User user = item.getUser();
+            User user = userExtractor.apply(item);
             String token = user.getFirebaseToken();
-            String dayOfWeek = item.getRandomMatching().getMeetingTime().getDayOfWeek().name();
-            String time = String.valueOf(item.getRandomMatching().getMeetingTime().getHour());
+            String dayOfWeek = dayOfWeekExtractor.apply(item);
+            String time = timeExtractor.apply(item);
             String deviceType = user.getDeviceType().name();
 
             // MessageParams 객체 생성
             MessageParams.DayOfWeekAndTimeParams messageParams =
                     new MessageParams.DayOfWeekAndTimeParams(dayOfWeek, time);
 
-            // NotificationType을 사용하여 메시지 생성
+            // 메시지 생성
             String message = templateType.generateMessage(messageParams);
 
             notifications.add(new Notification(
@@ -97,14 +91,14 @@ public class MatchingNotificationService {
             ));
 
             fcmDataList.add(new FcmNotificationEvent.UserFcmData(
-                    item.getRandomMatching().getId(),
+                    matchingIdExtractor.apply(item),
                     deviceType,
                     token,
                     messageParams
             ));
         }
 
-        sendNotificationsAndPublishEvent(notifications, fcmDataList, templateType, "RANDOM");
+        sendNotificationsAndPublishEvent(notifications, fcmDataList, templateType, matchingType);
     }
 
     private void sendNotificationsAndPublishEvent(
