@@ -1,13 +1,8 @@
 package com.clip.batch.notification;
 
-import com.clip.infra.fcm.event.FcmNotificationEvent;
-import com.clip.infra.fcm.service.MessageParams;
+import com.clip.batch.notification.service.MatchingProgressNotificationService;
 import com.clip.infra.fcm.service.MessageTemplateType;
 import com.clip.matching.entity.UserRandomMatching;
-import com.clip.notification.entity.Notification;
-import com.clip.notification.entity.NotificationType;
-import com.clip.notification.service.NotificationService;
-import com.clip.user.entity.User;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -25,7 +20,6 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,7 +29,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Configuration
@@ -45,8 +38,7 @@ public class RandomMatchingProgressNotificationBatchConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
     private final EntityManagerFactory entityManagerFactory;
-    private final ApplicationEventPublisher sendFCMEventPublisher;
-    private final NotificationService notificationService;
+    private final MatchingProgressNotificationService matchingProgressNotificationService;
     private static final int CHUNK_SIZE = 100;
     private static final int PAGE_SIZE = 100;
 
@@ -114,91 +106,11 @@ public class RandomMatchingProgressNotificationBatchConfig {
     public ItemWriter<UserRandomMatching> fcmRandomProgressWriter(
             @Value("#{jobParameters['notificationType']}") String notificationType
     ) {
-        return items -> {
+        return chunk -> {
+            List<UserRandomMatching> items = new ArrayList<>(chunk.getItems());
             if (items.isEmpty()) return;
-
-            // RandomMatching ID 기준으로 그룹화
-            Map<Long, List<UserRandomMatching>> groupedByMatchingId = new HashMap<>();
-            for (UserRandomMatching item : items) {
-                Long matchingId = item.getRandomMatching().getId();
-                if (!groupedByMatchingId.containsKey(matchingId)) {
-                    groupedByMatchingId.put(matchingId, new ArrayList<>());
-                }
-                groupedByMatchingId.get(matchingId).add(item);
-            }
-
-            // 모든 알림과 FCM 데이터를 저장할 리스트
-            List<Notification> allNotifications = new ArrayList<>();
-            List<FcmNotificationEvent.UserFcmData> allFcmDataList = new ArrayList<>();
-
-            // 각 그룹별로 처리
-            for (Map.Entry<Long, List<UserRandomMatching>> entry : groupedByMatchingId.entrySet()) {
-                Long matchingId = entry.getKey();
-                List<UserRandomMatching> matchingUsers = entry.getValue();
-
-                // 알림 객체와 FCM 데이터 준비
-                // 각 그룹별 알림 객체와 FCM 데이터 준비
-                List<Notification> groupNotifications = new ArrayList<>();
-                List<FcmNotificationEvent.UserFcmData> groupFcmDataList = new ArrayList<>();
-
-                // 각 사용자별 알림 생성
-                String randomNickname = null;
-                if ("MATCHING_STARTED".equals(notificationType)) {
-                    // 랜덤으로 한 명의 사용자 선택하여 닉네임 추출
-                    int randomIndex = (int) (Math.random() * matchingUsers.size());
-                    randomNickname = matchingUsers.get(randomIndex).getUser().getNickname();
-                }
-
-                for (UserRandomMatching item : matchingUsers) {
-                    User user = item.getUser();
-                    String token = user.getFirebaseToken();
-                    String nickname = "MATCHING_STARTED".equals(notificationType)
-                            ? randomNickname  // MATCHING_STARTED일 경우 랜덤 선택된 닉네임 사용
-                            : user.getNickname();  // 그 외의 경우 각 사용자의 닉네임 사용
-                    String deviceType = user.getDeviceType().name();
-
-                    // 메시지 생성
-                    MessageParams.NicknameParams messageParams = new MessageParams.NicknameParams(nickname);
-                    MessageTemplateType templateType = MessageTemplateType.valueOf(notificationType);
-                    String message = templateType.generateMessage(messageParams);
-
-                    // 알림 객체 생성
-                    groupNotifications.add(new Notification(
-                            NotificationType.MEETING,
-                            false,
-                            message,
-                            user
-                    ));
-
-                    groupFcmDataList.add(new FcmNotificationEvent.UserFcmData(
-                            matchingId,
-                            deviceType,
-                            token,
-                            messageParams
-                    ));
-                }
-
-                // 그룹별 데이터를 전체 리스트에 추가
-                allNotifications.addAll(groupNotifications);
-                allFcmDataList.addAll(groupFcmDataList);
-            }
-            // 모든 알림 일괄 저장
-            List<Notification> savedNotifications = notificationService.saveNotifications(allNotifications);
-
-            // 알림 ID와 FCM 데이터 매핑
-            Map<Long, FcmNotificationEvent.UserFcmData> userDataMap = new HashMap<>();
-            IntStream.range(0, savedNotifications.size())
-                    .forEach(i -> userDataMap.put(savedNotifications.get(i).getId(), allFcmDataList.get(i)));
-
-            // FCM 이벤트 발행 (한 번만)x
-            if (!userDataMap.isEmpty()) {
-                sendFCMEventPublisher.publishEvent(new FcmNotificationEvent.GeneralFcmBatchSendEvent(
-                        this,
-                        MessageTemplateType.valueOf(notificationType),
-                        "RANDOM",
-                        userDataMap
-                ));
-            }
+            MessageTemplateType templateType = MessageTemplateType.valueOf(notificationType);
+            matchingProgressNotificationService.processRandomProgressNotifications(items, templateType);
         };
     }
 }
