@@ -27,11 +27,7 @@ public interface DisplayInfoDocs {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "조회 성공",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = BannerInfoDto.class)
-            )
+            description = "조회 성공"
     )
     @GetMapping("/banners/{bannerType}")
     List<BannerInfoDto> getBanners(@PathVariable final BannerType bannerType);
@@ -45,11 +41,7 @@ public interface DisplayInfoDocs {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "조회 성공",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = NoticeInfoDto.class)
-            )
+            description = "조회 성공"
     )
     @GetMapping("/notices")
     List<NoticeInfoDto> getNotices();
