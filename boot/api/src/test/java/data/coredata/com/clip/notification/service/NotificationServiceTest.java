@@ -2,7 +2,9 @@ package data.coredata.com.clip.notification.service;
 
 import com.clip.ApiApplication;
 import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.notification.entity.Notification;
 import com.clip.notification.entity.NotificationType;
 import com.clip.notification.repository.NotificationRepository;
@@ -36,6 +38,10 @@ public class NotificationServiceTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private S3FCMService s3FCMService;
+    @MockitoBean
+    private FcmConfig fcmConfig;
 
     @AfterEach
     void tearDown() {

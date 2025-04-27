@@ -25,12 +25,15 @@ public class UserOneThingMatching extends BaseEntity {
     @JoinColumn(name = "onething_matching_id")
     private OneThingMatching oneThingMatching;
 
+    // 변수명 변경
     @Column
     private String myOneThingContent;
 
+    // 변수명 변경
     @Column
     private String myQuizContent;
 
+    // 변수명 변경
     @Column
     private boolean isCheckedMatchingStart;
 
