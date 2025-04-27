@@ -14,7 +14,7 @@ import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
 import com.clip.user.exception.UserNotFoundException;
-import com.clip.user.repository.JobRepository;
+import com.clip.user.repository.UserJobRepository;
 import com.clip.user.repository.UserRepository;
 import com.clip.user.service.UserService;
 import io.jsonwebtoken.Jwts;
@@ -53,7 +53,7 @@ public class UserAccountServiceTest {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private JobRepository jobRepository;
+    private UserJobRepository userJobRepository;
     @MockitoBean
     private S3ImgService s3ImgService;
     @MockitoBean
@@ -62,7 +62,7 @@ public class UserAccountServiceTest {
     @AfterEach
     void tearDown() {
         tokenRepository.deleteAllInBatch();
-        jobRepository.deleteAllInBatch();
+        userJobRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
