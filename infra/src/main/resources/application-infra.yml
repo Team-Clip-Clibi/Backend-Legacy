@@ -14,5 +14,7 @@ cloud:
     s3:
       bucket: ${S3_BUCKET_NAME}
       region: ap-northeast-2
+      fcm:
+        sdk: ${FCM_SDK}
     stack:
       auto: false
