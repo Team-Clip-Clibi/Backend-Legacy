@@ -1,10 +1,11 @@
 package com.clip.api.docs.matching;
 
+import com.clip.api.matching.controller.dto.MatchingOverviewDto;
 import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
 import com.clip.api.matching.controller.dto.MatchingSummaryDto;
 import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.matching.entity.MatchingStatus;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -75,4 +76,23 @@ public interface UserMatchingDocs {
     void updateMatchingStatusChecked(@PathVariable MatchingType matchingType,
                                      @PathVariable long matchingId,
                                      @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "모임 현황 조회",
+            description = """
+                     - 내 모임 화면에서 사용되는 API입니다.
+                     - 다음 모임 날짜 및 신청 완료 & 매칭 확정 모임 정보 및 안내문 전체 조회 여부 값을 조회하는 API입니다.
+                    \s""",
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MatchingOverviewDto.class)
+            )
+    )
+    @GetMapping("/overview")
+    MatchingOverviewDto getMatchingOverview(@AuthenticationPrincipal UserDetails userDetails);
 }
