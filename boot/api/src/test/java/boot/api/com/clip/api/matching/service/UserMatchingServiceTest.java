@@ -57,6 +57,7 @@ public class UserMatchingServiceTest {
         userRandomMatchingRepository.deleteAllInBatch();
         oneThingMatchingRepository.deleteAllInBatch();
         randomMatchingRepository.deleteAllInBatch();
+        userOneThingMatchingRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
