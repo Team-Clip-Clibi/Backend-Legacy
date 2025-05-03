@@ -127,7 +127,6 @@ public class OneThingOrderRepositoryTest {
             OneThingOrder oneThingOrder = oneThingOrderRepository.findOneThingOrder(user.getId(), oneThingMatching.getId()).get();
             oneThingOrder.updateStatus(OneThingOrderStatus.DONE);
             TossPayment tossPayment = TossPayment.builder()
-                    .orderId(orderId)
                     .paymentId(paymentId)
                     .amount(amount)
                     .build();
@@ -145,7 +144,6 @@ public class OneThingOrderRepositoryTest {
             OneThingOrder oneThingOrder = oneThingOrderRepository.findOneThingOrder(user.getId(), oneThingMatching.getId()).get();
             oneThingOrder.updateStatus(OneThingOrderStatus.CANCELED);
             TossPayment tossPayment = TossPayment.builder()
-                    .orderId(orderId)
                     .paymentId(paymentId)
                     .amount(amount)
                     .build();
@@ -231,7 +229,6 @@ public class OneThingOrderRepositoryTest {
             RandomOrder randomOrder = randomOrderRepository.findRandomOrder(user.getId(), randomMatching.getId()).get();
             randomOrder.updateStatus(RandomOrderStatus.DONE);
             TossPayment tossPayment = TossPayment.builder()
-                    .orderId(orderId)
                     .paymentId(paymentId)
                     .amount(amount)
                     .build();
@@ -249,7 +246,6 @@ public class OneThingOrderRepositoryTest {
             RandomOrder randomOrder = randomOrderRepository.findRandomOrder(user.getId(), randomMatching.getId()).get();
             randomOrder.updateStatus(RandomOrderStatus.CANCELED);
             TossPayment tossPayment = TossPayment.builder()
-                    .orderId(orderId)
                     .paymentId(paymentId)
                     .amount(amount)
                     .build();
