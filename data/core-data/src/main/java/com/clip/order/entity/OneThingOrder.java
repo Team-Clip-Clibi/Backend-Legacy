@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -22,6 +23,12 @@ public class OneThingOrder extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column
+    private UUID orderId;
+
+    @Column
+    private Integer amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -40,8 +47,10 @@ public class OneThingOrder extends BaseEntity {
     private List<TossPayment> tossPayment = new ArrayList<>();
 
     @Builder
-    public OneThingOrder(User user, OneThingOrderStatus status, OneThingMatching oneThingMatching, List<TossPayment> tossPayment) {
+    public OneThingOrder(User user, UUID orderId, Integer amount, OneThingOrderStatus status, OneThingMatching oneThingMatching, List<TossPayment> tossPayment) {
         this.user = user;
+        this.orderId = orderId;
+        this.amount = amount;
         this.status = status;
         this.oneThingMatching = oneThingMatching;
         this.tossPayment = tossPayment;
