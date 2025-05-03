@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,12 +38,31 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private boolean isCheckedMatchingStart;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private OneThingBudgetRange oneThingBudgetRange;
+
+    @ElementCollection(targetClass = PreferredDate.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "id"))
+    @Column
+    private List<PreferredDate> preferredDates = new ArrayList<>();
+
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart) {
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.myOneThingContent = myOneThingContent;
         this.myQuizContent = myQuizContent;
         this.isCheckedMatchingStart = isCheckedMatchingStart;
+        this.preferredDates = preferredDates;
+        this.oneThingBudgetRange = oneThingBudgetRange;
+    }
+
+    @Embeddable
+    @Getter
+    public static class PreferredDate{
+        private LocalDate date;
+        @Enumerated(EnumType.STRING)
+        private OneThingTimeSlot timeSlot;
     }
 }
