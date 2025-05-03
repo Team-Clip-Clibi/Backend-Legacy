@@ -44,11 +44,11 @@ public class OneThingMatching extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private OneThingPrice oneThingPrice;
+    private OneThingBudgetRange oneThingPrice;
 
 
     @Builder
-    public OneThingMatching(OneThingDistrict oneThingDistrict, OneThingKeyword oneThingKeyword, String location, String restaurantName, LocalDateTime meetingTime, OneThingPrice oneThingPrice) {
+    public OneThingMatching(OneThingDistrict oneThingDistrict, OneThingKeyword oneThingKeyword, String location, String restaurantName, LocalDateTime meetingTime, OneThingBudgetRange oneThingPrice) {
         this.oneThingDistrict = oneThingDistrict;
         this.oneThingKeyword = oneThingKeyword;
         this.location = location;
@@ -57,7 +57,7 @@ public class OneThingMatching extends BaseEntity {
         this.oneThingPrice = oneThingPrice;
     }
 
-    public void update(OneThingDistrict oneThingDistrict, String location, String restaurantName, LocalDateTime meetingTime, OneThingPrice oneThingPrice) {
+    public void update(OneThingDistrict oneThingDistrict, String location, String restaurantName, LocalDateTime meetingTime, OneThingBudgetRange oneThingPrice) {
         this.oneThingDistrict = oneThingDistrict;
         this.location = location;
         this.restaurantName = restaurantName;

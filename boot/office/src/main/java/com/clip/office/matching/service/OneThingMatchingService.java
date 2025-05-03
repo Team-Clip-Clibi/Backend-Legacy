@@ -48,7 +48,7 @@ public class OneThingMatchingService {
                 updateOneThingMatchingDto.getLocation(),
                 updateOneThingMatchingDto.getRestaurantName(),
                 updateOneThingMatchingDto.getMeetingTime(),
-                updateOneThingMatchingDto.getOneThingPrice());
+                updateOneThingMatchingDto.getOneThingBudgetRange());
 
         oneThingMatchingDataService.save(oneThingMatching);
     }
@@ -62,7 +62,7 @@ public class OneThingMatchingService {
                 .location(oneThingMatching.getLocation())
                 .restaurantName(oneThingMatching.getRestaurantName())
                 .meetingTime(oneThingMatching.getMeetingTime())
-                .oneThingPrice(oneThingMatching.getOneThingPrice())
+                .oneThingBudgetRange(oneThingMatching.getOneThingPrice())
                 .build();
     }
 
