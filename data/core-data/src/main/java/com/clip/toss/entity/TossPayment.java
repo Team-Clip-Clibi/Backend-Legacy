@@ -22,9 +22,6 @@ public class TossPayment extends BaseEntity {
     private String paymentId;
 
     @Column
-    private UUID orderId;
-
-    @Column
     private Integer amount;
 
     @Column
@@ -53,9 +50,8 @@ public class TossPayment extends BaseEntity {
     private String jsonResponsePayload;
 
     @Builder
-    public TossPayment(String paymentId, UUID orderId, Integer amount, Integer refundAmount, TossPaymentStatus tossPaymentStatus, String currency, String method, OffsetDateTime requested_at, OffsetDateTime approvedAt, String receipt_url, String jsonResponsePayload) {
+    public TossPayment(String paymentId, Integer amount, Integer refundAmount, TossPaymentStatus tossPaymentStatus, String currency, String method, OffsetDateTime requested_at, OffsetDateTime approvedAt, String receipt_url, String jsonResponsePayload) {
         this.paymentId = paymentId;
-        this.orderId = orderId;
         this.amount = amount;
         this.refundAmount = refundAmount;
         this.tossPaymentStatus = tossPaymentStatus;

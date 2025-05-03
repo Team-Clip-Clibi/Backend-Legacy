@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -22,6 +23,9 @@ public class RandomOrder extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column
+    private UUID orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -40,8 +44,9 @@ public class RandomOrder extends BaseEntity {
     private List<TossPayment> tossPayment = new ArrayList<>();
 
     @Builder
-    public RandomOrder(User user, RandomOrderStatus status, RandomMatching randomMatching, List<TossPayment> tossPayment) {
+    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, List<TossPayment> tossPayment) {
         this.user = user;
+        this.orderId = orderId;
         this.status = status;
         this.randomMatching = randomMatching;
         this.tossPayment = tossPayment;

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.time.LocalDateTime;
+
 @ContextConfiguration(classes = ApiApplication.class)
 @DataJpaTest
 public class TokenRepositoryTest {
@@ -28,7 +30,7 @@ public class TokenRepositoryTest {
         tokenRepository.save(Token.builder().user(user).refreshToken("refresh1").build());
 
         //when
-        tokenRepository.updateRefreshToken(user,"refresh2");
+        tokenRepository.updateRefreshToken(user,"refresh2", LocalDateTime.now());
         String refreshToken = tokenRepository.findById(user.getId()).get().getRefreshToken();
         //then
         Assertions.assertThat(refreshToken).isEqualTo("refresh2");
