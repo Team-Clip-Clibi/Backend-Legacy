@@ -1,14 +1,13 @@
 package com.clip.matching.service;
 
-import com.clip.matching.entity.OneThingMatching;
-import com.clip.matching.entity.RandomMatching;
-import com.clip.matching.entity.UserOneThingMatching;
-import com.clip.matching.entity.UserRandomMatching;
+import com.clip.matching.entity.*;
 import com.clip.matching.exception.MatchingNotFoundException;
 import com.clip.matching.repository.OneThingMatchingRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
 import com.clip.matching.repository.UserRandomMatchingRepository;
+import com.clip.order.entity.OneThingOrderStatus;
+import com.clip.order.entity.RandomOrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +39,12 @@ public class MatchingService {
         return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now());
     }
 
-    public Optional<UserOneThingMatching> findOptLatestUserOneThingMatching(long userId) {
-        return userOneThingMatchingRepository.findLatestUserOneThingMatching(userId, LocalDateTime.now().minusHours(2));
+    public Optional<UserOneThingMatching> findOptLatestUserOneThingMatching(long userId, LocalDateTime dateTime) {
+        return userOneThingMatchingRepository.findLatestUserOneThingMatching(userId, dateTime);
     }
 
-    public Optional<UserRandomMatching> findOptLatestUserRandomMatching(long userId) {
-        return userRandomMatchingRepository.findLatestUserRandomMatching(userId, LocalDateTime.now().minusHours(2));
+    public Optional<UserRandomMatching> findOptLatestUserRandomMatching(long userId, LocalDateTime dateTime) {
+        return userRandomMatchingRepository.findLatestUserRandomMatching(userId, dateTime);
     }
 
     public List<UserRandomMatching> findAllUserRandomMatchings(long randomMatchingId) {
@@ -62,5 +61,21 @@ public class MatchingService {
 
     public void updateUserRandomMatchingStatusChecked(long userId, long userRandomMatchingId) {
         userRandomMatchingRepository.updateStatusChecked(userId, userRandomMatchingId);
+    }
+
+    public List<UserOneThingMatching> findAllConfirmedOneThingMatching(long userId, MatchingStatus matchingStatus) {
+        return userOneThingMatchingRepository.findConfirmedUserOneThingMatching(userId, matchingStatus);
+    }
+
+    public List<UserRandomMatching> findAllConfirmedRandomMatching(long userId, MatchingStatus matchingStatus) {
+        return userRandomMatchingRepository.findConfirmedUserRandomMatching(userId, matchingStatus);
+    }
+
+    public List<UserOneThingMatching> findAllAppliedOneThingMatching(long userId, MatchingStatus matchingStatus) {
+        return userOneThingMatchingRepository.findAppliedUserOneThingMatching(userId, matchingStatus, OneThingOrderStatus.DONE);
+    }
+
+    public List<UserRandomMatching> findAllAppliedRandomMatching(long userId, MatchingStatus matchingStatus) {
+        return userRandomMatchingRepository.findAppliedUserRandomMatching(userId, matchingStatus, RandomOrderStatus.DONE);
     }
 }
