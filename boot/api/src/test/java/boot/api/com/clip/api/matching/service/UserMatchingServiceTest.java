@@ -1,6 +1,7 @@
 package boot.api.com.clip.api.matching.service;
 
 import com.clip.ApiApplication;
+import com.clip.api.matching.controller.dto.MatchingOverviewDto;
 import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingService;
@@ -9,11 +10,14 @@ import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.infra.fcm.config.FcmConfig;
-import com.clip.matching.entity.OneThingMatching;
-import com.clip.matching.entity.RandomMatching;
-import com.clip.matching.entity.UserOneThingMatching;
-import com.clip.matching.entity.UserRandomMatching;
+import com.clip.matching.entity.*;
 import com.clip.matching.repository.*;
+import com.clip.order.entity.OneThingOrder;
+import com.clip.order.entity.OneThingOrderStatus;
+import com.clip.order.entity.RandomOrder;
+import com.clip.order.entity.RandomOrderStatus;
+import com.clip.order.repository.OneThingOrderRepository;
+import com.clip.order.repository.RandomOrderRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -46,6 +50,10 @@ public class UserMatchingServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private OneThingOrderRepository oneThingOrderRepository;
+    @Autowired
+    private RandomOrderRepository randomOrderRepository;
 
     @MockitoBean
     private S3ImgService s3ImgService;
@@ -60,6 +68,8 @@ public class UserMatchingServiceTest {
     void tearDown() {
         userOneThingMatchingRepository.deleteAllInBatch();
         userRandomMatchingRepository.deleteAllInBatch();
+        oneThingOrderRepository.deleteAllInBatch();
+        randomOrderRepository.deleteAllInBatch();
         oneThingMatchingRepository.deleteAllInBatch();
         randomMatchingRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
@@ -184,4 +194,59 @@ public class UserMatchingServiceTest {
         Assertions.assertThat(userRandomMatchingRepository.findById(userRandomMatching.getId()).get().isCheckedMatchingStart()).isTrue();
 
     }
+
+    @DisplayName("userId로 다음 모임 날짜 및 신청 완료 & 매칭 확정 모임 정보 및 안내문 전체 조회 여부를 반환한다.")
+    @Test
+    public void getMatchingOverview() {
+        //given
+        User user = userRepository.save(User.builder().build());
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
+                .meetingTime(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .build());
+        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder()
+                .meetingTime(LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.SECONDS))
+                .build());
+
+        UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(
+                UserOneThingMatching.builder()
+                        .user(user)
+                        .oneThingMatching(oneThingMatching)
+                        .matchingStatus(MatchingStatus.APPLIED)
+                        .build()
+        );
+
+        UserRandomMatching userRandomMatching = userRandomMatchingRepository.save(
+                UserRandomMatching.builder()
+                        .user(user)
+                        .randomMatching(randomMatching)
+                        .matchingStatus(MatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        OneThingOrder oneThingOrder = oneThingOrderRepository.save(
+                OneThingOrder.builder()
+                        .user(user)
+                        .status(OneThingOrderStatus.DONE)
+                        .oneThingMatching(oneThingMatching)
+                        .build()
+        );
+
+        RandomOrder randomOrder = randomOrderRepository.save(
+                RandomOrder.builder()
+                        .user(user)
+                        .status(RandomOrderStatus.DONE)
+                        .randomMatching(randomMatching)
+                        .build()
+        );
+
+        //when
+        MatchingOverviewDto matchingOverview = userMatchingService.getMatchingOverview(user.getId());
+
+        //then
+        Assertions.assertThat(matchingOverview.getAppliedMatchingCount()).isEqualTo(1);
+        Assertions.assertThat(matchingOverview.getConfirmedMatchingCount()).isEqualTo(1);
+        Assertions.assertThat(matchingOverview.getIsAllNoticeRead()).isFalse();
+        Assertions.assertThat(matchingOverview.getNextMatchingDate()).isEqualTo(oneThingMatching.getMeetingTime().toLocalDate());
+    }
+
 }
