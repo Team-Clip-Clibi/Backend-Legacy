@@ -2,7 +2,7 @@ package com.clip.office.matching.controller.dto;
 
 import com.clip.matching.entity.OneThingDistrict;
 import com.clip.matching.entity.OneThingKeyword;
-import com.clip.matching.entity.OneThingPrice;
+import com.clip.matching.entity.OneThingBudgetRange;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +20,12 @@ public class CreateOneThingMatchingDto {
     private String location;
     private String restaurantName;
     private LocalDateTime meetingTime;
-    private OneThingPrice oneThingPrice;
+    private OneThingBudgetRange oneThingPrice;
 
     @Builder
     public CreateOneThingMatchingDto(OneThingDistrict oneThingDistrict, OneThingKeyword oneThingKeyword,
         String location,
-        String restaurantName, LocalDateTime meetingTime, OneThingPrice oneThingPrice) {
+        String restaurantName, LocalDateTime meetingTime, OneThingBudgetRange oneThingPrice) {
         this.oneThingDistrict = oneThingDistrict;
         this.oneThingKeyword = oneThingKeyword;
         this.location = location;
