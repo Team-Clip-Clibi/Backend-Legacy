@@ -31,11 +31,20 @@ public class UserRandomMatching extends BaseEntity {
     @Column
     private boolean isCheckedMatchingStart;
 
+    @Column
+    private MatchingStatus matchingStatus;
+
+    @Column
+    private boolean isNoticeRead;
+
     @Builder
-    public UserRandomMatching(User user, RandomMatching randomMatching, String myOneThingContent, boolean isCheckedMatchingStart) {
+    public UserRandomMatching(User user, RandomMatching randomMatching, String myOneThingContent, boolean isCheckedMatchingStart,
+                              MatchingStatus matchingStatus, boolean isNoticeRead) {
         this.user = user;
         this.randomMatching = randomMatching;
         this.myOneThingContent = myOneThingContent;
         this.isCheckedMatchingStart = isCheckedMatchingStart;
+        this.matchingStatus = matchingStatus;
+        this.isNoticeRead = isNoticeRead;
     }
 }
