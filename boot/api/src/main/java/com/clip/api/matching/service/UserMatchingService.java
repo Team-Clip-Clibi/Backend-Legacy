@@ -1,9 +1,6 @@
 package com.clip.api.matching.service;
 
-import com.clip.api.matching.controller.dto.MatchingOverviewDto;
-import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
-import com.clip.api.matching.controller.dto.MatchingSummaryDto;
-import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.mapper.MatchingMapper;
 import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
 import com.clip.matching.entity.*;
@@ -200,6 +197,10 @@ public class UserMatchingService {
                 .nextMatchingDate(nextMatchingDate)
                 .isAllNoticeRead(isAllNoticeRead)
                 .build();
+    }
+
+    public List<MatchingDto> getMatchings(MatchingStatus matchingStatus, Long lastId, long userId) {
+        return matchingMapper.toDto(matchingService.findAllMatchings(matchingStatus, lastId, userId));
     }
 
 }

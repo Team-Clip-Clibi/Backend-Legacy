@@ -2,13 +2,13 @@ package com.clip.matching.service;
 
 import com.clip.matching.entity.*;
 import com.clip.matching.exception.MatchingNotFoundException;
-import com.clip.matching.repository.OneThingMatchingRepository;
-import com.clip.matching.repository.RandomMatchingRepository;
-import com.clip.matching.repository.UserOneThingMatchingRepository;
-import com.clip.matching.repository.UserRandomMatchingRepository;
+import com.clip.matching.exception.NotExistMatchingException;
+import com.clip.matching.repository.*;
+import com.clip.matching.repository.projection.MatchingProjectionDto;
 import com.clip.order.entity.OneThingOrderStatus;
 import com.clip.order.entity.RandomOrderStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,10 +18,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
+    private final int PAGE_SIZE = 50;
     private final OneThingMatchingRepository oneThingMatchingRepository;
     private final RandomMatchingRepository randomMatchingRepository;
     private final UserOneThingMatchingRepository userOneThingMatchingRepository;
     private final UserRandomMatchingRepository userRandomMatchingRepository;
+    private final UserMatchingRepository userMatchingRepository;
 
     public OneThingMatching findOneThingMatching(final Long matchingId) {
         return oneThingMatchingRepository.findById(matchingId).orElseThrow(MatchingNotFoundException::new);
@@ -77,5 +79,13 @@ public class MatchingService {
 
     public List<UserRandomMatching> findAllAppliedRandomMatching(long userId, MatchingStatus matchingStatus) {
         return userRandomMatchingRepository.findAppliedUserRandomMatching(userId, matchingStatus, RandomOrderStatus.DONE);
+    }
+
+    public List<MatchingProjectionDto> findAllMatchings(MatchingStatus matchingStatus, Long lastId, long userId) {
+        List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, lastId, userId,PageRequest.ofSize(PAGE_SIZE));
+        if (matchings.isEmpty()) {
+            throw new NotExistMatchingException();
+        }
+        return matchings;
     }
 }
