@@ -1,7 +1,16 @@
 package com.clip.infra.fcm.exception;
 
+import com.google.firebase.messaging.Message;
+import java.util.Map;
+
 public class FcmServerException extends RuntimeException {
-    public FcmServerException() {
-        super("Firebase Cloud Messaging 서버 통신 오류가 발생했습니다");
+    private final Map<Long, Message> failedBatch;
+
+    public FcmServerException(Map<Long, Message> failedBatch) {
+        this.failedBatch = failedBatch;
+    }
+
+    public Map<Long, Message> getFailedBatch() {
+        return failedBatch;
     }
 }

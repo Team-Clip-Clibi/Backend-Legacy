@@ -51,4 +51,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Notification n set n.isRead = true where n.user.id = :userId and n.id = :notificationId")
     void updateToRead(@Param("userId") long userId, @Param("notificationId") long notificationId);
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update Notification n set n.sendStatus = 'FAILED' where n.id in :notificationIds")
+    void updateFcmSendFailedStatus(@Param("notificationIds") List<Long> notificationIds);
 }

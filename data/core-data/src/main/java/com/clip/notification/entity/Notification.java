@@ -27,6 +27,9 @@ public class Notification extends BaseEntity {
     @Column
     private String content;
 
+    @Column
+    private SendStatus sendStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     User user;
@@ -37,5 +40,6 @@ public class Notification extends BaseEntity {
         this.isRead = isRead;
         this.content = content;
         this.user = user;
+        this.sendStatus = SendStatus.SENT;
     }
 }
