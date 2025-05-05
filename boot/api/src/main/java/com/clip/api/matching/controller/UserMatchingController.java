@@ -1,15 +1,14 @@
 package com.clip.api.matching.controller;
 
 import com.clip.api.docs.matching.UserMatchingDocs;
-import com.clip.api.matching.controller.dto.MatchingOverviewDto;
-import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
-import com.clip.api.matching.controller.dto.MatchingSummaryDto;
-import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.service.UserMatchingService;
 import com.clip.matching.entity.MatchingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +34,10 @@ public class UserMatchingController implements UserMatchingDocs {
     @Override
     public MatchingOverviewDto getMatchingOverview(UserDetails userDetails) {
         return userMatchingService.getMatchingOverview(Long.parseLong(userDetails.getUsername()));
+    }
+
+    @Override
+    public List<MatchingDto> findMatchings(MatchingStatus matchingStatus, Long lastId, UserDetails userDetails) {
+        return userMatchingService.getMatchings(matchingStatus, lastId, Long.parseLong(userDetails.getUsername()));
     }
 }
