@@ -1,9 +1,6 @@
 package com.clip.api.docs.matching;
 
-import com.clip.api.matching.controller.dto.MatchingOverviewDto;
-import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
-import com.clip.api.matching.controller.dto.MatchingSummaryDto;
-import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.api.matching.controller.dto.*;
 import com.clip.matching.entity.MatchingStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "매칭 관리", description = "매칭 신청, 조회 etc ")
 @RequestMapping("/matchings")
@@ -95,4 +94,33 @@ public interface UserMatchingDocs {
     )
     @GetMapping("/overview")
     MatchingOverviewDto getMatchingOverview(@AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "모임 리스트 조회 API",
+            description = """
+                    - 모임 리스트를 조회합니다.
+                    - 모임 리스트는 매칭 상태에 따라 구분됩니다.
+                    - 매칭 상태는 APPLIED, CONFIRMED, COMPLETED, CANCELED 로 구분됩니다.
+                    - 전체 조회 시, 파라미터 없이 요청합니다.
+                    - 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 matchingId로 조회 시 204 No Content를 반환합니다.
+                    - 또한 매칭은 최신순으로 정렬되어 반환됩니다.
+                   \s""",
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "조회 성공, 다음 페이지 없음"
+    )
+    @GetMapping
+    List<MatchingDto> findMatchings(
+            @RequestParam(required = false) MatchingStatus status,
+            @RequestParam(required = false) Long lastMatchingId,
+            @AuthenticationPrincipal UserDetails userDetails
+    );
+
+
 }
