@@ -8,14 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update Token t set t.refreshToken = :refreshToken where t.user = :user")
-    void updateRefreshToken(@Param("user") User user, @Param("refreshToken") String refreshToken);
+    @Query("update Token t set t.refreshToken = :refreshToken, t.updatedAt = :updatedAt where t.user = :user")
+    void updateRefreshToken(@Param("user") User user, @Param("refreshToken") String refreshToken, @Param("updatedAt") LocalDateTime updatedAt);
 
     @Query("select t from Token t where t.user.id = :userId")
     Optional<Token> findToken(@Param("userId") Long userId);

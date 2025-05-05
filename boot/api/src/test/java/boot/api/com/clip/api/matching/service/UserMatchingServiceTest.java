@@ -27,7 +27,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -178,10 +177,10 @@ public class UserMatchingServiceTest {
 
         //when
         userMatchingService.updateMatchingStatusChecked(user.getId(),MatchingType.ONE_THING, userOneThingMatching.getId());
-        userMatchingService.updateMatchingStatusChecked(user.getId(),MatchingType.RANDOM, userOneThingMatching.getId());
+        userMatchingService.updateMatchingStatusChecked(user.getId(),MatchingType.RANDOM, userRandomMatching.getId());
 
         //then
-        Assertions.assertThat(userOneThingMatchingRepository.findById(userRandomMatching.getId()).get().isCheckedMatchingStart()).isTrue();
+        Assertions.assertThat(userOneThingMatchingRepository.findById(userOneThingMatching.getId()).get().isCheckedMatchingStart()).isTrue();
         Assertions.assertThat(userRandomMatchingRepository.findById(userRandomMatching.getId()).get().isCheckedMatchingStart()).isTrue();
 
     }

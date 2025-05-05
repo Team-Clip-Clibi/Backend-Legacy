@@ -1,6 +1,6 @@
 package com.clip.matching.entity;
 
-public enum OneThingPrice {
+public enum OneThingBudgetRange {
     LOW,
     MEDIUM,
     HIGH,
