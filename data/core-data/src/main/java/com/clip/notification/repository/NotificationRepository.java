@@ -1,6 +1,7 @@
 package com.clip.notification.repository;
 
 import com.clip.notification.entity.Notification;
+import com.clip.notification.entity.SendStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -54,6 +55,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("update Notification n set n.sendStatus = 'FAILED' where n.id in :notificationIds")
-    void updateFcmSendFailedStatus(@Param("notificationIds") List<Long> notificationIds);
+    @Query("update Notification n set n.sendStatus = :sendStatus where n.id in :notificationIds")
+    void updateFcmSendStatus(@Param("sendStatus") SendStatus sendStatus, @Param("notificationIds") List<Long> notificationIds);
 }

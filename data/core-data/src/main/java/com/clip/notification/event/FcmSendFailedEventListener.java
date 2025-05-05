@@ -1,6 +1,7 @@
 package com.clip.notification.event;
 
 import com.clip.infra.fcm.event.FcmSendFailedEvent;
+import com.clip.notification.entity.SendStatus;
 import com.clip.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class FcmSendFailedEventListener {
             log.warn("FCM 실패 이벤트 수신됨: 실패한 알림 ID가 없습니다.");
 
         // 실패한 알림 상태 변경
-        notificationRepository.updateFcmSendFailedStatus(failedNotificationIds);
+        notificationRepository.updateFcmSendStatus(SendStatus.FAILED, failedNotificationIds);
     }
 
 }
