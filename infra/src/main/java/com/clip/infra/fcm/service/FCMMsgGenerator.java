@@ -4,19 +4,16 @@ import com.clip.infra.fcm.event.FcmNotificationEvent;
 import com.google.firebase.messaging.*;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
 class FCMMsgGenerator {
     private static final String TITLE = "OneThing";
 
-    public List<Message> generateGeneralMsg(final FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
-        List<Message> messages = new ArrayList<>();
+    public Map<Long, Message> generateGeneralMsg(final FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+        Map<Long, Message> messageMap = new HashMap<>();
 
-        // userDataMap의 각 항목에 대해 메시지 생성
         for (Map.Entry<Long, FcmNotificationEvent.UserFcmData> entry : fcmEvent.getUserDataMap().entrySet()) {
             Long notificationId = entry.getKey();
             FcmNotificationEvent.UserFcmData userData = entry.getValue();
@@ -28,10 +25,10 @@ class FCMMsgGenerator {
                     userData
             );
 
-            messages.add(message);
+            messageMap.put(notificationId, message);
         }
 
-        return messages;
+        return messageMap;
     }
 
     private Message generateMessage(
