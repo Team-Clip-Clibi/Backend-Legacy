@@ -298,14 +298,17 @@ public class UserMatchingServiceTest {
         Assertions.assertThat(confirmedMatchings).hasSize(1);
     }
 
-    @DisplayName("userId로 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 matchingId로 조회 시 204 No Content를 반환한다.")
+    @DisplayName("userId로 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 매칭 시간으로 조회 시 204 No Content를 반환한다.")
     @Test
     public void getMatchingByLastId() {
         //given
         User user = userRepository.save(User.builder().build());
         String oneThingContent = "oneThingContent";
+
+        // 과거의 매칭 생성 (6개월 이전)
+        LocalDateTime oldMeetingTime = LocalDateTime.now().minusMonths(7).truncatedTo(ChronoUnit.SECONDS);
         OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
-                .meetingTime(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .meetingTime(oldMeetingTime)
                 .build());
 
         UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(
@@ -317,11 +320,10 @@ public class UserMatchingServiceTest {
                         .build()
         );
 
+        LocalDateTime lastMatchingDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-        //when
-
-        //then
-        assertThatThrownBy(() -> userMatchingService.getMatchings(null, 0L, user.getId()))
+        //when & then
+        assertThatThrownBy(() -> userMatchingService.getMatchings(null, lastMatchingDateTime, user.getId()))
                 .isInstanceOf(NotExistMatchingException.class);
     }
 
