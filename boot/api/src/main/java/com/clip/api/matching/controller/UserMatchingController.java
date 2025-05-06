@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,7 @@ public class UserMatchingController implements UserMatchingDocs {
     }
 
     @Override
-    public List<MatchingDto> findMatchings(MatchingStatus matchingStatus, Long lastId, UserDetails userDetails) {
-        return userMatchingService.getMatchings(matchingStatus, lastId, Long.parseLong(userDetails.getUsername()));
+    public List<MatchingDto> findMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, UserDetails userDetails) {
+        return userMatchingService.getMatchings(matchingStatus, lastMeetingTime, Long.parseLong(userDetails.getUsername()));
     }
 }

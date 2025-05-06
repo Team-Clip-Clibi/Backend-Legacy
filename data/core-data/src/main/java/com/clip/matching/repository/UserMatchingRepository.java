@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UserMatchingRepository extends JpaRepository<UserOneThingMatching, Long> {
@@ -22,8 +23,9 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserOneThingMatching uotm
         join uotm.oneThingMatching
         where (:matchingStatus is null or uotm.matchingStatus = :matchingStatus)
-        and (:lastId is null or uotm.oneThingMatching.id < :lastId)
+        and (uotm.oneThingMatching.meetingTime >= :lastMeetingTime)
         and uotm.user.id = :userId
+        order by uotm.oneThingMatching.meetingTime desc
         
         union all
         
@@ -36,12 +38,13 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserRandomMatching urm
         join urm.randomMatching
         where (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
-        and (:lastId is null or urm.randomMatching.id < :lastId)
+        and (urm.randomMatching.meetingTime >= :lastMeetingTime)
         and urm.user.id = :userId
+        order by urm.randomMatching.meetingTime desc
         """)
     List<MatchingProjectionDto> findAllMatchingsByStatus(
             @Param("matchingStatus") MatchingStatus matchingStatus,
-            @Param("lastId") Long lastId,
+            @Param("lastMeetingTime") LocalDateTime lastMeetingTime,
             @Param("userId") long userId,
             Pageable page);
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "매칭 관리", description = "매칭 신청, 조회 etc ")
@@ -102,7 +103,7 @@ public interface UserMatchingDocs {
                     - 모임 리스트는 매칭 상태에 따라 구분됩니다.
                     - 매칭 상태는 APPLIED, CONFIRMED, COMPLETED, CANCELED 로 구분됩니다.
                     - 전체 조회 시, 파라미터 없이 요청합니다.
-                    - 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 matchingId로 조회 시 204 No Content를 반환합니다.
+                    - 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 meetingTime으로 조회 시 204 No Content를 반환합니다.
                     - 또한 매칭은 최신순으로 정렬되어 반환됩니다.
                    \s""",
             security = @SecurityRequirement(name = "Bearer Token")
@@ -118,7 +119,7 @@ public interface UserMatchingDocs {
     @GetMapping
     List<MatchingDto> findMatchings(
             @RequestParam(required = false) MatchingStatus status,
-            @RequestParam(required = false) Long lastMatchingId,
+            @RequestParam(required = false) LocalDateTime lastMeetingTime,
             @AuthenticationPrincipal UserDetails userDetails
     );
 

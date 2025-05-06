@@ -199,8 +199,8 @@ public class UserMatchingService {
                 .build();
     }
 
-    public List<MatchingDto> getMatchings(MatchingStatus matchingStatus, Long lastId, long userId) {
-        return matchingMapper.toDto(matchingService.findAllMatchings(matchingStatus, lastId, userId));
+    public List<MatchingDto> getMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
+        return matchingMapper.toDto(matchingService.findAllMatchings(matchingStatus, lastMeetingTime, userId));
     }
 
 }

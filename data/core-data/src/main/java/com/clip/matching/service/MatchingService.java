@@ -81,8 +81,9 @@ public class MatchingService {
         return userRandomMatchingRepository.findAppliedUserRandomMatching(userId, matchingStatus, RandomOrderStatus.DONE);
     }
 
-    public List<MatchingProjectionDto> findAllMatchings(MatchingStatus matchingStatus, Long lastId, long userId) {
-        List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, lastId, userId,PageRequest.ofSize(PAGE_SIZE));
+    public List<MatchingProjectionDto> findAllMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
+        LocalDateTime sixMonthsAgo = lastMeetingTime.minusMonths(6);
+        List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, sixMonthsAgo, userId,PageRequest.ofSize(PAGE_SIZE));
         if (matchings.isEmpty()) {
             throw new NotExistMatchingException();
         }
