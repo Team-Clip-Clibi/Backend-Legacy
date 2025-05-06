@@ -59,6 +59,13 @@ dependencies {
     testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
     testImplementation 'com.h2database:h2:1.4.200'
+
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
+
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:6.4.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.4.0'
 }
 
 dependencyManagement {

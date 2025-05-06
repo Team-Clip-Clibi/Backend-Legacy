@@ -2,7 +2,9 @@ package com.clip.office.notice.service;
 
 import com.clip.OfficeApplication;
 import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.notice.entity.Notice;
 import com.clip.notice.entity.NoticeType;
 import com.clip.notice.repository.NoticeRepository;
@@ -53,6 +55,12 @@ class NoticeServiceTest {
 
     @MockitoBean
     private S3Config s3Config;
+
+    @MockitoBean
+    private S3FCMService s3FCMService;
+
+    @MockitoBean
+    private FcmConfig fcmConfig;
 
     @AfterEach
     void tearDown(){

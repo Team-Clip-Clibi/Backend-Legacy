@@ -4,7 +4,9 @@ import com.clip.ApiApplication;
 import com.clip.api.report.controller.dto.ReportDto;
 import com.clip.api.report.service.UserReportService;
 import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.report.entity.Report;
 import com.clip.report.entity.ReportCategory;
 import com.clip.report.repository.ReportRepository;
@@ -37,6 +39,10 @@ public class UserReportServiceTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private S3FCMService s3FCMService;
+    @MockitoBean
+    private FcmConfig fcmConfig;
 
     @AfterEach
     void tearDown() {

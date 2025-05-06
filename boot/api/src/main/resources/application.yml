@@ -4,6 +4,9 @@ spring:
     - core-data
     - office-data
     - infra
+  batch:
+    job:
+        enabled: false
 
 jwt:
   access-token-expiration-period-day: 1

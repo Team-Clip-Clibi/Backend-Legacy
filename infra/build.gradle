@@ -26,7 +26,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
+    implementation 'com.google.firebase:firebase-admin:9.4.3'
+    implementation 'org.springframework.retry:spring-retry'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-tx'
 }
 
 tasks.named('test') {
