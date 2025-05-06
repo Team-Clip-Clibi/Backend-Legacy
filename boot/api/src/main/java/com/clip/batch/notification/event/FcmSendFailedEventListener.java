@@ -1,4 +1,4 @@
-package com.clip.notification.event;
+package com.clip.batch.notification.event;
 
 import com.clip.infra.fcm.event.FcmSendFailedEvent;
 import com.clip.notification.entity.SendStatus;
