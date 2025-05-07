@@ -57,8 +57,8 @@ public class UserService {
         userRepository.updateUserDetailInfo(userId, gender, birth, city, county);
     }
 
-    public User findUser(String phoneNumber) {
-        return userRepository.findUser(phoneNumber)
+    public User findUserExcludeOwner(long ownerId, String phoneNumber) {
+        return userRepository.findUserExcludeOwner(ownerId, phoneNumber)
                 .orElseThrow(UserNotFoundException::new);
     }
 
