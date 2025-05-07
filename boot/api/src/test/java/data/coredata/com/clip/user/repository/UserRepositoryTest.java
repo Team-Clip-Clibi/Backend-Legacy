@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -152,7 +153,7 @@ public class UserRepositoryTest {
                 );
     }
 
-    @DisplayName("phoneNumber으로 User를 찾는다.")
+    @DisplayName("userId와 phoneNumber으로 User를 찾는다.")
     @Test
     void findUser() {
         //given
@@ -160,10 +161,25 @@ public class UserRepositoryTest {
         User user = userRepository.save(User.builder().phoneNumber(phoneNumber).build());
 
         //when
-        User foundUser = userRepository.findUser(phoneNumber).get();
+        User foundUser = userRepository.findUserExcludeOwner(123L, phoneNumber).get();
         entityManager.clear();
         //then
         assertThat(foundUser).isEqualTo(user);
+    }
+
+    @DisplayName("userId에 해당하는 phoneNumber는 반환하지 않는다.")
+    @Test
+    void findUserExcludeOwner() {
+        //given
+        String phoneNumber = "01012345678";
+        User user = userRepository.save(User.builder().phoneNumber(phoneNumber).build());
+
+        //when
+        Optional<User> foundUser = userRepository.findUserExcludeOwner(user.getId(), phoneNumber);
+        entityManager.clear();
+
+        //then
+        assertThat(foundUser).isEmpty();
     }
 
     @DisplayName("nickname이 존재하는지 확인한다.")
