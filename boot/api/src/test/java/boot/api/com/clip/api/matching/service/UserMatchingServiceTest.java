@@ -306,7 +306,7 @@ public class UserMatchingServiceTest {
         String oneThingContent = "oneThingContent";
 
         // 과거의 매칭 생성 (6개월 이전)
-        LocalDateTime oldMeetingTime = LocalDateTime.now().minusMonths(7).truncatedTo(ChronoUnit.SECONDS);
+        LocalDateTime oldMeetingTime = LocalDateTime.now().plusMonths(7).truncatedTo(ChronoUnit.SECONDS);
         OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
                 .meetingTime(oldMeetingTime)
                 .build());

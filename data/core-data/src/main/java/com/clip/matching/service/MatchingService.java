@@ -82,9 +82,7 @@ public class MatchingService {
     }
 
     public List<MatchingProjectionDto> findAllMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
-        LocalDateTime referenceTime = lastMeetingTime != null ? lastMeetingTime : LocalDateTime.now();
-        LocalDateTime sixMonthsAgo = referenceTime.minusMonths(6);
-        List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, referenceTime, sixMonthsAgo, userId,PageRequest.ofSize(PAGE_SIZE));
+        List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, lastMeetingTime, userId, PageRequest.ofSize(PAGE_SIZE));
         if (matchings.isEmpty()) {
             throw new NotExistMatchingException();
         }
