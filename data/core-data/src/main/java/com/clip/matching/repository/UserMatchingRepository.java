@@ -23,7 +23,8 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserOneThingMatching uotm
         join uotm.oneThingMatching
         where (:matchingStatus is null or uotm.matchingStatus = :matchingStatus)
-        and (:lastMeetingTime is null or uotm.oneThingMatching.meetingTime >= :lastMeetingTime)
+        and uotm.oneThingMatching.meetingTime < :referenceTime
+        and uotm.oneThingMatching.meetingTime >= :sixMonthsAgo
         and uotm.user.id = :userId
         order by uotm.oneThingMatching.meetingTime desc
         
@@ -38,13 +39,15 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserRandomMatching urm
         join urm.randomMatching
         where (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
-        and (:lastMeetingTime is null or urm.randomMatching.meetingTime >= :lastMeetingTime)
+        and urm.randomMatching.meetingTime < :referenceTime
+        and urm.randomMatching.meetingTime >= :sixMonthsAgo
         and urm.user.id = :userId
         order by urm.randomMatching.meetingTime desc
         """)
     List<MatchingProjectionDto> findAllMatchingsByStatus(
             @Param("matchingStatus") MatchingStatus matchingStatus,
-            @Param("lastMeetingTime") LocalDateTime lastMeetingTime,
+            @Param("referenceTime") LocalDateTime referenceTime,
+            @Param("sixMonthsAgo") LocalDateTime sixMonthsAgo,
             @Param("userId") long userId,
             Pageable page);
 }
