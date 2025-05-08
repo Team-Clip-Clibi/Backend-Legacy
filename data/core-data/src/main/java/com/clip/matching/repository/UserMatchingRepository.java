@@ -23,7 +23,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserOneThingMatching uotm
         join uotm.oneThingMatching
         where (:matchingStatus is null or uotm.matchingStatus = :matchingStatus)
-        and (uotm.oneThingMatching.meetingTime >= :lastMeetingTime)
+        and (:lastMeetingTime is null or uotm.oneThingMatching.meetingTime >= :lastMeetingTime)
         and uotm.user.id = :userId
         order by uotm.oneThingMatching.meetingTime desc
         
@@ -38,7 +38,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserRandomMatching urm
         join urm.randomMatching
         where (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
-        and (urm.randomMatching.meetingTime >= :lastMeetingTime)
+        and (:lastMeetingTime is null or urm.randomMatching.meetingTime >= :lastMeetingTime)
         and urm.user.id = :userId
         order by urm.randomMatching.meetingTime desc
         """)
