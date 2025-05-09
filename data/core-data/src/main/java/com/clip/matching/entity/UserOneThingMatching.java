@@ -50,8 +50,16 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private List<PreferredDate> preferredDates = new ArrayList<>();
 
+    @Column
+    private MatchingStatus matchingStatus;
+
+    @Column
+    private boolean isNoticeRead;
+
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange) {
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart,
+                                List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
+        MatchingStatus matchingStatus, boolean isNoticeRead) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.myOneThingContent = myOneThingContent;
@@ -59,6 +67,8 @@ public class UserOneThingMatching extends BaseEntity {
         this.isCheckedMatchingStart = isCheckedMatchingStart;
         this.preferredDates = preferredDates;
         this.oneThingBudgetRange = oneThingBudgetRange;
+        this.matchingStatus = matchingStatus;
+        this.isNoticeRead = isNoticeRead;
     }
 
     @Embeddable
