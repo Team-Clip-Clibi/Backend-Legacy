@@ -67,4 +67,8 @@ public class NotificationService {
                 now
         );
     }
+
+    public void updateToClosed(long userId, long notificationBannerId) {
+        notificationBannerRepository.updateToClosed(userId, notificationBannerId);
+    }
 }

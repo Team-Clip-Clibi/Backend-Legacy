@@ -1,5 +1,6 @@
 package com.clip.api.notification.service;
 
+import com.clip.api.notification.controller.dto.NotificationBannerDto;
 import com.clip.api.notification.controller.dto.NotificationDto;
 import com.clip.api.notification.mapper.NotificationMapper;
 import com.clip.notification.service.NotificationService;
@@ -34,5 +35,9 @@ public class UserNotificationService {
         return notificationMapper.toNotificationBannerDto(
                 notificationService.findNotificationBanners(userId)
         );
+    }
+
+    public void updateToClosed(long userId, long notificationBannerId) {
+        notificationService.updateToClosed(userId, notificationBannerId);
     }
 }
