@@ -85,4 +85,20 @@ public interface UserNotificationDocs {
     @GetMapping("/banner")
     List<NotificationBannerDto> findNotificationBanners(@AuthenticationPrincipal UserDetails userDetails);
 
+    @Operation(
+            summary = "홈 화면 알림 배너 닫음 상태 업데이트 API",
+            description = """
+                    유저가 notificationBannerId에 해당하는 알림배너를 닫는 경우 해당 API를 호출하여 알림을 닫기 처리합니다.
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "수정 성공"
+    )
+    @PatchMapping("/banner/status/{notificationBannerId}")
+    void updateToClosedStatus(@PathVariable(value = "notificationBannerId") Long notificationBannerId,
+                              @AuthenticationPrincipal UserDetails userDetails);
+
+
 }
