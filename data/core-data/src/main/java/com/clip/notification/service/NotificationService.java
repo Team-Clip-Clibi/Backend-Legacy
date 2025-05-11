@@ -1,6 +1,8 @@
 package com.clip.notification.service;
 
 import com.clip.notification.entity.Notification;
+import com.clip.notification.entity.NotificationBanner;
+import com.clip.notification.repository.NotificationBannerRepository;
 import com.clip.notification.repository.NotificationRepository;
 import com.clip.notification.exception.NotExistNotificationException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 public class NotificationService {
     private final int PAGE_SIZE = 50;
     private final NotificationRepository notificationRepository;
+    private final NotificationBannerRepository notificationBannerRepository;
 
     public Notification save(Notification notification) {
         return notificationRepository.save(notification);
@@ -53,5 +56,19 @@ public class NotificationService {
 
     public void updateToRead(long userId, long notificationId) {
         notificationRepository.updateToRead(userId, notificationId);
+    }
+
+    public List<NotificationBanner> findNotificationBanners(long userId) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();
+        return notificationBannerRepository.findUndismissedBanners(
+                userId,
+                startOfDay,
+                now
+        );
+    }
+
+    public void updateToClosed(long userId, long notificationBannerId) {
+        notificationBannerRepository.updateToClosed(userId, notificationBannerId);
     }
 }
