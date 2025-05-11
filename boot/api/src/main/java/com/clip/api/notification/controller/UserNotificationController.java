@@ -1,6 +1,7 @@
 package com.clip.api.notification.controller;
 
 import com.clip.api.docs.notification.UserNotificationDocs;
+import com.clip.api.notification.controller.dto.NotificationBannerDto;
 import com.clip.api.notification.controller.dto.NotificationDto;
 import com.clip.api.notification.service.UserNotificationService;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,10 @@ public class UserNotificationController implements UserNotificationDocs {
     @Override
     public List<NotificationBannerDto> findNotificationBanners(UserDetails userDetails) {
         return userNotificationService.getNotificationBanners(Long.parseLong(userDetails.getUsername()));
+    }
+
+    @Override
+    public void updateToClosedStatus(Long notificationBannerId, UserDetails userDetails) {
+        userNotificationService.updateToClosed(Long.parseLong(userDetails.getUsername()), notificationBannerId);
     }
 }
