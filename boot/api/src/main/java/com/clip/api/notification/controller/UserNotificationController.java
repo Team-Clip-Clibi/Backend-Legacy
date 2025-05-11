@@ -29,4 +29,9 @@ public class UserNotificationController implements UserNotificationDocs {
     public void updateToReadStatus(Long lastId, UserDetails userDetails) {
         userNotificationService.updateToRead(Long.parseLong(userDetails.getUsername()), lastId);
     }
+
+    @Override
+    public List<NotificationBannerDto> findNotificationBanners(UserDetails userDetails) {
+        return userNotificationService.getNotificationBanners(Long.parseLong(userDetails.getUsername()));
+    }
 }
