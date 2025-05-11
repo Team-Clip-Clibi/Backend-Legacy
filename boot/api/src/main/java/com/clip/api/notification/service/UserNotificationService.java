@@ -29,4 +29,10 @@ public class UserNotificationService {
     public void updateToRead(long userId, long notificationId) {
         notificationService.updateToRead(userId, notificationId);
     }
+
+    public List<NotificationBannerDto> getNotificationBanners(long userId) {
+        return notificationMapper.toNotificationBannerDto(
+                notificationService.findNotificationBanners(userId)
+        );
+    }
 }
