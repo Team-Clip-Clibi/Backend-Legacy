@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원관리", description = "회원가입, 로그인")
@@ -82,7 +84,7 @@ public interface UserAccountDocs {
             )
     })
     @GetMapping("/{phoneNumber}/info")
-    UserInfoDto getUserInfo(@PathVariable String phoneNumber);
+    UserInfoDto getUserInfo(@PathVariable String phoneNumber, @AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
             summary = "Access Token 재발급 API",

@@ -1,5 +1,6 @@
 package com.clip.api.docs.notification;
 
+import com.clip.api.notification.controller.dto.NotificationBannerDto;
 import com.clip.api.notification.controller.dto.NotificationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,5 +69,36 @@ public interface UserNotificationDocs {
     @PatchMapping("/status/{notificationId}")
     void updateToReadStatus(@PathVariable(value = "notificationId") Long lastId,
                                                 @AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "홈 화면 알림 배너 조회 API",
+            description = """
+                    - 홈 화면에서 알림 배너를 조회합니다.
+                    - 알림 배너 타입은 3가지로, MATCHING(매칭 완료 안내), MATCHING_INFO(매칭 안내문 확인 안내), REVIEW(리뷰 작성 안내)입니다.
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @GetMapping("/banner")
+    List<NotificationBannerDto> findNotificationBanners(@AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "홈 화면 알림 배너 닫음 상태 업데이트 API",
+            description = """
+                    유저가 notificationBannerId에 해당하는 알림배너를 닫는 경우 해당 API를 호출하여 알림을 닫기 처리합니다.
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "수정 성공"
+    )
+    @PatchMapping("/banner/status/{notificationBannerId}")
+    void updateToClosedStatus(@PathVariable(value = "notificationBannerId") Long notificationBannerId,
+                              @AuthenticationPrincipal UserDetails userDetails);
+
 
 }

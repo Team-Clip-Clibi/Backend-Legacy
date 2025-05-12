@@ -6,7 +6,9 @@ import com.clip.api.matching.service.UserMatchingReviewService;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
 import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.Mood;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.entity.RandomMatchingReview;
@@ -23,7 +25,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -52,6 +53,10 @@ public class UserMatchingReviewServiceTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private S3FCMService s3FCMService;
+    @MockitoBean
+    private FcmConfig fcmConfig;
     @MockitoBean
     private FeignConfig feignConfig;
     @MockitoBean

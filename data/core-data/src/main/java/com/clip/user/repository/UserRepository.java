@@ -58,8 +58,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("county") County county
     );
 
-    @Query("select u from User u where u.phoneNumber = :phoneNumber")
-    Optional<User> findUser(@Param("phoneNumber") String phoneNumber);
+    @Query("select u from User u where u.phoneNumber = :phoneNumber and u.id != :accountOwnerId")
+    Optional<User> findUserExcludeOwner(@Param("accountOwnerId") long accountOwnerId, @Param("phoneNumber") String phoneNumber);
 
     boolean existsByNickname(String nickname);
 }

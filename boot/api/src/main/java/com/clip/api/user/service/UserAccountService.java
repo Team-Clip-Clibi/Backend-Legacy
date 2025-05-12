@@ -85,8 +85,8 @@ public class UserAccountService {
         );
     }
 
-    public UserInfoDto getUserInfo(String phoneNumber) {
-        User user = userService.findUser(phoneNumber);
+    public UserInfoDto getUserInfo(long userId, String phoneNumber) {
+        User user = userService.findUserExcludeOwner(userId, phoneNumber);
         return UserInfoDto.builder()
                 .createdAt(user.getCreatedAt())
                 .userName(user.getUsername())

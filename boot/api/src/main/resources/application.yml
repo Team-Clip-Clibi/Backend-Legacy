@@ -6,9 +6,13 @@ spring:
     - infra
   lifecycle:
     timeout-per-shutdown-phase: 10s
+  batch:
+    job:
+      enabled: false
 
 server:
   shutdown: graceful
+
 
 
 jwt:

@@ -27,8 +27,8 @@ public class UserAccountController implements UserAccountDocs {
     }
 
     @Override
-    public UserInfoDto getUserInfo(String phoneNumber) {
-        return userAccountService.getUserInfo(phoneNumber);
+    public UserInfoDto getUserInfo(String phoneNumber, UserDetails userDetails) {
+        return userAccountService.getUserInfo(Long.parseLong(userDetails.getUsername()), phoneNumber);
     }
 
     @Override

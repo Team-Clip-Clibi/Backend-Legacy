@@ -28,7 +28,6 @@ public class RandomMatching {
     private String restaurantName;
 
     @Column
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime meetingTime;
 
     @Builder

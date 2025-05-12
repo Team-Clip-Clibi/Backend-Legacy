@@ -11,12 +11,14 @@ import com.clip.global.config.feign.FeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.user.entity.*;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
 import com.clip.user.exception.UserNotFoundException;
-import com.clip.user.repository.JobRepository;
+import com.clip.user.repository.UserJobRepository;
 import com.clip.user.repository.UserRepository;
 import com.clip.user.service.UserService;
 import io.jsonwebtoken.Jwts;
@@ -55,11 +57,15 @@ public class UserAccountServiceTest {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private JobRepository jobRepository;
+    private UserJobRepository userJobRepository;
     @MockitoBean
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private S3FCMService s3FCMService;
+    @MockitoBean
+    private FcmConfig fcmConfig;
     @MockitoBean
     private FeignConfig feignConfig;
     @MockitoBean
@@ -68,7 +74,7 @@ public class UserAccountServiceTest {
     @AfterEach
     void tearDown() {
         tokenRepository.deleteAllInBatch();
-        jobRepository.deleteAllInBatch();
+        userJobRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
