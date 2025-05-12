@@ -1,11 +1,13 @@
 package boot.api.com.clip.api.user.service;
 
 import com.clip.ApiApplication;
+import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.entity.Token;
 import com.clip.auth.repository.TokenRepository;
 import com.clip.auth.service.TokenService;
+import com.clip.global.config.feign.FeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.infra.aws.s3.S3Config;
@@ -58,6 +60,10 @@ public class UserAccountServiceTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private FeignConfig feignConfig;
+    @MockitoBean
+    private TossPaymentFeign tossPaymentFeign;
 
     @AfterEach
     void tearDown() {

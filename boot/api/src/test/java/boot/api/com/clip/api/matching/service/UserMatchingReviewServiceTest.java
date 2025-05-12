@@ -3,6 +3,8 @@ package boot.api.com.clip.api.matching.service;
 import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
 import com.clip.api.matching.service.UserMatchingReviewService;
+import com.clip.api.payment.feign.TossPaymentFeign;
+import com.clip.global.config.feign.FeignConfig;
 import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.matching.entity.Mood;
@@ -50,6 +52,10 @@ public class UserMatchingReviewServiceTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private FeignConfig feignConfig;
+    @MockitoBean
+    private TossPaymentFeign tossPaymentFeign;
 
     @AfterEach
     void tearDown() {

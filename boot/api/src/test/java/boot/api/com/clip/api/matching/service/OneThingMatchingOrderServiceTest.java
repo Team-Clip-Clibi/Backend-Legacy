@@ -3,6 +3,8 @@ package boot.api.com.clip.api.matching.service;
 import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.OneThingOrderDto;
 import com.clip.api.matching.service.OneThingMatchingOrderService;
+import com.clip.api.payment.feign.TossPaymentFeign;
+import com.clip.global.config.feign.FeignConfig;
 import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
@@ -25,6 +27,10 @@ public class OneThingMatchingOrderServiceTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private FeignConfig feignConfig;
+    @MockitoBean
+    private TossPaymentFeign tossPaymentFeign;
 
     @Autowired
     private UserRepository userRepository;
