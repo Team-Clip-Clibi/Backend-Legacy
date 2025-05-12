@@ -4,11 +4,20 @@ spring:
     - core-data
     - office-data
     - infra
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+server:
+  shutdown: graceful
+
 
 jwt:
   access-token-expiration-period-day: 1
   refresh-token-expiration-period-month: 3
   secret-key: ${JWT_KEY}
+
+toss:
+  secret-key: ${TOSS_KEY}
 
 exclude-auth-path-patterns:
   paths:
