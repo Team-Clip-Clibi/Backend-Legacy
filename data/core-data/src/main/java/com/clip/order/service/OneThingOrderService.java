@@ -2,6 +2,7 @@ package com.clip.order.service;
 
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
+import com.clip.order.exception.OrderNotFoundException;
 import com.clip.order.repository.OneThingOrderRepository;
 import com.clip.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +23,10 @@ public class OneThingOrderService {
                 .amount(amount)
                 .build();
         return oneThingOrderRepository.save(oneThingOrder);
+    }
+
+    public OneThingOrder findOneThingOrder(long userId, UUID orderId) {
+        return oneThingOrderRepository.findOneThingOrder(userId, orderId)
+                .orElseThrow(OrderNotFoundException::new);
     }
 }

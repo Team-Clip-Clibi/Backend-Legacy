@@ -39,16 +39,20 @@ public class RandomOrder extends BaseEntity {
     @JoinColumn(name = "random_id")
     private RandomMatching randomMatching;
 
+    @Column
+    private Integer amount;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tosspayment",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<TossPayment> tossPayment = new ArrayList<>();
 
     @Builder
-    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, List<TossPayment> tossPayment) {
+    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, Integer amount, List<TossPayment> tossPayment) {
         this.user = user;
         this.orderId = orderId;
         this.status = status;
         this.randomMatching = randomMatching;
+        this.amount = amount;
         this.tossPayment = tossPayment;
     }
 
