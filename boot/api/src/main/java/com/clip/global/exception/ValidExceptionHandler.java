@@ -7,6 +7,7 @@ import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.exception.PhoneNumberAlreadyExistsException;
 import com.clip.user.exception.UserNotFoundException;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +54,10 @@ public class ValidExceptionHandler {
     @ExceptionHandler(NotExistMatchingException.class)
     public ResponseEntity<?> notExistMatchingException(NotExistMatchingException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<?> FeignException(FeignException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

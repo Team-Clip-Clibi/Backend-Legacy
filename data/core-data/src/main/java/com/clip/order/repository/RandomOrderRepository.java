@@ -6,9 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface RandomOrderRepository extends JpaRepository<RandomOrder, Long> {
 
     @Query("select r from RandomOrder r where r.user.id = :userId and r.randomMatching.id = :randomMatchingId")
     Optional<RandomOrder> findRandomOrder(@Param("userId") long userId, @Param("randomMatchingId") long randomMatchingId);
+
+    @Query("select r from RandomOrder r where r.user.id = :userId and r.orderId = :orderId")
+    Optional<RandomOrder> findRandomOrder(@Param("userId") long userId, @Param("orderId") UUID orderId);
 }

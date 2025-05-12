@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "원띵 매칭", description = "원띵 매칭 신청")
-@RequestMapping("/onething")
+@RequestMapping("/onethings")
 public interface OneThingMatchingDocs {
 
     @Operation(

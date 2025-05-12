@@ -7,6 +7,8 @@ import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingService;
 import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
+import com.clip.api.payment.feign.TossPaymentFeign;
+import com.clip.global.config.feign.FeignConfig;
 import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -70,6 +72,10 @@ public class UserMatchingServiceTest {
     private S3FCMService s3FCMService;
     @MockitoBean
     private FcmConfig fcmConfig;
+    @MockitoBean
+    private FeignConfig feignConfig;
+    @MockitoBean
+    private TossPaymentFeign tossPaymentFeign;
 
     @AfterEach
     void tearDown() {

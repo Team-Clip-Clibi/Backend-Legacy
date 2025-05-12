@@ -1,5 +1,5 @@
 package com.clip.user.entity;
 
 public enum Gender {
-    MALE,FEMALE
+    MALE,FEMALE,NON_BINARY
 }
