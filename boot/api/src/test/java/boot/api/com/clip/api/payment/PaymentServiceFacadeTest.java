@@ -9,7 +9,9 @@ import com.clip.api.payment.service.PaymentServiceFacade;
 import com.clip.api.payment.service.event.PaymentExceptionEvent;
 import com.clip.global.config.feign.FeignConfig;
 import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
 import com.clip.order.repository.OneThingOrderRepository;
@@ -50,6 +52,10 @@ public class PaymentServiceFacadeTest {
     private S3ImgService s3ImgService;
     @MockitoBean
     private S3Config s3Config;
+    @MockitoBean
+    private S3FCMService s3FCMService;
+    @MockitoBean
+    private FcmConfig fcmConfig;
     @MockitoBean
     private FeignConfig feignConfig;
     @MockitoBean

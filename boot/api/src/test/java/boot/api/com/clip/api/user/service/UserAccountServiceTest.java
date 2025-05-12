@@ -255,7 +255,7 @@ public class UserAccountServiceTest {
 
         //when
         userAccountService.updatePhoneNumber(user.getId(), phoneNumber);
-        user = userService.findUser(phoneNumber);
+        user = userService.findUser(user.getId());
 
         //then
         assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
@@ -285,7 +285,7 @@ public class UserAccountServiceTest {
 
         //when
         userAccountService.updateName(user.getId(), userName);
-        user = userService.findUser(user.getPhoneNumber());
+        user = userService.findUser(user.getId());
 
         //then
         assertThat(user.getUsername()).isEqualTo(userName);
@@ -301,7 +301,7 @@ public class UserAccountServiceTest {
 
         //when
         userAccountService.updateNickname(user.getId(), nickname);
-        user = userService.findUser(user.getPhoneNumber());
+        user = userService.findUser(user.getId());
 
         //then
         assertThat(user.getNickname()).isEqualTo(nickname);
@@ -342,7 +342,7 @@ public class UserAccountServiceTest {
 
         //when
         userAccountService.updateUserDetailInfo(user.getId(), userDetailInfoDto);
-        user = userService.findUser(phoneNumber);
+        user = userService.findUser(user.getId());
 
         //then
         assertThat(user).extracting(
