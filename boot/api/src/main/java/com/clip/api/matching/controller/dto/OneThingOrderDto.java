@@ -1,5 +1,6 @@
 package com.clip.api.matching.controller.dto;
 
+import com.clip.matching.entity.OneThingCategory;
 import com.clip.matching.entity.OneThingDistrict;
 import com.clip.matching.entity.OneThingBudgetRange;
 import com.clip.matching.entity.UserOneThingMatching;
@@ -23,14 +24,16 @@ public class OneThingOrderDto {
         private final List<UserOneThingMatching.PreferredDate> preferredDates;
         private final String tmiContent;
         private final OneThingBudgetRange oneThingBudgetRange;
+        private final OneThingCategory oneThingCategory;
 
         @Builder
-        public Request(String topic, List<OneThingDistrict> districts, List<UserOneThingMatching.PreferredDate> preferredDates, String tmiContent, OneThingBudgetRange oneThingBudgetRange) {
+        public Request(String topic, List<OneThingDistrict> districts, List<UserOneThingMatching.PreferredDate> preferredDates, String tmiContent, OneThingBudgetRange oneThingBudgetRange, OneThingCategory oneThingCategory) {
             this.topic = topic;
             this.districts = districts;
             this.preferredDates = preferredDates;
             this.tmiContent = tmiContent;
             this.oneThingBudgetRange = oneThingBudgetRange;
+            this.oneThingCategory = oneThingCategory;
         }
     }
 
