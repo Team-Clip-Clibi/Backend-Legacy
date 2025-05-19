@@ -57,14 +57,13 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             """)
     List<UserOneThingMatching> findConfirmedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus);
 
+    //todo / to.세은 / 2025-05-18 / OnethingOrder entity 변경으로 인한 쿼리 수정, 정상 동작하는지 확인해주세요!
     @Query("""
             select u
             from UserOneThingMatching u
-            join OneThingOrder o
-            on u.oneThingMatching.id = o.oneThingMatching.id
             where u.user.id = :userId
             and u.matchingStatus = :matchingStatus
-            and o.status = :oneThingOrderStatus
+            and u.oneThingOrder.status = :oneThingOrderStatus
             """)
     List<UserOneThingMatching> findAppliedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus
     , @Param("oneThingOrderStatus") OneThingOrderStatus oneThingOrderStatus);

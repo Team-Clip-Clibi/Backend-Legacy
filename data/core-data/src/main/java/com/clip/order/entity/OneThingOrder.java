@@ -1,14 +1,18 @@
 package com.clip.order.entity;
 
 import com.clip.common.entity.BaseEntity;
-import com.clip.matching.entity.OneThingMatching;
+import com.clip.price.entity.OneThingDiscount;
+import com.clip.price.entity.OneThingPrice;
 import com.clip.toss.entity.TossPayment;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +20,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"onething_id", "user_id"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OneThingOrder extends BaseEntity {
 
     @Id
@@ -27,32 +30,33 @@ public class OneThingOrder extends BaseEntity {
     @Column
     private UUID orderId;
 
-    @Column
-    private Integer amount;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private OneThingPrice price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private OneThingDiscount oneThingDiscount;
+
     @Enumerated(EnumType.STRING)
     @Column
     private OneThingOrderStatus status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "onething_id")
-    private OneThingMatching oneThingMatching;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tosspayment",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<TossPayment> tossPayment = new ArrayList<>();
 
     @Builder
-    public OneThingOrder(User user, UUID orderId, Integer amount, OneThingOrderStatus status, OneThingMatching oneThingMatching, List<TossPayment> tossPayment) {
+    public OneThingOrder(User user, UUID orderId, OneThingPrice oneThingPrice, OneThingDiscount oneThingDiscount, OneThingOrderStatus status, List<TossPayment> tossPayment) {
         this.user = user;
         this.orderId = orderId;
-        this.amount = amount;
+        this.price = oneThingPrice;
+        this.oneThingDiscount = oneThingDiscount;
         this.status = status;
-        this.oneThingMatching = oneThingMatching;
         this.tossPayment = tossPayment;
     }
 
@@ -65,5 +69,28 @@ public class OneThingOrder extends BaseEntity {
 
     public void updateStatus(OneThingOrderStatus status) {
         this.status = status;
+    }
+
+    @Transient
+    public BigDecimal getDiscountedPrice() {
+        if (Objects.isNull(oneThingDiscount)) {
+            return price.getBasePrice();
+        }
+        switch (oneThingDiscount.getDiscountUnit()) {
+            case AMOUNT -> {
+                BigDecimal discountedPrice = price.getBasePrice().subtract(oneThingDiscount.getDiscountValue());
+                return discountedPrice.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : discountedPrice;
+            }
+            case PERCENTAGE -> {
+                BigDecimal discountedPrice = price.getBasePrice()
+                        .multiply(BigDecimal.ONE.subtract(oneThingDiscount.getDiscountValue().divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)))
+                        .setScale(0, RoundingMode.HALF_UP);
+
+                return price.getBasePrice().subtract(discountedPrice).compareTo(BigDecimal.ZERO) < 0 ?
+                        BigDecimal.ZERO :
+                        discountedPrice;
+            }
+        }
+        return BigDecimal.ZERO;
     }
 }

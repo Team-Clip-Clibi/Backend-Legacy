@@ -10,9 +10,6 @@ import java.util.UUID;
 
 public interface OneThingOrderRepository extends JpaRepository<OneThingOrder, Long> {
 
-    @Query("select o from OneThingOrder o where o.user.id = :userId and o.oneThingMatching.id = :oneThingMatchingId")
-    Optional<OneThingOrder> findOneThingOrder(@Param("userId") long userId, @Param("oneThingMatchingId") long oneThingMatchingId);
-
     @Query("select o from OneThingOrder o where o.user.id = :userId and o.orderId = :orderId")
     Optional<OneThingOrder> findOneThingOrder(@Param("userId") long userId, @Param("orderId") UUID orderId);
 }

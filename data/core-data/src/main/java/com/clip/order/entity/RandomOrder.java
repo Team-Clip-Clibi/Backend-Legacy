@@ -2,13 +2,18 @@ package com.clip.order.entity;
 
 import com.clip.common.entity.BaseEntity;
 import com.clip.matching.entity.RandomMatching;
+import com.clip.price.entity.RandomDiscount;
+import com.clip.price.entity.RandomPrice;
 import com.clip.toss.entity.TossPayment;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +21,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"random_id", "user_id"})})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RandomOrder extends BaseEntity {
 
     @Id
@@ -39,21 +43,27 @@ public class RandomOrder extends BaseEntity {
     @JoinColumn(name = "random_id")
     private RandomMatching randomMatching;
 
-    @Column
-    private Integer amount;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private RandomPrice price;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private RandomDiscount randomDiscount;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tosspayment",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<TossPayment> tossPayment = new ArrayList<>();
 
     @Builder
-    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, Integer amount, List<TossPayment> tossPayment) {
+    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, RandomPrice randomPrice, RandomDiscount randomDiscount, List<TossPayment> tossPayment) {
         this.user = user;
         this.orderId = orderId;
         this.status = status;
         this.randomMatching = randomMatching;
-        this.amount = amount;
         this.tossPayment = tossPayment;
+        this.price = randomPrice;
+        this.randomDiscount = randomDiscount;
     }
 
     public void addTossPayment(TossPayment tossPayment) {
@@ -65,5 +75,28 @@ public class RandomOrder extends BaseEntity {
 
     public void updateStatus(RandomOrderStatus randomOrderStatus) {
         this.status = randomOrderStatus;
+    }
+
+    @Transient
+    public BigDecimal getDiscountedPrice() {
+        if (Objects.isNull(randomDiscount)) {
+            return price.getBasePrice();
+        }
+        switch (randomDiscount.getDiscountUnit()) {
+            case AMOUNT -> {
+                BigDecimal discountedPrice = price.getBasePrice().subtract(randomDiscount.getDiscountValue());
+                return discountedPrice.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : discountedPrice;
+            }
+            case PERCENTAGE -> {
+                BigDecimal discountedPrice = price.getBasePrice()
+                        .multiply(BigDecimal.ONE.subtract(randomDiscount.getDiscountValue().divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)))
+                        .setScale(0, RoundingMode.HALF_UP);
+
+                return price.getBasePrice().subtract(discountedPrice).compareTo(BigDecimal.ZERO) < 0 ?
+                        BigDecimal.ZERO :
+                        discountedPrice;
+            }
+        }
+        return BigDecimal.ZERO;
     }
 }

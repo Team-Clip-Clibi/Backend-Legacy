@@ -11,6 +11,9 @@ import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
 import com.clip.order.repository.OneThingOrderRepository;
+import com.clip.price.entity.*;
+import com.clip.price.repository.OneThingDiscountRepository;
+import com.clip.price.repository.OneThingPriceRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -21,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.math.BigDecimal;
 
 @ContextConfiguration(classes = ApiApplication.class)
 @SpringBootTest
@@ -46,13 +51,18 @@ public class OneThingMatchingOrderServiceTest {
     private UserOneThingMatchingRepository userOneThingMatchingRepository;
     @Autowired
     private OneThingMatchingOrderService oneThingMatchingOrderService;
-
+    @Autowired
+    private OneThingPriceRepository oneThingPriceRepository;
+    @Autowired
+    private OneThingDiscountRepository oneThingDiscountRepository;
 
 
     @AfterEach
     void tearDown() {
-        oneThingOrderRepository.deleteAllInBatch();
         userOneThingMatchingRepository.deleteAllInBatch();
+        oneThingOrderRepository.deleteAllInBatch();
+        oneThingPriceRepository.deleteAllInBatch();
+        oneThingDiscountRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
 
@@ -62,6 +72,15 @@ public class OneThingMatchingOrderServiceTest {
         //given
         User user = userRepository.save(User.builder().build());
         OneThingOrderDto.Request request = OneThingOrderDto.Request.builder().build();
+        OneThingPrice price = oneThingPriceRepository.save(OneThingPrice.builder()
+                .basePrice(BigDecimal.valueOf(8900))
+                .priceType(OneThingPriceType.BASIC)
+                .build());
+        OneThingDiscount discount = oneThingDiscountRepository.save(OneThingDiscount.builder()
+                .discountType(DiscountType.BASE)
+                .discountValue(BigDecimal.valueOf(6000))
+                .discountUnit(DiscountUnit.AMOUNT)
+                .build());
 
         //when
         OneThingOrderDto.Response res = oneThingMatchingOrderService.createOrder(user.getId(), request);

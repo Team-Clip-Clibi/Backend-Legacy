@@ -16,6 +16,9 @@ import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
 import com.clip.order.repository.OneThingOrderRepository;
 import com.clip.order.service.OneThingOrderService;
+import com.clip.price.entity.*;
+import com.clip.price.repository.OneThingDiscountRepository;
+import com.clip.price.repository.OneThingPriceRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -30,6 +33,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -47,6 +51,10 @@ public class PaymentServiceFacadeTest {
     private UserRepository userRepository;
     @Autowired
     private OneThingOrderRepository oneThingOrderRepository;
+    @Autowired
+    private OneThingPriceRepository oneThingPriceRepository;
+    @Autowired
+    private OneThingDiscountRepository oneThingDiscountRepository;
 
     @MockitoBean
     private S3ImgService s3ImgService;
@@ -70,6 +78,8 @@ public class PaymentServiceFacadeTest {
     void tearDown() {
         oneThingOrderRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
+        oneThingPriceRepository.deleteAllInBatch();
+        oneThingDiscountRepository.deleteAllInBatch();
     }
 
     @DisplayName("oneThing주문 결제를 승인 후 payment 객체를 주문서에 저장한다.")
@@ -78,7 +88,22 @@ public class PaymentServiceFacadeTest {
         //given
         UUID orderId = UUID.randomUUID();
         User user = userRepository.save(User.builder().build());
-        oneThingOrderRepository.save(OneThingOrder.builder().orderId(orderId).amount(2900).user(user).build());
+        OneThingPrice price = oneThingPriceRepository.save(OneThingPrice.builder()
+                .basePrice(BigDecimal.valueOf(8900))
+                .priceType(OneThingPriceType.BASIC)
+                .build());
+        OneThingDiscount discount = oneThingDiscountRepository.save(OneThingDiscount.builder()
+                .discountType(DiscountType.BASE)
+                .discountValue(BigDecimal.valueOf(6000))
+                .discountUnit(DiscountUnit.AMOUNT)
+                .build());
+
+        oneThingOrderRepository.save(OneThingOrder.builder()
+                .orderId(orderId)
+                .oneThingPrice(price)
+                .oneThingDiscount(discount)
+                .user(user).build()
+        );
 
         PaymentObject paymentObject = PaymentObject.builder()
                 .paymentKey("paymentKey")
@@ -108,10 +133,20 @@ public class PaymentServiceFacadeTest {
         //given
         UUID orderId = UUID.randomUUID();
         User user = userRepository.save(User.builder().build());
+        OneThingPrice price = oneThingPriceRepository.save(OneThingPrice.builder()
+                .basePrice(BigDecimal.valueOf(8900))
+                .priceType(OneThingPriceType.BASIC)
+                .build());
+        OneThingDiscount discount = oneThingDiscountRepository.save(OneThingDiscount.builder()
+                .discountType(DiscountType.BASE)
+                .discountValue(BigDecimal.valueOf(6000))
+                .discountUnit(DiscountUnit.AMOUNT)
+                .build());
 
         oneThingOrderRepository.save(OneThingOrder.builder()
                 .orderId(orderId)
-                .amount(2900)
+                .oneThingPrice(price)
+                .oneThingDiscount(discount)
                 .user(user)
                 .status(OneThingOrderStatus.WAIT_FOR_PAYMENT)
                 .build()
@@ -140,9 +175,19 @@ public class PaymentServiceFacadeTest {
         //given
         UUID orderId = UUID.randomUUID();
         User user = userRepository.save(User.builder().build());
+        OneThingPrice price = oneThingPriceRepository.save(OneThingPrice.builder()
+                .basePrice(BigDecimal.valueOf(8900))
+                .priceType(OneThingPriceType.BASIC)
+                .build());
+        OneThingDiscount discount = oneThingDiscountRepository.save(OneThingDiscount.builder()
+                .discountType(DiscountType.BASE)
+                .discountValue(BigDecimal.valueOf(6000))
+                .discountUnit(DiscountUnit.AMOUNT)
+                .build());
         oneThingOrderRepository.save(OneThingOrder.builder()
                 .orderId(orderId)
-                .amount(2900)
+                .oneThingPrice(price)
+                .oneThingDiscount(discount)
                 .user(user)
                 .build()
         );
