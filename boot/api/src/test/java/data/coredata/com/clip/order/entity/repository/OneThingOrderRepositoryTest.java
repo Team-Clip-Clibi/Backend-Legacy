@@ -50,7 +50,6 @@ public class OneThingOrderRepositoryTest {
 
         //when
         OneThingOrder oneThingOrder = OneThingOrder.builder()
-                .oneThingMatching(oneThingMatching)
                 .user(user)
                 .status(OneThingOrderStatus.READY)
                 .build();
@@ -69,31 +68,6 @@ public class OneThingOrderRepositoryTest {
                 );
     }
 
-    @DisplayName("유저는 동일한 원띵 매칭 주문서를 2개 이상 발행할 수 없다.")
-    @Test
-    void failSaveOneThingMatchingOrder() {
-        //given
-        User user = userRepository.save(User.builder().build());
-        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().build());
-
-        //when
-        OneThingOrder oneThingOrder1 = OneThingOrder.builder()
-                .oneThingMatching(oneThingMatching)
-                .user(user)
-                .status(OneThingOrderStatus.READY)
-                .build();
-        OneThingOrder savedOneThingOrder1 = oneThingOrderRepository.save(oneThingOrder1);
-
-        //then
-        OneThingOrder oneThingOrder2 = OneThingOrder.builder()
-                .oneThingMatching(oneThingMatching)
-                .user(user)
-                .status(OneThingOrderStatus.READY)
-                .build();
-        assertThatThrownBy(() -> oneThingOrderRepository.save(oneThingOrder2))
-                .isInstanceOf(DataIntegrityViolationException.class);
-    }
-
     @DisplayName("원띵 주문내역 변경 시나리오 테스트")
     @TestFactory
     List<DynamicTest> oneThingOrderChange() {
@@ -108,8 +82,8 @@ public class OneThingOrderRepositoryTest {
         return List.of(DynamicTest.dynamicTest("유저가 원띵 모임을 신청하면 READY 상태의 주문서가 발행된다.",()->{
             //when
             OneThingOrder oneThingOrder = OneThingOrder.builder()
-                    .oneThingMatching(oneThingMatching)
                     .user(user)
+                    .orderId(orderId)
                     .status(OneThingOrderStatus.READY)
                     .build();
             OneThingOrder savedOneThingOrder = oneThingOrderRepository.save(oneThingOrder);
@@ -124,7 +98,7 @@ public class OneThingOrderRepositoryTest {
         }), DynamicTest.dynamicTest("유저가 결제를 완료하면 DONE 상태로 변경되며 결제에 해당하는 tossPayment가 생성된다.",()->{
 
             //when
-            OneThingOrder oneThingOrder = oneThingOrderRepository.findOneThingOrder(user.getId(), oneThingMatching.getId()).get();
+            OneThingOrder oneThingOrder = oneThingOrderRepository.findOneThingOrder(user.getId(), orderId).get();
             oneThingOrder.updateStatus(OneThingOrderStatus.DONE);
             TossPayment tossPayment = TossPayment.builder()
                     .paymentId(paymentId)
@@ -141,7 +115,7 @@ public class OneThingOrderRepositoryTest {
         }), DynamicTest.dynamicTest("유저가 결제를 취소하면 상태로 변경되며 결제에 해당하는 tossPayment가 생성된다.",()->{
 
             //when
-            OneThingOrder oneThingOrder = oneThingOrderRepository.findOneThingOrder(user.getId(), oneThingMatching.getId()).get();
+            OneThingOrder oneThingOrder = oneThingOrderRepository.findOneThingOrder(user.getId(), orderId).get();
             oneThingOrder.updateStatus(OneThingOrderStatus.CANCELED);
             TossPayment tossPayment = TossPayment.builder()
                     .paymentId(paymentId)
@@ -184,31 +158,6 @@ public class OneThingOrderRepositoryTest {
                         RandomOrderStatus.DONE,
                         null
                 );
-    }
-
-    @DisplayName("유저는 동일한 랜덤 매칭 주문서를 2개 이상 발행할 수 없다.")
-    @Test
-    void failSaveRandomMatchingOrder() {
-        //given
-        User user = userRepository.save(User.builder().build());
-        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder().build());
-
-        //when
-        RandomOrder randomOrder1 = RandomOrder.builder()
-                .randomMatching(randomMatching)
-                .user(user)
-                .status(RandomOrderStatus.ABORTED)
-                .build();
-        RandomOrder savedRandomOrder = randomOrderRepository.save(randomOrder1);
-
-        //then
-        RandomOrder randomOrder2 = RandomOrder.builder()
-                .randomMatching(randomMatching)
-                .user(user)
-                .status(RandomOrderStatus.ABORTED)
-                .build();
-        assertThatThrownBy(() -> randomOrderRepository.save(randomOrder2))
-                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @DisplayName("랜덤 주문내역 변경 시나리오 테스트")
