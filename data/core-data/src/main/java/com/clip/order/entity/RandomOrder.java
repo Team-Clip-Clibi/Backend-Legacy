@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,14 +47,19 @@ public class RandomOrder extends BaseEntity {
     @JoinColumn(name = "tosspayment",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<TossPayment> tossPayment = new ArrayList<>();
 
+    @Column
+    private LocalDateTime expiredAt;
+
     @Builder
-    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, Integer amount, List<TossPayment> tossPayment) {
+    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, Integer amount, List<TossPayment> tossPayment,
+                        LocalDateTime expiredAt) {
         this.user = user;
         this.orderId = orderId;
         this.status = status;
         this.randomMatching = randomMatching;
         this.amount = amount;
         this.tossPayment = tossPayment;
+        this.expiredAt = expiredAt;
     }
 
     public void addTossPayment(TossPayment tossPayment) {

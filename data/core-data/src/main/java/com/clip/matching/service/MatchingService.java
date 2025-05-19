@@ -24,6 +24,7 @@ public class MatchingService {
     private final UserOneThingMatchingRepository userOneThingMatchingRepository;
     private final UserRandomMatchingRepository userRandomMatchingRepository;
     private final UserMatchingRepository userMatchingRepository;
+    private final RandomMatchingCapacityRepository randomMatchingCapacityRepository;
 
     public OneThingMatching findOneThingMatching(final Long matchingId) {
         return oneThingMatchingRepository.findById(matchingId).orElseThrow(MatchingNotFoundException::new);
@@ -31,6 +32,15 @@ public class MatchingService {
 
     public RandomMatching findRandomMatching(final Long matchingId) {
         return randomMatchingRepository.findById(matchingId).orElseThrow(MatchingNotFoundException::new);
+    }
+
+    public List<RandomMatchingCapacity> findClosestUpcomingRandomMatchingCapacitiesWithDistrict(List<RandomDistrict> districts) {
+        return randomMatchingCapacityRepository.findClosestUpcomingRandomMatchingCapacities(LocalDateTime.now(), districts);
+    }
+
+    public RandomMatchingCapacity findRandomMatchingCapacity(final Long randomMatchingId) {
+        return randomMatchingCapacityRepository.findRandomMatchingCapacity(randomMatchingId)
+                .orElseThrow(MatchingNotFoundException::new);
     }
 
     public List<UserOneThingMatching> findUserOneThingMatchings(final Long userId) {

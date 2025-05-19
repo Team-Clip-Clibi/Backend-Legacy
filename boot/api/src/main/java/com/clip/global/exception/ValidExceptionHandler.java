@@ -1,5 +1,6 @@
 package com.clip.global.exception;
 
+import com.clip.api.matching.service.exception.MatchingFailedException;
 import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
 import com.clip.matching.exception.NotExistMatchingException;
 import com.clip.notification.exception.NotExistNotificationException;
@@ -58,6 +59,11 @@ public class ValidExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<?> FeignException(FeignException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(MatchingFailedException.class)
+    public ResponseEntity<?> matchingFailedException(MatchingFailedException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }
