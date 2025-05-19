@@ -31,6 +31,7 @@ public class UserRandomMatching extends BaseEntity {
     @Column
     private boolean isCheckedMatchingStart;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private MatchingStatus matchingStatus;
 
