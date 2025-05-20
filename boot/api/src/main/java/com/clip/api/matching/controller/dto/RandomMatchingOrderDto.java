@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -17,13 +16,13 @@ public class RandomMatchingOrderDto {
     public static class Request {
         private final String topic;
         @Size(max = 2)
-        private final List<RandomDistrict> districts;
+        private final RandomDistrict district;
         private final String tmiContent;
 
         @Builder
-        public Request(String topic, List<RandomDistrict> districts, String tmiContent) {
+        public Request(String topic, RandomDistrict district, String tmiContent) {
             this.topic = topic;
-            this.districts = districts;
+            this.district = district;
             this.tmiContent = tmiContent;
         }
     }

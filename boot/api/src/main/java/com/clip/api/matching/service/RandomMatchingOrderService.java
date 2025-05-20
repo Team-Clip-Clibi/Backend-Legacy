@@ -48,7 +48,7 @@ public class RandomMatchingOrderService {
     @Transactional
     public RandomMatchingOrderDto.Response createOrder(long userId, RandomMatchingOrderDto.Request request) {
         User user = userService.findUser(userId);
-        List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistricts());
+        List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistrict());
         RandomPrice basicRandomPrice = randomPriceService.findBasicRandomPrice();
         RandomDiscount baseDiscount = randomDiscountService.findBasicRandomDiscount();
 

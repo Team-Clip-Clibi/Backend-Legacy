@@ -130,12 +130,12 @@ public class RandomMatchingOrderServiceTest {
 
                         try {
                             // 사용자별로 선호하는 지역 다르게 설정 (20명씩 강남/홍대)
-                            List<RandomDistrict> districts = index < 20
-                                    ? List.of(RandomDistrict.GANGNAM)
-                                    : List.of(RandomDistrict.HONGDAE_HAPJEONG);
+                            RandomDistrict district = index < 20
+                                    ? RandomDistrict.GANGNAM
+                                    : RandomDistrict.HONGDAE_HAPJEONG;
 
                             RandomMatchingOrderDto.Request request = RandomMatchingOrderDto.Request.builder()
-                                    .districts(districts)
+                                    .district(district)
                                     .topic("테스트 주제 " + index)
                                     .build();
 

@@ -19,11 +19,11 @@ public interface RandomMatchingCapacityRepository extends JpaRepository<RandomMa
                 select min(rm2.meetingTime)
                 from RandomMatching rm2
                 where rm2.meetingTime >= :now
-                and rm2.randomDistrict in :districts
+                and rm2.randomDistrict = :districts
             )
             order by rmc.availableCapacity desc
         """)
-    List<RandomMatchingCapacity> findClosestUpcomingRandomMatchingCapacities(@Param("now") LocalDateTime now, @Param("districts") List<RandomDistrict> districts);
+    List<RandomMatchingCapacity> findClosestUpcomingRandomMatchingCapacities(@Param("now") LocalDateTime now, @Param("districts") RandomDistrict district);
 
     @Query("""
             select rmc from RandomMatchingCapacity rmc
