@@ -18,19 +18,14 @@ import com.clip.matching.repository.UserRandomMatchingRepository;
 import com.clip.order.repository.RandomOrderRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,11 +35,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;;
 
 @ContextConfiguration(classes = ApiApplication.class)
 @SpringBootTest
@@ -74,16 +65,14 @@ public class RandomMatchingOrderServiceTest {
     private RandomMatchingRepository randomMatchingRepository;
     @Autowired
     private RandomMatchingOrderService randomMatchingOrderService;
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @AfterEach
     void tearDown() {
         randomOrderRepository.deleteAllInBatch();
-        randomMatchingRepository.deleteAllInBatch();
-        userRandomMatchingRepository.deleteAllInBatch();
         randomMatchingCapacityRepository.deleteAllInBatch();
+        userRandomMatchingRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
+        randomMatchingRepository.deleteAllInBatch();
     }
 
     @Nested
@@ -94,17 +83,10 @@ public class RandomMatchingOrderServiceTest {
         @DisplayName("여러 지역에서 다수 사용자가 동시에 매칭을 신청할 때 정상 처리되는 사용자와 정상 처리되지 않는 사용자의 매칭 신청을 확인한다.")
         void shouldHandleConcurrentMatchingRequests() throws InterruptedException {
             // 2개 지역의 랜덤 매칭 생성
-            RandomMatching gangnamMatching = randomMatchingRepository.save(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", LocalDateTime.now().plusDays(1)));
-            RandomMatching hongdaeMatching = randomMatchingRepository.save(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", LocalDateTime.now().plusDays(1)));
-
-            EntityManager entityManager = applicationContext.getBean(EntityManager.class);
-            entityManager.flush();
-            entityManager.clear();
-
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(randomMatchingRepository.findById(gangnamMatching.getId()).get(), 6));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", LocalDateTime.now().plusDays(1), 6), 6));
             RandomMatchingCapacity hongdaeCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(randomMatchingRepository.findById(hongdaeMatching.getId()).get(), 6));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", LocalDateTime.now().plusDays(1), 6), 6));
 
             int threadCount = 40;
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
@@ -119,30 +101,29 @@ public class RandomMatchingOrderServiceTest {
                 final int index = i;
                 executorService.submit(() -> {
                     try {
-                        // 각 스레드에서 새로운 트랜잭션 시작
                         User user = User.builder()
-                                .nickname("User")
+                                .nickname("User" + index)
                                 .build();
                         User usr = userRepository.save(user);
 
 
-                            try {
-                                // 사용자별로 선호하는 지역 다르게 설정 (20명씩 강남/홍대)
-                                List<RandomDistrict> districts = index < 20
-                                        ? List.of(RandomDistrict.GANGNAM)
-                                        : List.of(RandomDistrict.HONGDAE_HAPJEONG);
+                        try {
+                            // 사용자별로 선호하는 지역 다르게 설정 (20명씩 강남/홍대)
+                            List<RandomDistrict> districts = index < 20
+                                    ? List.of(RandomDistrict.GANGNAM)
+                                    : List.of(RandomDistrict.HONGDAE_HAPJEONG);
 
-                                RandomMatchingOrderDto.Request request = RandomMatchingOrderDto.Request.builder()
-                                        .districts(districts)
-                                        .topic("테스트 주제 " + index)
-                                        .build();
+                            RandomMatchingOrderDto.Request request = RandomMatchingOrderDto.Request.builder()
+                                    .districts(districts)
+                                    .topic("테스트 주제 " + index)
+                                    .build();
 
-                                // 서비스 메서드 호출
-                                RandomMatchingOrderDto.Response response = randomMatchingOrderService.createOrder(usr.getId(), request);
-                                successResponses.add(response);
-                            } catch (Exception e) {
-                                exceptions.add(e);
-                            }
+                            // 서비스 메서드 호출
+                            RandomMatchingOrderDto.Response response = randomMatchingOrderService.createOrder(usr.getId(), request);
+                            successResponses.add(response);
+                        } catch (Exception e) {
+                            exceptions.add(e);
+                        }
 
                     } catch (Exception e) {
                         exceptions.add(e);
@@ -171,10 +152,10 @@ public class RandomMatchingOrderServiceTest {
 
             // 강남과 홍대 각각 6명씩 매칭되었는지 확인
             int gangnamMatchCount = (int) userRandomMatchingRepository.findAll().stream()
-                    .filter(urm -> urm.getRandomMatching().getId().equals(gangnamMatching.getId()))
+                    .filter(urm -> urm.getRandomMatching().getId().equals(gangnamCapacity.getRandomMatching().getId()))
                     .count();
             int hongdaeMatchCount = (int) userRandomMatchingRepository.findAll().stream()
-                    .filter(urm -> urm.getRandomMatching().getId().equals(hongdaeMatching.getId()))
+                    .filter(urm -> urm.getRandomMatching().getId().equals(hongdaeCapacity.getRandomMatching().getId()))
                     .count();
 
             assertThat(gangnamMatchCount).isEqualTo(6);
