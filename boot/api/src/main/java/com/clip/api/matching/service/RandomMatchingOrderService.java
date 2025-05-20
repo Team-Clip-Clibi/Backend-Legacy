@@ -10,6 +10,10 @@ import com.clip.matching.service.MatchingService;
 import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.order.entity.RandomOrder;
 import com.clip.order.service.RandomOrderService;
+import com.clip.price.entity.RandomDiscount;
+import com.clip.price.entity.RandomPrice;
+import com.clip.price.service.RandomDiscountService;
+import com.clip.price.service.RandomPriceService;
 import com.clip.user.entity.User;
 import com.clip.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +29,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class RandomMatchingOrderService {
-
-    private final int RANDOM_MATHING_AMOUNT = 2900;
     private final int MIN_RANDOM_MATHING_CAPACITY = 4;
     private final int MIN_AVAILABLE_CAPACITY = 0;
 
@@ -34,6 +36,8 @@ public class RandomMatchingOrderService {
     private final MatchingService matchingService;
     private final UserRandomMatchingService userRandomMatchingService;
     private final RandomOrderService randomOrderService;
+    private final RandomPriceService randomPriceService;
+    private final RandomDiscountService randomDiscountService;
 
     @Retryable(
             retryFor = ObjectOptimisticLockingFailureException.class,
@@ -45,6 +49,8 @@ public class RandomMatchingOrderService {
     public RandomMatchingOrderDto.Response createOrder(long userId, RandomMatchingOrderDto.Request request) {
         User user = userService.findUser(userId);
         List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistricts());
+        RandomPrice basicRandomPrice = randomPriceService.findBasicRandomPrice();
+        RandomDiscount baseDiscount = randomDiscountService.findBasicRandomDiscount();
 
         // 각 모임별 현재 참여자 수 계산 (총 정원 - 가용 정원)
         Map<Long, Integer> currentParticipantsMap = new HashMap<>();
@@ -75,16 +81,17 @@ public class RandomMatchingOrderService {
         }
 
         RandomMatching assignedMatching = selectedCapacity.getRandomMatching();
+        RandomOrder order = randomOrderService.createOrder(user, basicRandomPrice, baseDiscount);
 
         UserRandomMatching userRandomMatching = UserRandomMatching.builder()
                 .user(user)
                 .randomMatching(assignedMatching)
+                .randomOrder(order)
                 .myOneThingContent(request.getTopic())
                 .matchingStatus(MatchingStatus.APPLIED)
                 .build();
 
         userRandomMatchingService.save(userRandomMatching);
-        RandomOrder createdOrder = randomOrderService.createOrder(user, RANDOM_MATHING_AMOUNT);
 
         // 가용 인원 차감
         boolean reserved = selectedCapacity.reserve();
@@ -93,7 +100,8 @@ public class RandomMatchingOrderService {
         }
 
         return RandomMatchingOrderDto.Response.builder()
-                .orderId(createdOrder.getOrderId())
+                .orderId(order.getOrderId())
+                .amount(order.getDiscountedPrice().intValue())
                 .meetingTime(assignedMatching.getMeetingTime())
                 .meetingPlace(assignedMatching.getRestaurantName())
                 .meetingLocation(assignedMatching.getLocation())

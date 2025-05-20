@@ -1,6 +1,7 @@
 package com.clip.matching.entity;
 
 import com.clip.common.entity.BaseEntity;
+import com.clip.order.entity.RandomOrder;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -25,6 +26,10 @@ public class UserRandomMatching extends BaseEntity {
     @JoinColumn(name = "random_matching_id")
     private RandomMatching randomMatching;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "random_order_id")
+    private RandomOrder randomOrder;
+
     @Column
     private String myOneThingContent;
 
@@ -39,10 +44,11 @@ public class UserRandomMatching extends BaseEntity {
     private boolean isNoticeRead;
 
     @Builder
-    public UserRandomMatching(User user, RandomMatching randomMatching, String myOneThingContent, boolean isCheckedMatchingStart,
+    public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String myOneThingContent, boolean isCheckedMatchingStart,
                               MatchingStatus matchingStatus, boolean isNoticeRead) {
         this.user = user;
         this.randomMatching = randomMatching;
+        this.randomOrder = randomOrder;
         this.myOneThingContent = myOneThingContent;
         this.isCheckedMatchingStart = isCheckedMatchingStart;
         this.matchingStatus = matchingStatus;

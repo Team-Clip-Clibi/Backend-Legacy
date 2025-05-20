@@ -16,6 +16,11 @@ import com.clip.matching.repository.RandomMatchingCapacityRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.repository.UserRandomMatchingRepository;
 import com.clip.order.repository.RandomOrderRepository;
+import com.clip.price.entity.*;
+import com.clip.price.repository.RandomDiscountRepository;
+import com.clip.price.repository.RandomPriceRepository;
+import com.clip.price.service.RandomDiscountService;
+import com.clip.price.service.RandomPriceService;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,14 +71,24 @@ public class RandomMatchingOrderServiceTest {
     private RandomMatchingRepository randomMatchingRepository;
     @Autowired
     private RandomMatchingOrderService randomMatchingOrderService;
+    @Autowired
+    private RandomPriceService randomPriceService;
+    @Autowired
+    private RandomDiscountService randomDiscountService;
+    @Autowired
+    private RandomPriceRepository randomPriceRepository;
+    @Autowired
+    private RandomDiscountRepository randomDiscountRepository;
 
     @AfterEach
     void tearDown() {
-        randomOrderRepository.deleteAllInBatch();
         randomMatchingCapacityRepository.deleteAllInBatch();
         userRandomMatchingRepository.deleteAllInBatch();
+        randomOrderRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
         randomMatchingRepository.deleteAllInBatch();
+        randomPriceRepository.deleteAllInBatch();
+        randomDiscountRepository.deleteAllInBatch();
     }
 
     @Nested
@@ -91,6 +107,11 @@ public class RandomMatchingOrderServiceTest {
             int threadCount = 40;
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
             CountDownLatch latch = new CountDownLatch(threadCount);
+
+            RandomPrice basicRandomPrice = randomPriceRepository.save(
+                    new RandomPrice(BigDecimal.valueOf(2900), OneThingPriceType.BASIC));
+            RandomDiscount baseDiscount = randomDiscountRepository.save(
+                    new RandomDiscount(BigDecimal.valueOf(0), DiscountUnit.AMOUNT, DiscountType.BASE));
 
             List<RandomMatchingOrderDto.Response> successResponses = Collections.synchronizedList(new ArrayList<>());
             List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
