@@ -11,7 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -55,8 +55,12 @@ public class RandomOrder extends BaseEntity {
     @JoinColumn(name = "tosspayment",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<TossPayment> tossPayment = new ArrayList<>();
 
+    @Column
+    private LocalDateTime expiredAt;
+
     @Builder
-    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, RandomPrice randomPrice, RandomDiscount randomDiscount, List<TossPayment> tossPayment) {
+    public RandomOrder(User user, UUID orderId, RandomOrderStatus status, RandomMatching randomMatching, RandomPrice randomPrice, RandomDiscount randomDiscount, List<TossPayment> tossPayment
+                      , LocalDateTime expiredAt) {
         this.user = user;
         this.orderId = orderId;
         this.status = status;
@@ -64,6 +68,7 @@ public class RandomOrder extends BaseEntity {
         this.tossPayment = tossPayment;
         this.price = randomPrice;
         this.randomDiscount = randomDiscount;
+        this.expiredAt = expiredAt;
     }
 
     public void addTossPayment(TossPayment tossPayment) {

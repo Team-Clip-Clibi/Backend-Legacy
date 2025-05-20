@@ -7,6 +7,7 @@ import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.RandomDistrict;
 import com.clip.matching.entity.RandomMatching;
+import com.clip.matching.repository.RandomMatchingCapacityRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.service.MatchingService;
 import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
@@ -53,6 +54,10 @@ class RandomMatchingServiceTest {
 
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
+
+    @Autowired
+    private RandomMatchingCapacityRepository randomMatchingCapacityRepository;
+
     @MockitoBean
     private S3ImgService s3ImgService;
     @MockitoBean
@@ -67,6 +72,7 @@ class RandomMatchingServiceTest {
 
     @AfterEach
     void tearDown() {
+        randomMatchingCapacityRepository.deleteAllInBatch();
         randomMatchingRepository.deleteAllInBatch();
     }
 

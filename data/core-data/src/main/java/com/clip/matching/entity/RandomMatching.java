@@ -1,5 +1,6 @@
 package com.clip.matching.entity;
 
+import com.clip.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor
-public class RandomMatching {
+public class RandomMatching extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +31,23 @@ public class RandomMatching {
     @Column
     private LocalDateTime meetingTime;
 
+    @Column
+    private Integer totalCapacity;
+
     @Builder
-    public RandomMatching(Long id,RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime) {
-        this.id = id;
+    public RandomMatching(RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
+        this.totalCapacity = totalCapacity;
     }
 
-    public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime) {
+    public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
+        this.totalCapacity = totalCapacity;
     }
 }
