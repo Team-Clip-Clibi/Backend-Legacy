@@ -94,7 +94,6 @@ public class RandomMatchingOrderService {
 
         return RandomMatchingOrderDto.Response.builder()
                 .orderId(createdOrder.getOrderId())
-                .amount(createdOrder.getAmount())
                 .meetingTime(assignedMatching.getMeetingTime())
                 .meetingPlace(assignedMatching.getRestaurantName())
                 .meetingLocation(assignedMatching.getLocation())
