@@ -17,12 +17,14 @@ public class CreateRandomMatchingDto {
     private String location;
     private String restaurantName;
     private LocalDateTime meetingTime;
+    private Integer totalCapacity;
 
     @Builder
-    public CreateRandomMatchingDto(RandomDistrict randomDistrict,String location, String restaurantName, LocalDateTime meetingTime) {
+    public CreateRandomMatchingDto(RandomDistrict randomDistrict,String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
+        this.totalCapacity = totalCapacity;
     }
 }

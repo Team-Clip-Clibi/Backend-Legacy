@@ -1,6 +1,7 @@
 package com.clip.office.matching.service;
 
 import com.clip.matching.entity.RandomMatching;
+import com.clip.matching.entity.RandomMatchingCapacity;
 import com.clip.matching.service.MatchingService;
 import com.clip.matching.service.RandomMatchingDataService;
 import com.clip.office.matching.controller.dto.CreateRandomMatchingDto;
@@ -32,9 +33,16 @@ public class RandomMatchingService {
                 .location(createRandomMatchingDto.getLocation())
                 .restaurantName(createRandomMatchingDto.getRestaurantName())
                 .meetingTime(createRandomMatchingDto.getMeetingTime())
+                .totalCapacity(createRandomMatchingDto.getTotalCapacity())
+                .build();
+
+        RandomMatchingCapacity randomMatchingCapacity = RandomMatchingCapacity.builder()
+                .randomMatching(randomMatching)
+                .availableCapacity(createRandomMatchingDto.getTotalCapacity())
                 .build();
 
         randomMatchingDataService.save(randomMatching);
+        randomMatchingDataService.save(randomMatchingCapacity);
     }
 
     @Transactional
@@ -45,7 +53,8 @@ public class RandomMatchingService {
                 updateRandomMatchingDto.getRandomDistrict(),
                 updateRandomMatchingDto.getLocation(),
                 updateRandomMatchingDto.getRestaurantName(),
-                updateRandomMatchingDto.getMeetingTime());
+                updateRandomMatchingDto.getMeetingTime(),
+                updateRandomMatchingDto.getTotalCapacity());
 
         randomMatchingDataService.save(randomMatching);
     }
