@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;import java.util.UUID;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +21,6 @@ public class RandomOrderService {
                 .orderId(UUID.randomUUID())
                 .user(user)
                 .status(RandomOrderStatus.WAIT_FOR_PAYMENT)
-                .amount(amount)
                 .expiredAt(LocalDateTime.now().plusMinutes(15))
                 .build();
         return randomOrderRepository.save(randomOrder);
