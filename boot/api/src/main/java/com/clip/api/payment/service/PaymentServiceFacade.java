@@ -24,7 +24,7 @@ public class PaymentServiceFacade {
                 paymentObject = tossPaymentFeign.confirmPayment(PaymentConfirmDto.builder()
                         .paymentKey(paymentDto.getPaymentKey())
                         .orderId(paymentDto.getOrderId())
-                        .amount(randomOrder.getAmount())
+                        .amount(randomOrder.getDiscountedPrice())
                         .build()
                 );
                 userPaymentService.updateRandomOrderStatus(userId, paymentObject);
@@ -34,7 +34,7 @@ public class PaymentServiceFacade {
                 paymentObject = tossPaymentFeign.confirmPayment(PaymentConfirmDto.builder()
                         .paymentKey(paymentDto.getPaymentKey())
                         .orderId(paymentDto.getOrderId())
-                        .amount(oneThingOrder.getAmount())
+                        .amount(oneThingOrder.getDiscountedPrice())
                         .build()
                 );
                 userPaymentService.updateOneThingOrderStatus(userId, paymentObject);

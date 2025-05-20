@@ -16,7 +16,6 @@ import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.*;
 import com.clip.matching.exception.NotExistMatchingException;
 import com.clip.matching.repository.*;
-import com.clip.matching.repository.projection.MatchingProjectionDto;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
 import com.clip.order.entity.RandomOrder;
@@ -220,27 +219,11 @@ public class UserMatchingServiceTest {
                 .meetingTime(LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.SECONDS))
                 .build());
 
-        UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(
-                UserOneThingMatching.builder()
-                        .user(user)
-                        .oneThingMatching(oneThingMatching)
-                        .matchingStatus(MatchingStatus.APPLIED)
-                        .build()
-        );
-
-        UserRandomMatching userRandomMatching = userRandomMatchingRepository.save(
-                UserRandomMatching.builder()
-                        .user(user)
-                        .randomMatching(randomMatching)
-                        .matchingStatus(MatchingStatus.CONFIRMED)
-                        .build()
-        );
-
         OneThingOrder oneThingOrder = oneThingOrderRepository.save(
                 OneThingOrder.builder()
                         .user(user)
                         .status(OneThingOrderStatus.DONE)
-                        .oneThingMatching(oneThingMatching)
+//                        .oneThingMatching(oneThingMatching)
                         .build()
         );
 
@@ -249,6 +232,23 @@ public class UserMatchingServiceTest {
                         .user(user)
                         .status(RandomOrderStatus.DONE)
                         .randomMatching(randomMatching)
+                        .build()
+        );
+
+        UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(
+                UserOneThingMatching.builder()
+                        .user(user)
+                        .oneThingMatching(oneThingMatching)
+                        .matchingStatus(MatchingStatus.APPLIED)
+                        .oneThingOrder(oneThingOrder)
+                        .build()
+        );
+
+        UserRandomMatching userRandomMatching = userRandomMatchingRepository.save(
+                UserRandomMatching.builder()
+                        .user(user)
+                        .randomMatching(randomMatching)
+                        .matchingStatus(MatchingStatus.CONFIRMED)
                         .build()
         );
 

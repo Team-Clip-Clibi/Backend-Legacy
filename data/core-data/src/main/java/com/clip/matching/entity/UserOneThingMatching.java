@@ -1,6 +1,7 @@
 package com.clip.matching.entity;
 
 import com.clip.common.entity.BaseEntity;
+import com.clip.order.entity.OneThingOrder;
 import com.clip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,6 +30,14 @@ public class UserOneThingMatching extends BaseEntity {
     @JoinColumn(name = "onething_matching_id")
     private OneThingMatching oneThingMatching;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "onething_order_id")
+    private OneThingOrder oneThingOrder;
+
+    @Enumerated
+    @Column
+    private OneThingCategory oneThingCategory;
+
     // 변수명 변경
     @Column
     private String myOneThingContent;
@@ -50,6 +59,7 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private List<PreferredDate> preferredDates = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
     @Column
     private MatchingStatus matchingStatus;
 
@@ -57,11 +67,13 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isNoticeRead;
 
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart,
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
         MatchingStatus matchingStatus, boolean isNoticeRead) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
+        this.oneThingOrder = oneThingOrder;
+        this.oneThingCategory = oneThingCategory;
         this.myOneThingContent = myOneThingContent;
         this.myQuizContent = myQuizContent;
         this.isCheckedMatchingStart = isCheckedMatchingStart;
