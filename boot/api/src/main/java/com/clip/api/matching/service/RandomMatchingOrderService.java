@@ -38,7 +38,7 @@ public class RandomMatchingOrderService {
     @Retryable(
             retryFor = ObjectOptimisticLockingFailureException.class,
             maxAttempts = 3,
-            backoff = @Backoff(delay = 100),
+            backoff = @Backoff(delay = 30),
             recover = "recoverCreateOrder"
     )
     @Transactional
@@ -46,32 +46,31 @@ public class RandomMatchingOrderService {
         User user = userService.findUser(userId);
         List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistricts());
 
-
         // 각 모임별 현재 참여자 수 계산 (총 정원 - 가용 정원)
         Map<Long, Integer> currentParticipantsMap = new HashMap<>();
         randomMatchingCapacities.forEach(capacity -> {
-            int currentParticipants = capacity.getConfirmedParticipants();
+            int currentParticipants = capacity.getConfirmedParticipants(capacity.getRandomMatching().getTotalCapacity());
             currentParticipantsMap.put(capacity.getRandomMatching().getId(), currentParticipants);
         });
 
-        // 모든 모임에 3명씩 채워졌는지 확인
+        // 모든 모임에 4명씩 채워졌는지 확인
         boolean allMeetingsHaveThreeMembers = randomMatchingCapacities.stream()
                 .allMatch(capacity -> currentParticipantsMap.get(capacity.getRandomMatching().getId()) >= MIN_RANDOM_MATHING_CAPACITY);
 
         RandomMatchingCapacity selectedCapacity;
 
         if (!allMeetingsHaveThreeMembers) {
-            // 3명 미만인 모임들 중에서 순서대로 선택 (가용 인원이 많은 순으로 정렬된 상태)
+            // 4명 미만인 모임들 중에서 순서대로 선택 (가용 인원이 많은 순으로 정렬된 상태)
             selectedCapacity = randomMatchingCapacities.stream()
                     .filter(capacity -> currentParticipantsMap.get(capacity.getRandomMatching().getId()) < MIN_RANDOM_MATHING_CAPACITY
                             && capacity.getAvailableCapacity() > MIN_AVAILABLE_CAPACITY)
                     .findFirst()
                     .orElseThrow(() -> new MatchingFailedException("3명 미만인 모임이 없거나 모든 모임이 가득 찼습니다."));
         } else {
-            // 모든 모임에 3명씩 채워진 경우, 참여자 수가 가장 적은 모임 선택
+            // 모든 모임에 4명씩 채워진 경우, 참여자 수가 가장 적은 모임 선택
             selectedCapacity = randomMatchingCapacities.stream()
                     .filter(capacity -> capacity.getAvailableCapacity() > MIN_AVAILABLE_CAPACITY)
-                    .min(Comparator.comparingInt(RandomMatchingCapacity::getConfirmedParticipants))
+                    .min(Comparator.comparingInt(capacity -> capacity.getConfirmedParticipants(capacity.getRandomMatching().getTotalCapacity())))
                     .orElseThrow(() -> new MatchingFailedException("모든 모임이 가득 찼습니다."));
         }
 
