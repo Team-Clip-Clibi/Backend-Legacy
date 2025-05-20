@@ -22,22 +22,18 @@ public class RandomMatchingCapacity extends BaseEntity {
     private RandomMatching randomMatching;
 
     @Column
-    private Integer totalCapacity; // 총 정원
+    private Integer availableCapacity;
 
     @Column
-    private Integer availableCapacity; // 가용 정원
-
-    @Column
-    private Integer pendingCapacity; // 결제 대기중인 정원
+    private Integer pendingCapacity;
 
     @Version
     private Long version;
 
     @Builder
-    public RandomMatchingCapacity(RandomMatching randomMatching, Integer totalCapacity) {
+    public RandomMatchingCapacity(RandomMatching randomMatching, Integer availableCapacity) {
         this.randomMatching = randomMatching;
-        this.totalCapacity = totalCapacity;
-        this.availableCapacity = totalCapacity;
+        this.availableCapacity = availableCapacity;
         this.pendingCapacity = 0;
     }
 
@@ -55,7 +51,7 @@ public class RandomMatchingCapacity extends BaseEntity {
         availableCapacity += 1;
     }
 
-    public int getConfirmedParticipants() {
+    public int getConfirmedParticipants(int totalCapacity) {
         return totalCapacity - availableCapacity - pendingCapacity;
     }
 

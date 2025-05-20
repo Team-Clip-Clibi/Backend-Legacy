@@ -31,18 +31,23 @@ public class RandomMatching extends BaseEntity {
     @Column
     private LocalDateTime meetingTime;
 
+    @Column
+    private Integer totalCapacity;
+
     @Builder
-    public RandomMatching(RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime) {
+    public RandomMatching(RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
+        this.totalCapacity = totalCapacity;
     }
 
-    public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime) {
+    public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
         this.location = location;
         this.restaurantName = restaurantName;
         this.meetingTime = meetingTime;
+        this.totalCapacity = totalCapacity;
     }
 }
