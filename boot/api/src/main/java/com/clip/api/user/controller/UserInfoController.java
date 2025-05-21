@@ -97,6 +97,6 @@ public class UserInfoController implements UserInfoDocs {
 
     @Override
     public boolean isExistsMatching(UserDetails userDetails) {
-        return userAccountService.isExistsMyMatching(Long.parseLong(userDetails.getUsername()));
+        return userAccountService.isMyMatchingExist(Long.parseLong(userDetails.getUsername()));
     }
 }

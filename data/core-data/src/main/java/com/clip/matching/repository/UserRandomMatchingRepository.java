@@ -28,7 +28,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
     @Query("""
             select u
             from UserRandomMatching u
-            join fetch u.randomMatching
+            join u.randomMatching
             where u.user.id = :userId
             and u.randomMatching.meetingTime >= :dateTime
             order by u.randomMatching.meetingTime

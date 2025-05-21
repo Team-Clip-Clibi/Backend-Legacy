@@ -32,7 +32,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDate;
@@ -554,7 +553,7 @@ public class UserAccountServiceTest {
             userOneThingMatchingRepository.save(UserOneThingMatching.builder().user(user).oneThingMatching(oneThingMatching).build());
 
             //when
-            boolean existsMyMatching = userAccountService.isExistsMyMatching(user.getId());
+            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isTrue();
@@ -569,7 +568,7 @@ public class UserAccountServiceTest {
             userRandomMatchingRepository.save(UserRandomMatching.builder().user(user).randomMatching(randomMatching).build());
 
             //when
-            boolean existsMyMatching = userAccountService.isExistsMyMatching(user.getId());
+            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isTrue();
@@ -586,7 +585,7 @@ public class UserAccountServiceTest {
             userRandomMatchingRepository.save(UserRandomMatching.builder().user(user).randomMatching(randomMatching).build());
 
             //when
-            boolean existsMyMatching = userAccountService.isExistsMyMatching(user.getId());
+            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isTrue();
@@ -599,7 +598,7 @@ public class UserAccountServiceTest {
             User user = userRepository.findUser("socialId", Platform.APPLE).get();
 
             //when
-            boolean existsMyMatching = userAccountService.isExistsMyMatching(user.getId());
+            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isFalse();

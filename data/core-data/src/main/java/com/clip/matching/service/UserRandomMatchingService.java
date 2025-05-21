@@ -16,7 +16,7 @@ public class UserRandomMatchingService {
         return userRandomMatchingRepository.save(userRandomMatching);
     }
 
-    public boolean isExistsRandomMatching(long userId) {
+    public boolean isRandomMatchingExist(long userId) {
         return userRandomMatchingRepository.findLatestUserRandomMatching(userId, LocalDateTime.now()).isPresent();
     }
 

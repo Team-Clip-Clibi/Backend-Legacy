@@ -16,7 +16,7 @@ public class UserOneThingMatchingService {
         return userOneThingMatchingRepository.save(userOneThingMatching);
     }
 
-    public boolean isExistOneThingMatching(long userId) {
+    public boolean isOneThingMatchingExist(long userId) {
         return userOneThingMatchingRepository.findLatestUserOneThingMatching(userId, LocalDateTime.now()).isPresent();
     }
 

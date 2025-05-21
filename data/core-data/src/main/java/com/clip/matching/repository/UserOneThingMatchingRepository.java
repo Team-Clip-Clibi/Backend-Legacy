@@ -28,7 +28,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
     @Query("""
             select u
             from UserOneThingMatching u
-            join fetch u.oneThingMatching
+            join u.oneThingMatching
             where u.user.id = :userId
             and u.oneThingMatching.meetingTime >= :dateTime
             order by u.oneThingMatching.meetingTime

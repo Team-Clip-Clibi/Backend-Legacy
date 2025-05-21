@@ -191,7 +191,7 @@ public class UserAccountService {
             throw new TokenValidationException();
         }
         long userId = Long.parseLong(tokenProvider.extractUserId(refreshToken));
-        if (isExistsMyMatching(userId)) {
+        if (isMyMatchingExist(userId)) {
             throw new IllegalStateException("매칭이 존재하는 유저는 탈퇴할 수 없습니다.");
         }
         User user = userService.findUser(userId);
@@ -204,9 +204,9 @@ public class UserAccountService {
         userService.deleteUser(user);
     }
 
-    public boolean isExistsMyMatching(long userId) {
-        boolean isOneThingMatchingExist = userOneThingMatchingService.isExistOneThingMatching(userId);
-        boolean isRandomMatchingExist = userRandomMatchingService.isExistsRandomMatching(userId);
+    public boolean isMyMatchingExist(long userId) {
+        boolean isOneThingMatchingExist = userOneThingMatchingService.isOneThingMatchingExist(userId);
+        boolean isRandomMatchingExist = userRandomMatchingService.isRandomMatchingExist(userId);
         return isOneThingMatchingExist || isRandomMatchingExist;
     }
 }
