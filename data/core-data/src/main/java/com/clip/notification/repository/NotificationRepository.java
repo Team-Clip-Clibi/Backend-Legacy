@@ -57,4 +57,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Notification n set n.sendStatus = :sendStatus where n.id in :notificationIds")
     void updateFcmSendStatus(@Param("sendStatus") SendStatus sendStatus, @Param("notificationIds") List<Long> notificationIds);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Notification n where n.user.id = :userId")
+    void deleteNotification(@Param("userId") long userId);
 }

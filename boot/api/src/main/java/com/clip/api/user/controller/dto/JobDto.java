@@ -1,18 +1,17 @@
 package com.clip.api.user.controller.dto;
 
+import com.clip.user.entity.JobCategory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 public class JobDto {
-    private List<JobCategory> jobList;
+    private JobCategory job;
 
     @Builder
-    public JobDto(List<JobCategory> jobList) {
-        this.jobList = jobList;
+    public JobDto(JobCategory job) {
+        this.job = job;
     }
 }

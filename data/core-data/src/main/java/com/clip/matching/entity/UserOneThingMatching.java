@@ -54,6 +54,10 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private OneThingBudgetRange oneThingBudgetRange;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private OneThingDistrict oneThingDistrict;
+
     @ElementCollection(targetClass = PreferredDate.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "id"))
     @Column
@@ -67,7 +71,7 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isNoticeRead;
 
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart,
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
         MatchingStatus matchingStatus, boolean isNoticeRead) {
         this.user = user;
@@ -77,6 +81,7 @@ public class UserOneThingMatching extends BaseEntity {
         this.myOneThingContent = myOneThingContent;
         this.myQuizContent = myQuizContent;
         this.isCheckedMatchingStart = isCheckedMatchingStart;
+        this.oneThingDistrict = oneThingDistrict;
         this.preferredDates = preferredDates;
         this.oneThingBudgetRange = oneThingBudgetRange;
         this.matchingStatus = matchingStatus;

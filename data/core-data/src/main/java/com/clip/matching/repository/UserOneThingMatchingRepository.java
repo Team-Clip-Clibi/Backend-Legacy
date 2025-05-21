@@ -67,4 +67,9 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             """)
     List<UserOneThingMatching> findAppliedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus
     , @Param("oneThingOrderStatus") OneThingOrderStatus oneThingOrderStatus);
+
+    @Transactional
+    @Modifying
+    @Query("delete from UserOneThingMatching u where u.user.id = :userId ")
+    void deleteOneThingMatching(@Param("userId") long userId);
 }

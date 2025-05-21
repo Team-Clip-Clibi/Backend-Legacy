@@ -71,4 +71,8 @@ public class NotificationService {
     public void updateToClosed(long userId, long notificationBannerId) {
         notificationBannerRepository.updateToClosed(userId, notificationBannerId);
     }
+
+    public void deleteNotification(long userId) {
+        notificationRepository.deleteNotification(userId);
+    }
 }

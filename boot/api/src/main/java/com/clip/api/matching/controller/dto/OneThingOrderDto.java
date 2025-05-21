@@ -18,8 +18,7 @@ public class OneThingOrderDto {
     @Getter
     public static class Request{
         private final String topic;
-        @Size(max = 2)
-        private final List<OneThingDistrict> districts;
+        private final OneThingDistrict district;
         @Size(max = 3)
         private final List<UserOneThingMatching.PreferredDate> preferredDates;
         private final String tmiContent;
@@ -27,9 +26,9 @@ public class OneThingOrderDto {
         private final OneThingCategory oneThingCategory;
 
         @Builder
-        public Request(String topic, List<OneThingDistrict> districts, List<UserOneThingMatching.PreferredDate> preferredDates, String tmiContent, OneThingBudgetRange oneThingBudgetRange, OneThingCategory oneThingCategory) {
+        public Request(String topic, OneThingDistrict district, List<UserOneThingMatching.PreferredDate> preferredDates, String tmiContent, OneThingBudgetRange oneThingBudgetRange, OneThingCategory oneThingCategory) {
             this.topic = topic;
-            this.districts = districts;
+            this.district = district;
             this.preferredDates = preferredDates;
             this.tmiContent = tmiContent;
             this.oneThingBudgetRange = oneThingBudgetRange;
