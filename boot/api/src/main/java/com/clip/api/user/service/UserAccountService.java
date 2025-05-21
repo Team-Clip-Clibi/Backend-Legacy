@@ -150,6 +150,7 @@ public class UserAccountService {
                 .updateLanguage(languageMapper.toStringLanguage(languageDto.getLanguage()));
     }
 
+    @Transactional(readOnly = true)
     public JobDto getJob(long userId) {
         return JobDto.builder()
                 .job(userService.findUser(userId).getJob().getJobCategory())
