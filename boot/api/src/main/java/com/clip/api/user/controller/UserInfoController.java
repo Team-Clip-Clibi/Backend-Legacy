@@ -57,7 +57,7 @@ public class UserInfoController implements UserInfoDocs {
 
     @Override
     public void updateJob(JobDto jobDto, UserDetails userDetails) {
-        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobDto);
+        userAccountService.updateJob(Long.parseLong(userDetails.getUsername()), jobDto.getJob());
     }
 
     @Override
@@ -93,5 +93,10 @@ public class UserInfoController implements UserInfoDocs {
     @Override
     public LanguageDto getLanguage(UserDetails userDetails) {
         return userAccountService.getLanguage(Long.parseLong(userDetails.getUsername()));
+    }
+
+    @Override
+    public boolean isExistsMatching(UserDetails userDetails) {
+        return userAccountService.isExistsMyMatching(Long.parseLong(userDetails.getUsername()));
     }
 }

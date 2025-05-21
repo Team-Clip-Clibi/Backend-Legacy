@@ -15,11 +15,12 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private String jobName;
+    private JobCategory jobCategory;
 
     @Builder
-    public Job(String jobName) {
-        this.jobName = jobName;
+    public Job(JobCategory jobCategory) {
+        this.jobCategory = jobCategory;
     }
 }

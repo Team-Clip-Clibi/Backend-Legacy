@@ -2,8 +2,6 @@ package com.clip.api.user.controller;
 
 import com.clip.api.docs.user.UserAccountDocs;
 import com.clip.api.user.controller.dto.*;
-import com.clip.api.user.mapper.JobMapper;
-import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.global.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;

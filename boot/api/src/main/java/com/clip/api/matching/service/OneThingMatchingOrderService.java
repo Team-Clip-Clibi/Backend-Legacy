@@ -35,6 +35,7 @@ public class OneThingMatchingOrderService {
 
         UserOneThingMatching userOneThingMatching = UserOneThingMatching.builder()
                 .user(user)
+                .oneThingDistrict(request.getDistrict())
                 .myOneThingContent(request.getTopic())
                 .myQuizContent(request.getTmiContent())
                 .preferredDates(request.getPreferredDates())
