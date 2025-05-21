@@ -591,7 +591,7 @@ public class UserAccountServiceTest {
             assertThat(existsMyMatching).isTrue();
         }
 
-        @DisplayName("랜덤 매칭과 원띵 매칭 예정이면 True를 반환한다.")
+        @DisplayName("예정된 매칭이 없으면 False를 반환한다.")
         @Test
         void matchingNotExist() {
             //given
