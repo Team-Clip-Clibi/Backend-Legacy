@@ -9,6 +9,8 @@ import com.clip.auth.repository.TokenRepository;
 import com.clip.global.config.feign.FeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.global.exception.ResourceAlreadyExistException;
+import com.clip.global.exception.ResourceNotFoundException;
 import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -19,9 +21,6 @@ import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
 import com.clip.matching.repository.UserRandomMatchingRepository;
 import com.clip.user.entity.*;
-import com.clip.user.exception.NicknameAlreadyExistsException;
-import com.clip.user.exception.PhoneNumberAlreadyExistsException;
-import com.clip.user.exception.UserNotFoundException;
 import com.clip.user.repository.UserJobRepository;
 import com.clip.user.repository.UserRepository;
 import com.clip.user.service.UserService;
@@ -259,7 +258,7 @@ public class UserAccountServiceTest {
 
         //when & then
         assertThatThrownBy(() -> userAccountService.login(LoginDto.builder().platform(platform).socialId(socialId).build()))
-                .isInstanceOf(UserNotFoundException.class);
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 
     @DisplayName("userId로 phoneNumber를 업데이트 한다.")
@@ -287,7 +286,7 @@ public class UserAccountServiceTest {
 
         //when & then
         assertThatThrownBy(() -> userService.updatePhoneNumber(newUser.getId(), phoneNumber))
-                .isInstanceOf(PhoneNumberAlreadyExistsException.class);
+                .isInstanceOf(ResourceAlreadyExistException.class);
         assertThat(newUser.getNickname()).isNull();
     }
 
@@ -335,7 +334,7 @@ public class UserAccountServiceTest {
 
         //when & then
         assertThatThrownBy(() -> userAccountService.updateNickname(newUser.getId(), nickname))
-                .isInstanceOf(NicknameAlreadyExistsException.class);
+                .isInstanceOf(ResourceAlreadyExistException.class);
         assertThat(newUser.getNickname()).isNull();
     }
 
@@ -383,7 +382,7 @@ public class UserAccountServiceTest {
 
         //when & then
         assertThatThrownBy(() -> userAccountService.checkNicknameAvailable(nickname))
-                .isInstanceOf(NicknameAlreadyExistsException.class);
+                .isInstanceOf(ResourceAlreadyExistException.class);
     }
 
     @DisplayName("userId로 프로필 기본 정보를 조회할 수 있다.")
