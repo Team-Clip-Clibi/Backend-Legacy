@@ -1,8 +1,8 @@
 package com.clip.order.service;
 
+import com.clip.global.exception.ResourceNotFoundException;
 import com.clip.order.entity.RandomOrder;
 import com.clip.order.entity.RandomOrderStatus;
-import com.clip.order.exception.OrderNotFoundException;
 import com.clip.order.repository.RandomOrderRepository;
 import com.clip.price.entity.RandomDiscount;
 import com.clip.price.entity.RandomPrice;
@@ -32,6 +32,6 @@ public class RandomOrderService {
 
     public RandomOrder findRandomOrder(long userId, UUID orderId) {
         return randomOrderRepository.findRandomOrder(userId, orderId)
-                .orElseThrow(OrderNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("randomOrder", orderId.toString()));
     }
 }

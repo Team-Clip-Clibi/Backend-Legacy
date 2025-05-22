@@ -8,6 +8,7 @@ import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.global.exception.ResourceAlreadyExistException;
 import com.clip.matching.service.OneThingMatchingReviewService;
 import com.clip.matching.service.RandomMatchingReviewService;
 import com.clip.matching.service.UserOneThingMatchingService;
@@ -16,7 +17,6 @@ import com.clip.notification.service.NotificationService;
 import com.clip.user.entity.JobCategory;
 import com.clip.user.entity.RelationshipStatus;
 import com.clip.user.entity.User;
-import com.clip.user.exception.NicknameAlreadyExistsException;
 import com.clip.user.service.JobService;
 import com.clip.user.service.TermsAcceptanceService;
 import com.clip.user.service.UserService;
@@ -107,7 +107,7 @@ public class UserAccountService {
 
     public void checkNicknameAvailable(String nickname) {
         if (userService.isExistNickname(nickname)) {
-            throw new NicknameAlreadyExistsException();
+            throw new ResourceAlreadyExistException("nickname", nickname);
         }
     }
 

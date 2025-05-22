@@ -2,12 +2,11 @@ package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.mapper.MatchingMapper;
-import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
+import com.clip.global.exception.NoContentAvailableException;
 import com.clip.matching.entity.*;
 import com.clip.matching.service.MatchingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,7 +48,7 @@ public class UserMatchingService {
         ).orElse(List.of());
 
         if (myOptUserOneThingMatching.isEmpty() && myOptUserRandomMatching.isEmpty()) {
-            throw new NotExistAnyMatchingException();
+            throw new NoContentAvailableException("userMatching", userId);
         } else if (myOptUserOneThingMatching.isPresent() && myOptUserRandomMatching.isPresent()) {
             if (isOneThingMeetingBeforeRandomMeeting(myOptUserOneThingMatching, myOptUserRandomMatching)) {
                 return getOneThingMatchingProgressStatusDto(myOptUserOneThingMatching, myOneThingMatchingGroup);
