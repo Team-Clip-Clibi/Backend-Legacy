@@ -1,8 +1,8 @@
 package com.clip.order.service;
 
+import com.clip.global.exception.ResourceNotFoundException;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
-import com.clip.order.exception.OrderNotFoundException;
 import com.clip.order.repository.OneThingOrderRepository;
 import com.clip.price.entity.OneThingDiscount;
 import com.clip.price.entity.OneThingPrice;
@@ -30,6 +30,6 @@ public class OneThingOrderService {
 
     public OneThingOrder findOneThingOrder(long userId, UUID orderId) {
         return oneThingOrderRepository.findOneThingOrder(userId, orderId)
-                .orElseThrow(OrderNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("onethingOrder", orderId.toString()));
     }
 }

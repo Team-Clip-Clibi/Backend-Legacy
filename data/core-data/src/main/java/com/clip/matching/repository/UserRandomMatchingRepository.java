@@ -68,4 +68,9 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             """)
     List<UserRandomMatching> findAppliedUserRandomMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus
             , @Param("randomOrderStatus") RandomOrderStatus randomOrderStatus);
+
+    @Transactional
+    @Modifying
+    @Query("delete from UserRandomMatching u where u.user.id = :userId")
+    void deleteRandomMatching(@Param("userId") long userId);
 }

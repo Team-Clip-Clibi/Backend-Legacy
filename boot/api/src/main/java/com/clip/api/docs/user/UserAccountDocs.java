@@ -113,11 +113,10 @@ public interface UserAccountDocs {
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "204",
+                    responseCode = "200",
                     description = "탈퇴 성공"
             )
     })
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/me")
     void deleteUser(@RequestHeader("Authorization") String authorizationHeader);
 }

@@ -1,7 +1,6 @@
 package com.clip.api.user.service;
 
 import com.clip.api.user.controller.dto.*;
-import com.clip.api.user.mapper.JobMapper;
 import com.clip.api.user.mapper.LanguageMapper;
 import com.clip.api.user.mapper.TermsAcceptanceMapper;
 import com.clip.api.user.mapper.UserProfileMapper;
@@ -9,9 +8,16 @@ import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.global.exception.ResourceAlreadyExistException;
+import com.clip.matching.service.OneThingMatchingReviewService;
+import com.clip.matching.service.RandomMatchingReviewService;
+import com.clip.matching.service.UserOneThingMatchingService;
+import com.clip.matching.service.UserRandomMatchingService;
+import com.clip.notification.service.NotificationService;
+import com.clip.user.entity.JobCategory;
 import com.clip.user.entity.RelationshipStatus;
 import com.clip.user.entity.User;
-import com.clip.user.exception.NicknameAlreadyExistsException;
+import com.clip.user.service.JobService;
 import com.clip.user.service.TermsAcceptanceService;
 import com.clip.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +36,13 @@ public class UserAccountService {
     private final TokenService tokenService;
     private final TermsAcceptanceMapper termsAcceptanceMapper;
     private final UserProfileMapper userProfileMapper;
-    private final JobMapper jobMapper;
     private final LanguageMapper languageMapper;
+    private final UserOneThingMatchingService userOneThingMatchingService;
+    private final UserRandomMatchingService userRandomMatchingService;
+    private final OneThingMatchingReviewService oneThingMatchingReviewService;
+    private final RandomMatchingReviewService randomMatchingReviewService;
+    private final NotificationService notificationService;
+    private final JobService jobService;
 
     @Transactional
     public TokenProvider.Token signup(SignupDto request) {
@@ -96,7 +107,7 @@ public class UserAccountService {
 
     public void checkNicknameAvailable(String nickname) {
         if (userService.isExistNickname(nickname)) {
-            throw new NicknameAlreadyExistsException();
+            throw new ResourceAlreadyExistException("nickname", nickname);
         }
     }
 
@@ -116,9 +127,9 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void updateJob(long userId, JobDto jobDto) {
+    public void updateJob(long userId, JobCategory jobCategory) {
         userService.findUser(userId)
-                .updateJobList(jobMapper.toStringJobList(jobDto.getJobList()));
+                .updateJob(jobService.findJob(jobCategory));
     }
 
     @Transactional
@@ -139,10 +150,11 @@ public class UserAccountService {
                 .updateLanguage(languageMapper.toStringLanguage(languageDto.getLanguage()));
     }
 
+    @Transactional(readOnly = true)
     public JobDto getJob(long userId) {
-        return jobMapper.toJobDto(
-                userService.findUser(userId).getJobList()
-        );
+        return JobDto.builder()
+                .job(userService.findUser(userId).getJob().getJobCategory())
+                .build();
     }
 
     public RelationshipDto getReplationship(long userId) {
@@ -180,8 +192,22 @@ public class UserAccountService {
             throw new TokenValidationException();
         }
         long userId = Long.parseLong(tokenProvider.extractUserId(refreshToken));
+        if (isMyMatchingExist(userId)) {
+            throw new IllegalStateException("매칭이 존재하는 유저는 탈퇴할 수 없습니다.");
+        }
         User user = userService.findUser(userId);
+        notificationService.deleteNotification(userId);
+        oneThingMatchingReviewService.deleteOneThingMatchingReview(userId);
+        randomMatchingReviewService.deleteRandomMatchingReview(userId);
+        userOneThingMatchingService.deleteOneThingMatching(userId);
+        userRandomMatchingService.deleteRandomMatching(userId);
         termsAcceptanceService.deleteTermsAcceptance(userId);
         userService.deleteUser(user);
+    }
+
+    public boolean isMyMatchingExist(long userId) {
+        boolean isOneThingMatchingExist = userOneThingMatchingService.isOneThingMatchingExist(userId);
+        boolean isRandomMatchingExist = userRandomMatchingService.isRandomMatchingExist(userId);
+        return isOneThingMatchingExist || isRandomMatchingExist;
     }
 }

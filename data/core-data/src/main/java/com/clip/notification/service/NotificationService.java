@@ -1,10 +1,10 @@
 package com.clip.notification.service;
 
+import com.clip.global.exception.NoContentAvailableException;
 import com.clip.notification.entity.Notification;
 import com.clip.notification.entity.NotificationBanner;
 import com.clip.notification.repository.NotificationBannerRepository;
 import com.clip.notification.repository.NotificationRepository;
-import com.clip.notification.exception.NotExistNotificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class NotificationService {
                 PageRequest.ofSize(PAGE_SIZE)
         );
         if (unreadNotifications.isEmpty()) {
-            throw new NotExistNotificationException();
+            throw new NoContentAvailableException("unreadNotifications", lastId);
         }
         return unreadNotifications;
     }
@@ -49,7 +49,7 @@ public class NotificationService {
                 PageRequest.ofSize(PAGE_SIZE)
         );
         if (readNotifications.isEmpty()) {
-            throw new NotExistNotificationException();
+            throw new NoContentAvailableException("readNotifications", lastId);
         }
         return readNotifications;
     }
@@ -70,5 +70,9 @@ public class NotificationService {
 
     public void updateToClosed(long userId, long notificationBannerId) {
         notificationBannerRepository.updateToClosed(userId, notificationBannerId);
+    }
+
+    public void deleteNotification(long userId) {
+        notificationRepository.deleteNotification(userId);
     }
 }

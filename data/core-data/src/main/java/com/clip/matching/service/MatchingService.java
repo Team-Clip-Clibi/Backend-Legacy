@@ -1,8 +1,8 @@
 package com.clip.matching.service;
 
+import com.clip.global.exception.NoContentAvailableException;
+import com.clip.global.exception.ResourceNotFoundException;
 import com.clip.matching.entity.*;
-import com.clip.matching.exception.MatchingNotFoundException;
-import com.clip.matching.exception.NotExistMatchingException;
 import com.clip.matching.repository.*;
 import com.clip.matching.repository.projection.MatchingProjectionDto;
 import com.clip.order.entity.OneThingOrderStatus;
@@ -27,11 +27,11 @@ public class MatchingService {
     private final RandomMatchingCapacityRepository randomMatchingCapacityRepository;
 
     public OneThingMatching findOneThingMatching(final Long matchingId) {
-        return oneThingMatchingRepository.findById(matchingId).orElseThrow(MatchingNotFoundException::new);
+        return oneThingMatchingRepository.findById(matchingId).orElseThrow(()->new ResourceNotFoundException("oneThingMatching", matchingId));
     }
 
     public RandomMatching findRandomMatching(final Long matchingId) {
-        return randomMatchingRepository.findById(matchingId).orElseThrow(MatchingNotFoundException::new);
+        return randomMatchingRepository.findById(matchingId).orElseThrow(()->new ResourceNotFoundException("randomMatching", matchingId));
     }
 
     public List<RandomMatchingCapacity> findClosestUpcomingRandomMatchingCapacitiesWithDistrict(RandomDistrict district) {
@@ -40,7 +40,7 @@ public class MatchingService {
 
     public RandomMatchingCapacity findRandomMatchingCapacity(final Long randomMatchingId) {
         return randomMatchingCapacityRepository.findRandomMatchingCapacity(randomMatchingId)
-                .orElseThrow(MatchingNotFoundException::new);
+                .orElseThrow(()->new ResourceNotFoundException("randomMatchingCapacity", randomMatchingId));
     }
 
     public List<UserOneThingMatching> findUserOneThingMatchings(final Long userId) {
@@ -94,7 +94,7 @@ public class MatchingService {
     public List<MatchingProjectionDto> findAllMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
         List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, lastMeetingTime, userId, PageRequest.ofSize(PAGE_SIZE));
         if (matchings.isEmpty()) {
-            throw new NotExistMatchingException();
+            throw new NoContentAvailableException("userMatchings", userId);
         }
         return matchings;
     }

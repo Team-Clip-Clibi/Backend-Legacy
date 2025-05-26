@@ -1,9 +1,8 @@
 package com.clip.user.service;
 
+import com.clip.global.exception.ResourceAlreadyExistException;
+import com.clip.global.exception.ResourceNotFoundException;
 import com.clip.user.entity.*;
-import com.clip.user.exception.NicknameAlreadyExistsException;
-import com.clip.user.exception.PhoneNumberAlreadyExistsException;
-import com.clip.user.exception.UserNotFoundException;
 import com.clip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,7 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User findUser(String socialId, Platform platform) {
-        return userRepository.findUser(socialId, platform).orElseThrow(UserNotFoundException::new);
+        return userRepository.findUser(socialId, platform).orElseThrow(()-> new ResourceNotFoundException("user", socialId));
     }
 
     public Optional<User> findOptUser(String socialId, Platform platform) {
@@ -33,7 +32,7 @@ public class UserService {
         try {
             userRepository.updatePhoneNumber(userId, phoneNumber);
         }catch (DataIntegrityViolationException e){
-            throw new PhoneNumberAlreadyExistsException();
+            throw new ResourceAlreadyExistException("phoneNumber", phoneNumber);
         }
     }
 
@@ -45,7 +44,7 @@ public class UserService {
         try {
             userRepository.updateNickname(userId, nickname);
         }catch (DataIntegrityViolationException e){
-            throw new NicknameAlreadyExistsException();
+            throw new ResourceAlreadyExistException("nickname", nickname);
         }
     }
 
@@ -59,12 +58,12 @@ public class UserService {
 
     public User findUserExcludeOwner(long ownerId, String phoneNumber) {
         return userRepository.findUserExcludeOwner(ownerId, phoneNumber)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("user", phoneNumber));
     }
 
     public User findUser(long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(()-> new ResourceNotFoundException("user", userId));
     }
 
     public boolean isExistNickname(String nickname) {

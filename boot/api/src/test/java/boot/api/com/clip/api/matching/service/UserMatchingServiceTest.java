@@ -9,12 +9,12 @@ import com.clip.api.matching.service.UserMatchingService;
 import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.exception.NoContentAvailableException;
 import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.*;
-import com.clip.matching.exception.NotExistMatchingException;
 import com.clip.matching.repository.*;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
@@ -88,14 +88,14 @@ public class UserMatchingServiceTest {
     }
 
     @Test
-    @DisplayName("참여할 원띵,랜덤 모임이 없이면 NotExistAnyMatchingException 예외를 반환한다.")
+    @DisplayName("참여할 원띵,랜덤 모임이 없이면 NoContentAvailableException 예외를 반환한다.")
     public void notExistAnyMatchingException() {
         // given
         User user = userRepository.save(User.builder().build());
 
         // when&then
         Assertions.assertThatThrownBy(() -> userMatchingService.getUserMatchingStatus(user.getId()))
-                .isInstanceOf(NotExistAnyMatchingException.class);
+                .isInstanceOf(NoContentAvailableException.class);
     }
 
     @Test
@@ -330,7 +330,7 @@ public class UserMatchingServiceTest {
 
         //when & then
         assertThatThrownBy(() -> userMatchingService.getMatchings(null, lastMatchingDateTime, user.getId()))
-                .isInstanceOf(NotExistMatchingException.class);
+                .isInstanceOf(NoContentAvailableException.class);
     }
 
 }

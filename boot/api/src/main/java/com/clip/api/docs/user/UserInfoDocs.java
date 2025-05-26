@@ -302,4 +302,18 @@ public interface UserInfoDocs {
     )
     @GetMapping("/language")
     LanguageDto getLanguage(@AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(
+            summary = "신청 모임 존재 여부 확인 API",
+            description = """
+                    탈퇴 전 모임 존재 여부를 확인합니다.
+                    """,
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @GetMapping("/matchings/exists")
+    boolean isExistsMatching(@AuthenticationPrincipal UserDetails userDetails);
 }
