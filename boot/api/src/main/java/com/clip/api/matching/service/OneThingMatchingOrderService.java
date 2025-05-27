@@ -1,6 +1,7 @@
 package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.OneThingOrderDto;
+import com.clip.global.exception.InvalidRequestException;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.service.UserOneThingMatchingService;
 import com.clip.order.entity.OneThingOrder;
@@ -15,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class OneThingMatchingOrderService {
@@ -26,6 +29,9 @@ public class OneThingMatchingOrderService {
 
     @Transactional
     public OneThingOrderDto.Response createOrder(long userId, OneThingOrderDto.Request request) {
+        if (!isAvailableDate(request)) {
+            throw new InvalidRequestException("The preferred dates must be between 4 days before and 21 days after today.");
+        }
 
         OneThingPrice basicOneThingPrice = oneThingPriceService.findBasicOneThingPrice();
         OneThingDiscount baseDiscount = oneThingDiscountService.findBaseDiscount();
@@ -49,5 +55,15 @@ public class OneThingMatchingOrderService {
                 .amount(order.getDiscountedPrice().intValue())
                 .orderId(order.getOrderId())
                 .build();
+    }
+
+    private static boolean isAvailableDate(OneThingOrderDto.Request request) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDateLimit = currentDate.minusDays(4);
+        LocalDate endDateLimit = currentDate.plusDays(21);
+        return request.getPreferredDates().stream()
+                .anyMatch(preferredDate ->
+                        preferredDate.getDate().isAfter(startDateLimit) &&
+                                preferredDate.getDate().isBefore(endDateLimit));
     }
 }
