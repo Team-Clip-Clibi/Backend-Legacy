@@ -30,6 +30,12 @@ public class ValidExceptionHandler {
                 .body(e.getMessage());
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<?> invalidRequestException(TokenValidationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
     @ExceptionHandler(NoContentAvailableException.class)
     public ResponseEntity<?> noContentAvailableException(NoContentAvailableException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
