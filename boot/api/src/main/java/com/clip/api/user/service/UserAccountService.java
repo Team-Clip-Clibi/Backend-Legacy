@@ -8,6 +8,7 @@ import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
+import com.clip.global.exception.NoContentAvailableException;
 import com.clip.global.exception.ResourceAlreadyExistException;
 import com.clip.matching.service.OneThingMatchingReviewService;
 import com.clip.matching.service.RandomMatchingReviewService;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -152,6 +154,9 @@ public class UserAccountService {
 
     @Transactional(readOnly = true)
     public JobDto getJob(long userId) {
+        if (Objects.isNull(userService.findUser(userId).getJob())) {
+            throw new NoContentAvailableException("Job", userId);
+        }
         return JobDto.builder()
                 .job(userService.findUser(userId).getJob().getJobCategory())
                 .build();
