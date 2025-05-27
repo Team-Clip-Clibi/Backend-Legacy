@@ -90,9 +90,16 @@ public class UserOneThingMatching extends BaseEntity {
 
     @Embeddable
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class PreferredDate{
         private LocalDate date;
         @Enumerated(EnumType.STRING)
         private OneThingTimeSlot timeSlot;
+
+        @Builder
+        public PreferredDate(LocalDate date, OneThingTimeSlot timeSlot) {
+            this.date = date;
+            this.timeSlot = timeSlot;
+        }
     }
 }
