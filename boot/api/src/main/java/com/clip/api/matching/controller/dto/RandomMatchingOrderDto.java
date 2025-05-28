@@ -1,6 +1,7 @@
 package com.clip.api.matching.controller.dto;
 
 import com.clip.matching.entity.RandomDistrict;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class RandomMatchingOrderDto {
 
     @Getter
+    @Schema(name = "RandomOrderRequest")
     public static class Request {
         private final String topic;
         @Size(max = 2)

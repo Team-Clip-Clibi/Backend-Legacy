@@ -4,6 +4,7 @@ import com.clip.matching.entity.OneThingCategory;
 import com.clip.matching.entity.OneThingDistrict;
 import com.clip.matching.entity.OneThingBudgetRange;
 import com.clip.matching.entity.UserOneThingMatching;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class OneThingOrderDto {
 
     @Getter
+    @Schema(name = "OneThingOrderRequest")
     public static class Request{
         private final String topic;
         private final OneThingDistrict district;
