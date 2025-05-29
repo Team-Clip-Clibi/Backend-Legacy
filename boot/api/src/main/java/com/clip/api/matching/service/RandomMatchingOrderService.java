@@ -24,6 +24,8 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -48,7 +50,8 @@ public class RandomMatchingOrderService {
     @Transactional
     public RandomMatchingOrderDto.Response createOrder(long userId, RandomMatchingOrderDto.Request request) {
         User user = userService.findUser(userId);
-        List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistrict());
+        LocalDateTime matchingTime = calculateMatchingDate(LocalDate.now());
+        List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistrict(), matchingTime);
         RandomPrice basicRandomPrice = randomPriceService.findBasicRandomPrice();
         RandomDiscount baseDiscount = randomDiscountService.findBasicRandomDiscount();
 
@@ -125,5 +128,14 @@ public class RandomMatchingOrderService {
         RandomMatchingCapacity randomMatchingCapacity = matchingService.findRandomMatchingCapacity(matchingId);
         // 가용 인원 복구
         randomMatchingCapacity.cancelReservation();
+    }
+
+    private LocalDateTime calculateMatchingDate(LocalDate now) {
+        int dayOfWeek = now.getDayOfWeek().getValue();
+        // 이번 주 금요일 계산
+        LocalDate thisFriday = now.plusDays(5 - dayOfWeek);
+
+        // 목요일 이후라면 다음 주 금요일, 아니면 이번 주 금요일
+        return dayOfWeek >= 4 ? thisFriday.plusDays(7).atTime(19, 0) : thisFriday.atTime(19, 0);
     }
 }
