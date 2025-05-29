@@ -143,10 +143,9 @@ public class RandomMatchingOrderService {
     private LocalDateTime calculateMatchingDate(LocalDate now) {
         DayOfWeek currentDay = now.getDayOfWeek();
 
-
-        LocalDate matchingDate = (currentDay == DayOfWeek.THURSDAY || currentDay == DayOfWeek.FRIDAY)
+        LocalDate matchingDate = (currentDay == DayOfWeek.THURSDAY)
                 ? now.plusWeeks(1).with(DayOfWeek.FRIDAY)
-                : now.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+                : now.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
 
         return matchingDate.atTime(19, 0);
     }
