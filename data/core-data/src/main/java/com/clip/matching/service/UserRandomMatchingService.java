@@ -23,4 +23,8 @@ public class UserRandomMatchingService {
     public void deleteRandomMatching(long userId) {
         userRandomMatchingRepository.deleteRandomMatching(userId);
     }
+
+    public boolean isDuplicatedMatching(long userId, LocalDateTime meetingTime) {
+        return userRandomMatchingRepository.findUserRandomMatching(userId, meetingTime).isPresent();
+    }
 }

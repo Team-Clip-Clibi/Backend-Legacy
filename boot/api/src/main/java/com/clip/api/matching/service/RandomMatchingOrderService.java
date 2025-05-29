@@ -1,5 +1,6 @@
 package com.clip.api.matching.service;
 
+import com.clip.api.matching.controller.dto.RandomMatchingDuplicateCheckDto;
 import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import com.clip.api.matching.service.exception.MatchingFailedException;
 import com.clip.matching.entity.MatchingStatus;
@@ -128,6 +129,12 @@ public class RandomMatchingOrderService {
         RandomMatchingCapacity randomMatchingCapacity = matchingService.findRandomMatchingCapacity(matchingId);
         // 가용 인원 복구
         randomMatchingCapacity.cancelReservation();
+    }
+
+    public RandomMatchingDuplicateCheckDto checkDuplicateMatching(long userId) {
+        LocalDateTime matchingTime = calculateMatchingDate(LocalDate.now());
+        boolean isDuplicated = userRandomMatchingService.isDuplicatedMatching(userId, matchingTime);
+        return new RandomMatchingDuplicateCheckDto(matchingTime, isDuplicated);
     }
 
     private LocalDateTime calculateMatchingDate(LocalDate now) {
