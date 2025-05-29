@@ -1,6 +1,7 @@
 package com.clip.api.matching.controller;
 
 import com.clip.api.docs.matching.RandomMatchingDocs;
+import com.clip.api.matching.controller.dto.RandomMatchingDuplicateCheckDto;
 import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import com.clip.api.matching.service.RandomMatchingOrderService;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,10 @@ public class UserRandomMatchingController implements RandomMatchingDocs {
     @Override
     public void restoreCapacity(UserDetails userDetails, Long orderId) {
         userRandomMatchingService.restoreCapacity(Long.parseLong(userDetails.getUsername()), orderId);
+    }
+
+    @Override
+    public RandomMatchingDuplicateCheckDto checkDuplicateMatching(UserDetails userDetails) {
+        return userRandomMatchingService.checkDuplicateMatching(Long.parseLong(userDetails.getUsername()));
     }
 }
