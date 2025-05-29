@@ -25,8 +25,11 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Service
@@ -138,11 +141,13 @@ public class RandomMatchingOrderService {
     }
 
     private LocalDateTime calculateMatchingDate(LocalDate now) {
-        int dayOfWeek = now.getDayOfWeek().getValue();
-        // 이번 주 금요일 계산
-        LocalDate thisFriday = now.plusDays(5 - dayOfWeek);
+        DayOfWeek currentDay = now.getDayOfWeek();
 
-        // 목요일 이후라면 다음 주 금요일, 아니면 이번 주 금요일
-        return dayOfWeek >= 4 ? thisFriday.plusDays(7).atTime(19, 0) : thisFriday.atTime(19, 0);
+
+        LocalDate matchingDate = (currentDay == DayOfWeek.THURSDAY || currentDay == DayOfWeek.FRIDAY)
+                ? now.plusWeeks(1).with(DayOfWeek.FRIDAY)
+                : now.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+
+        return matchingDate.atTime(19, 0);
     }
 }

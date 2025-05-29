@@ -32,8 +32,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,16 +102,11 @@ public class RandomMatchingOrderServiceTest {
         @DisplayName("여러 지역에서 다수 사용자가 동시에 매칭을 신청할 때 정상 처리되는 사용자와 정상 처리되지 않는 사용자의 매칭 신청을 확인한다.")
         void shouldHandleConcurrentMatchingRequests() throws InterruptedException {
             LocalDate now = LocalDate.now();
-            int dayOfWeek = now.getDayOfWeek().getValue();
-
-            // 이번 주 금요일 계산
-            LocalDate meetingDate = now.plusDays(5 - dayOfWeek);
-            // 목요일 이후라면 다음 주 금요일
-            if (dayOfWeek >= 4) {
-                meetingDate = meetingDate.plusDays(7);
-            }
-
-            LocalDateTime meetingDateTime = meetingDate.atTime(19, 0);
+            DayOfWeek currentDay = now.getDayOfWeek();
+            LocalDate matchingDate = (currentDay == DayOfWeek.THURSDAY || currentDay == DayOfWeek.FRIDAY)
+                    ? now.plusWeeks(1).with(DayOfWeek.FRIDAY)
+                    : now.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+            LocalDateTime meetingDateTime = matchingDate.atTime(19, 0);
 
             // 2개 지역의 랜덤 매칭 생성
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
@@ -206,16 +204,11 @@ public class RandomMatchingOrderServiceTest {
             // Given
             User user = userRepository.save(User.builder().nickname("TestUser").build());
             LocalDate now = LocalDate.now();
-            int dayOfWeek = now.getDayOfWeek().getValue();
-
-            // 이번 주 금요일 계산
-            LocalDate meetingDate = now.plusDays(5 - dayOfWeek);
-            // 목요일 이후라면 다음 주 금요일
-            if (dayOfWeek >= 4) {
-                meetingDate = meetingDate.plusDays(7);
-            }
-
-            LocalDateTime meetingDateTime = meetingDate.atTime(19, 0);
+            DayOfWeek currentDay = now.getDayOfWeek();
+            LocalDate matchingDate = (currentDay == DayOfWeek.THURSDAY || currentDay == DayOfWeek.FRIDAY)
+                    ? now.plusWeeks(1).with(DayOfWeek.FRIDAY)
+                    : now.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+            LocalDateTime meetingDateTime = matchingDate.atTime(19, 0);
 
             RandomMatching randomMatching = new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 6);
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
@@ -244,16 +237,11 @@ public class RandomMatchingOrderServiceTest {
             // Given
             User user = userRepository.save(User.builder().nickname("NewUser").build());
             LocalDate now = LocalDate.now();
-            int dayOfWeek = now.getDayOfWeek().getValue();
-
-            // 이번 주 금요일 계산
-            LocalDate meetingDate = now.plusDays(5 - dayOfWeek);
-            // 목요일 이후라면 다음 주 금요일
-            if (dayOfWeek >= 4) {
-                meetingDate = meetingDate.plusDays(7);
-            }
-
-            LocalDateTime meetingDateTime = meetingDate.atTime(19, 0);
+            DayOfWeek currentDay = now.getDayOfWeek();
+            LocalDate matchingDate = (currentDay == DayOfWeek.THURSDAY || currentDay == DayOfWeek.FRIDAY)
+                    ? now.plusWeeks(1).with(DayOfWeek.FRIDAY)
+                    : now.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+            LocalDateTime meetingDateTime = matchingDate.atTime(19, 0);
 
             // When
             RandomMatchingDuplicateCheckDto result = randomMatchingOrderService.checkDuplicateMatching(user.getId());
