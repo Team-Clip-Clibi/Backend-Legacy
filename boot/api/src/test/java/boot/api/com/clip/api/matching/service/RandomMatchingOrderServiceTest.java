@@ -1,6 +1,7 @@
 package boot.api.com.clip.api.matching.service;
 
 import com.clip.ApiApplication;
+import com.clip.api.matching.controller.dto.RandomMatchingDuplicateCheckDto;
 import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import com.clip.api.matching.service.RandomMatchingOrderService;
 import com.clip.api.payment.feign.TossPaymentFeign;
@@ -9,9 +10,7 @@ import com.clip.infra.aws.s3.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.infra.fcm.config.FcmConfig;
-import com.clip.matching.entity.RandomDistrict;
-import com.clip.matching.entity.RandomMatching;
-import com.clip.matching.entity.RandomMatchingCapacity;
+import com.clip.matching.entity.*;
 import com.clip.matching.repository.RandomMatchingCapacityRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.repository.UserRandomMatchingRepository;
@@ -194,6 +193,74 @@ public class RandomMatchingOrderServiceTest {
 
             assertThat(gangnamMatchCount).isEqualTo(6);
             assertThat(hongdaeMatchCount).isEqualTo(6);
+        }
+    }
+
+    @Nested
+    @DisplayName("checkDuplicateMatching 메서드 테스트")
+    class CheckDuplicateMatchingTests {
+
+        @Test
+        @DisplayName("이미 매칭에 참여한 사용자는 중복으로 확인되어야 한다")
+        void shouldReturnTrueWhenUserAlreadyParticipated() {
+            // Given
+            User user = userRepository.save(User.builder().nickname("TestUser").build());
+            LocalDate now = LocalDate.now();
+            int dayOfWeek = now.getDayOfWeek().getValue();
+
+            // 이번 주 금요일 계산
+            LocalDate meetingDate = now.plusDays(5 - dayOfWeek);
+            // 목요일 이후라면 다음 주 금요일
+            if (dayOfWeek >= 4) {
+                meetingDate = meetingDate.plusDays(7);
+            }
+
+            LocalDateTime meetingDateTime = meetingDate.atTime(19, 0);
+
+            RandomMatching randomMatching = new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 6);
+            RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
+                    new RandomMatchingCapacity(randomMatching, 6));
+
+            UserRandomMatching userRandomMatching = UserRandomMatching.builder()
+                    .user(user)
+                    .randomMatching(randomMatching)
+                    .myOneThingContent("테스트 주제")
+                    .matchingStatus(MatchingStatus.APPLIED)
+                    .build();
+
+            userRandomMatchingRepository.save(userRandomMatching);
+
+            // When
+            RandomMatchingDuplicateCheckDto result = randomMatchingOrderService.checkDuplicateMatching(user.getId());
+
+            // Then
+            assertThat(result.getIsDuplicated()).isTrue();
+            assertThat(result.getMeetingTime()).isEqualTo(meetingDateTime);
+        }
+
+        @Test
+        @DisplayName("매칭에 참여하지 않은 사용자는 중복이 아니어야 한다")
+        void shouldReturnFalseWhenUserNotParticipated() {
+            // Given
+            User user = userRepository.save(User.builder().nickname("NewUser").build());
+            LocalDate now = LocalDate.now();
+            int dayOfWeek = now.getDayOfWeek().getValue();
+
+            // 이번 주 금요일 계산
+            LocalDate meetingDate = now.plusDays(5 - dayOfWeek);
+            // 목요일 이후라면 다음 주 금요일
+            if (dayOfWeek >= 4) {
+                meetingDate = meetingDate.plusDays(7);
+            }
+
+            LocalDateTime meetingDateTime = meetingDate.atTime(19, 0);
+
+            // When
+            RandomMatchingDuplicateCheckDto result = randomMatchingOrderService.checkDuplicateMatching(user.getId());
+
+            // Then
+            assertThat(result.getIsDuplicated()).isFalse();
+            assertThat(result.getMeetingTime()).isEqualTo(meetingDateTime);
         }
     }
 }
