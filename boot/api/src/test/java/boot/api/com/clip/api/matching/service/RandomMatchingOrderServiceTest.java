@@ -33,6 +33,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,11 +99,23 @@ public class RandomMatchingOrderServiceTest {
         @Test
         @DisplayName("여러 지역에서 다수 사용자가 동시에 매칭을 신청할 때 정상 처리되는 사용자와 정상 처리되지 않는 사용자의 매칭 신청을 확인한다.")
         void shouldHandleConcurrentMatchingRequests() throws InterruptedException {
+            LocalDate now = LocalDate.now();
+            int dayOfWeek = now.getDayOfWeek().getValue();
+
+            // 이번 주 금요일 계산
+            LocalDate meetingDate = now.plusDays(5 - dayOfWeek);
+            // 목요일 이후라면 다음 주 금요일
+            if (dayOfWeek >= 4) {
+                meetingDate = meetingDate.plusDays(7);
+            }
+
+            LocalDateTime meetingDateTime = meetingDate.atTime(19, 0);
+
             // 2개 지역의 랜덤 매칭 생성
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", LocalDateTime.now().plusDays(1), 6), 6));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 6), 6));
             RandomMatchingCapacity hongdaeCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", LocalDateTime.now().plusDays(1), 6), 6));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", meetingDateTime, 6), 6));
 
             int threadCount = 40;
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
