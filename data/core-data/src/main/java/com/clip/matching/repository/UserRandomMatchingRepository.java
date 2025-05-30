@@ -73,4 +73,12 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
     @Modifying
     @Query("delete from UserRandomMatching u where u.user.id = :userId")
     void deleteRandomMatching(@Param("userId") long userId);
+
+    @Query("""
+            select u
+            from UserRandomMatching u
+            where u.user.id = :userId
+            and u.randomMatching.meetingTime = :meetingTime
+            """)
+    Optional<UserRandomMatching> findUserRandomMatching(@Param("userId") long userId, @Param("meetingTime") LocalDateTime meetingTime);
 }

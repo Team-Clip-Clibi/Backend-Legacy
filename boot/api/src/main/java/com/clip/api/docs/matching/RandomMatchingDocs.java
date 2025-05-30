@@ -1,5 +1,6 @@
 package com.clip.api.docs.matching;
 
+import com.clip.api.matching.controller.dto.RandomMatchingDuplicateCheckDto;
 import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -56,5 +57,21 @@ public interface RandomMatchingDocs {
     void restoreCapacity(
             @AuthenticationPrincipal final UserDetails userDetails,
             @PathVariable("matchingId") final Long matchingId
+    );
+
+    @Operation(
+            summary = "랜덤 매칭 중복 신청 여부 조회",
+            description = """
+                     - 랜덤 매칭 중복 신청 여부 조회 API입니다.
+                     - 랜덤 매칭 페이지에서 중복 신청 여부를 확인할 때 사용합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @GetMapping("/duplicate-check")
+    RandomMatchingDuplicateCheckDto checkDuplicateMatching(
+            @AuthenticationPrincipal final UserDetails userDetails
     );
 }

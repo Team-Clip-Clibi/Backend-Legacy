@@ -27,6 +27,7 @@ public class Notification extends BaseEntity {
     @Column
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private SendStatus sendStatus;
 
