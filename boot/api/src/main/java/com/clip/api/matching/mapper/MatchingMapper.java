@@ -21,6 +21,7 @@ public interface MatchingMapper {
         return OnethingMatchingSummaryDto.builder()
                 .matchingId(userOneThingMatching.getOneThingMatching().getId())
                 .daysUntilMeeting(userOneThingMatching.getOneThingMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
+                .meetingTime(userOneThingMatching.getOneThingMatching().getMeetingTime())
                 .meetingPlace(userOneThingMatching.getOneThingMatching().getLocation())
                 .build();
     }
@@ -29,6 +30,7 @@ public interface MatchingMapper {
         return RandomMatchingSummaryDto.builder()
                 .matchingId(userRandomMatching.getRandomMatching().getId())
                 .daysUntilMeeting(userRandomMatching.getRandomMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
+                .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
                 .meetingPlace(userRandomMatching.getRandomMatching().getLocation())
                 .build();
     }
