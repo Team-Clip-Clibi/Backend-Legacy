@@ -21,9 +21,11 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             join fetch u.oneThingMatching
             where u.user.id = :userId
             and u.oneThingMatching.meetingTime >= :date
+            and u.matchingStatus = :matchingStatus
             order by u.oneThingMatching.meetingTime asc
             """)
-    List<UserOneThingMatching> findUserOneThingMatching(@Param("userId") Long userId, @Param("date") LocalDateTime date);
+    List<UserOneThingMatching> findUserOneThingMatching(@Param("userId") Long userId, @Param("date") LocalDateTime date,
+                                                        @Param("matchingStatus") MatchingStatus matchingStatus);
 
     @Query("""
             select u
