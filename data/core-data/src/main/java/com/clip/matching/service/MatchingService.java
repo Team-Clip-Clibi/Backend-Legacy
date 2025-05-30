@@ -44,11 +44,11 @@ public class MatchingService {
     }
 
     public List<UserOneThingMatching> findUserOneThingMatchings(final Long userId) {
-        return userOneThingMatchingRepository.findUserOneThingMatching(userId, LocalDateTime.now());
+        return userOneThingMatchingRepository.findUserOneThingMatching(userId, LocalDateTime.now(), MatchingStatus.CONFIRMED);
     }
 
     public List<UserRandomMatching> findUserRandomMatchings(final Long userId) {
-        return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now());
+        return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now(), MatchingStatus.CONFIRMED);
     }
 
     public Optional<UserOneThingMatching> findOptLatestUserOneThingMatching(long userId, LocalDateTime dateTime) {
