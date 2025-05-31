@@ -64,14 +64,13 @@ public class OneThingMatchingOrderService {
     }
 
     private static boolean isAvailableDate(OneThingOrderDto.Request request, LocalDate currentDate) {
-        LocalDate saturdayDate = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
-        LocalDate sundayDate = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
         LocalDate requestDate = request.getPreferredDates().stream()
                 .sorted()
                 .findFirst()
                 .orElseThrow()
                 .getDate();
+
         return ((requestDate.getDayOfWeek() == DayOfWeek.SATURDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS))) ||
                 ((requestDate.getDayOfWeek() == DayOfWeek.SUNDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS)));
     }
