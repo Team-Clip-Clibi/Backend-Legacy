@@ -15,14 +15,16 @@ public class MatchingDto {
     private String matchingType;
     private Long matchingId;
     private String myOneThingContent;
+    private Boolean isReviewWritten;
 
     @Builder
     public MatchingDto(LocalDateTime meetingTime, MatchingStatus matchingStatus,
-                       String matchingType, Long matchingId, String myOneThingContent) {
+                       String matchingType, Long matchingId, String myOneThingContent, Boolean isReviewWritten) {
         this.meetingTime = meetingTime;
         this.matchingStatus = matchingStatus;
         this.matchingType = matchingType;
         this.matchingId = matchingId;
         this.myOneThingContent = myOneThingContent;
+        this.isReviewWritten = isReviewWritten;
     }
 }
