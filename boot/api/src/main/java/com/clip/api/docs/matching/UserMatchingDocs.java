@@ -105,6 +105,7 @@ public interface UserMatchingDocs {
                     - 전체 조회 시, 파라미터 없이 요청합니다.
                     - 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 meetingTime으로 조회 시 204 No Content를 반환합니다.
                     - 또한 매칭은 최신순으로 정렬되어 반환됩니다.
+                    - isReviewWritten 필드는 매칭이 완료되었고, 후기를 작성한 경우에만 true로 반환됩니다. default는 false입니다.
                    \s""",
             security = @SecurityRequirement(name = "Bearer Token")
     )
