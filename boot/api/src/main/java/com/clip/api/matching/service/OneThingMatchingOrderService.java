@@ -14,16 +14,18 @@ import com.clip.user.entity.User;
 import com.clip.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OneThingMatchingOrderService {
-    private static final int RESERVATION_DEADLINE_DAYS = 4;
+    private static final int RESERVATION_DEADLINE_DAYS = 3;
 
     private final UserService userService;
     private final UserOneThingMatchingService userOneThingMatchingService;
@@ -70,8 +72,7 @@ public class OneThingMatchingOrderService {
                 .findFirst()
                 .orElseThrow()
                 .getDate();
-
-        return ((requestDate.getDayOfWeek() == DayOfWeek.SATURDAY) && currentDate.isBefore(saturdayDate.minusDays(RESERVATION_DEADLINE_DAYS))) ||
-                ((requestDate.getDayOfWeek() == DayOfWeek.SUNDAY) && currentDate.isBefore(sundayDate.minusDays(RESERVATION_DEADLINE_DAYS)));
+        return ((requestDate.getDayOfWeek() == DayOfWeek.SATURDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS))) ||
+                ((requestDate.getDayOfWeek() == DayOfWeek.SUNDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS)));
     }
 }
