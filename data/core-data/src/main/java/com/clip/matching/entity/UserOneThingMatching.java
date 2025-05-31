@@ -91,7 +91,7 @@ public class UserOneThingMatching extends BaseEntity {
     @Embeddable
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class PreferredDate{
+    public static class PreferredDate implements Comparable<PreferredDate> {
         private LocalDate date;
         @Enumerated(EnumType.STRING)
         private OneThingTimeSlot timeSlot;
@@ -100,6 +100,11 @@ public class UserOneThingMatching extends BaseEntity {
         public PreferredDate(LocalDate date, OneThingTimeSlot timeSlot) {
             this.date = date;
             this.timeSlot = timeSlot;
+        }
+
+        @Override
+        public int compareTo(PreferredDate o) {
+            return this.date.compareTo(o.date);
         }
     }
 }
