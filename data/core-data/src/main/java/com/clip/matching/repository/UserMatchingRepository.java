@@ -15,13 +15,16 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
 
     @Query("""
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
-            uotm.oneThingMatching.meetingTime,
+            otm.meetingTime,
             uotm.matchingStatus,
             'ONE_THING',
-            uotm.oneThingMatching.id,
-            uotm.myOneThingContent)
+            otm.id,
+            uotm.myOneThingContent,
+            case when uotm.matchingStatus = 'COMPLETED' and otr.id is not null then true else false end
+        )
         from UserOneThingMatching uotm
-        join uotm.oneThingMatching
+        join uotm.oneThingMatching otm
+        left join OneThingMatchingReview otr on otr.oneThingMatching.id = otm.id and otr.user.id = :userId
         where (:matchingStatus is null or uotm.matchingStatus = :matchingStatus)
         and (:lastMeetingTime is null or uotm.oneThingMatching.meetingTime < :lastMeetingTime)
         and uotm.user.id = :userId
@@ -30,13 +33,16 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         union all
         
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
-            urm.randomMatching.meetingTime,
+            rm.meetingTime,
             urm.matchingStatus,
             'RANDOM',
-            urm.randomMatching.id,
-            urm.myOneThingContent)
+            rm.id,
+            urm.myOneThingContent,
+            case when urm.matchingStatus = 'COMPLETED' and rmr.id is not null then true else false end
+        )
         from UserRandomMatching urm
-        join urm.randomMatching
+        join urm.randomMatching rm
+        left join RandomMatchingReview rmr on rmr.randomMatching.id = rm.id and rmr.user.id = :userId
         where (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
         and (:lastMeetingTime is null or urm.randomMatching.meetingTime < :lastMeetingTime)
         and urm.user.id = :userId
