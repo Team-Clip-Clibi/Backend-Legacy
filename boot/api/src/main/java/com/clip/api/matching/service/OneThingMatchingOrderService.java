@@ -18,12 +18,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 
 @Service
 @RequiredArgsConstructor
 public class OneThingMatchingOrderService {
-    private static final int RESERVATION_DEADLINE_DAYS = 4;
+    private static final int RESERVATION_DEADLINE_DAYS = 3;
 
     private final UserService userService;
     private final UserOneThingMatchingService userOneThingMatchingService;
@@ -62,8 +61,6 @@ public class OneThingMatchingOrderService {
     }
 
     private static boolean isAvailableDate(OneThingOrderDto.Request request, LocalDate currentDate) {
-        LocalDate saturdayDate = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
-        LocalDate sundayDate = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
         LocalDate requestDate = request.getPreferredDates().stream()
                 .sorted()
@@ -71,7 +68,7 @@ public class OneThingMatchingOrderService {
                 .orElseThrow()
                 .getDate();
 
-        return ((requestDate.getDayOfWeek() == DayOfWeek.SATURDAY) && currentDate.isBefore(saturdayDate.minusDays(RESERVATION_DEADLINE_DAYS))) ||
-                ((requestDate.getDayOfWeek() == DayOfWeek.SUNDAY) && currentDate.isBefore(sundayDate.minusDays(RESERVATION_DEADLINE_DAYS)));
+        return ((requestDate.getDayOfWeek() == DayOfWeek.SATURDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS))) ||
+                ((requestDate.getDayOfWeek() == DayOfWeek.SUNDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS)));
     }
 }
