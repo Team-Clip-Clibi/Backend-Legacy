@@ -23,10 +23,6 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
-    public List<Notification> saveNotifications(List<Notification> notifications) {
-        return notificationRepository.saveAll(notifications);
-    }
-
     public List<Notification> findUnreadNotifications(long userId, Long lastId) {
         List<Notification> unreadNotifications = notificationRepository.findUnreadNotifications(
                 userId,
