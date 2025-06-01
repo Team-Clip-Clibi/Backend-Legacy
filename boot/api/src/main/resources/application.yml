@@ -41,3 +41,5 @@ exclude-auth-path-patterns:
       method: GET
     - path-pattern: /zzilit/img/upload
       method: POST
+    - path-pattern: /displays/banners/**
+      method: GET
