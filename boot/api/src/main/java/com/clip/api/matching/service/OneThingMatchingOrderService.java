@@ -16,11 +16,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
 public class OneThingMatchingOrderService {
+    private static final int RESERVATION_DEADLINE_DAYS = 3;
+
     private final UserService userService;
     private final UserOneThingMatchingService userOneThingMatchingService;
     private final OneThingOrderService onethingOrderService;
@@ -29,7 +32,7 @@ public class OneThingMatchingOrderService {
 
     @Transactional
     public OneThingOrderDto.Response createOrder(long userId, OneThingOrderDto.Request request) {
-        if (!isAvailableDate(request)) {
+        if (!isAvailableDate(request, LocalDate.now())) {
             throw new InvalidRequestException("The preferred dates must be between 4 days before and 21 days after today.");
         }
 
@@ -57,13 +60,15 @@ public class OneThingMatchingOrderService {
                 .build();
     }
 
-    private static boolean isAvailableDate(OneThingOrderDto.Request request) {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate startDateLimit = currentDate.minusDays(4);
-        LocalDate endDateLimit = currentDate.plusDays(21);
-        return request.getPreferredDates().stream()
-                .anyMatch(preferredDate ->
-                        preferredDate.getDate().isAfter(startDateLimit) &&
-                                preferredDate.getDate().isBefore(endDateLimit));
+    private static boolean isAvailableDate(OneThingOrderDto.Request request, LocalDate currentDate) {
+
+        LocalDate requestDate = request.getPreferredDates().stream()
+                .sorted()
+                .findFirst()
+                .orElseThrow()
+                .getDate();
+
+        return ((requestDate.getDayOfWeek() == DayOfWeek.SATURDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS))) ||
+                ((requestDate.getDayOfWeek() == DayOfWeek.SUNDAY) && currentDate.isBefore(requestDate.minusDays(RESERVATION_DEADLINE_DAYS)));
     }
 }

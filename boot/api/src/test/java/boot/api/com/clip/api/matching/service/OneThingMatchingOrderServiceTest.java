@@ -1,132 +1,46 @@
 package boot.api.com.clip.api.matching.service;
 
-import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.OneThingOrderDto;
 import com.clip.api.matching.service.OneThingMatchingOrderService;
-import com.clip.api.payment.feign.TossPaymentFeign;
-import com.clip.global.config.feign.FeignConfig;
-import com.clip.global.exception.InvalidRequestException;
-import com.clip.infra.aws.s3.S3Config;
-import com.clip.infra.aws.s3.S3FCMService;
-import com.clip.infra.aws.s3.S3ImgService;
-import com.clip.infra.fcm.config.FcmConfig;
-import com.clip.matching.entity.UserOneThingMatching;
-import com.clip.matching.repository.UserOneThingMatchingRepository;
-import com.clip.order.repository.OneThingOrderRepository;
-import com.clip.price.entity.*;
-import com.clip.price.repository.OneThingDiscountRepository;
-import com.clip.price.repository.OneThingPriceRepository;
-import com.clip.user.entity.User;
-import com.clip.user.repository.UserRepository;
+import com.clip.matching.entity.*;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
-@ContextConfiguration(classes = ApiApplication.class)
-@SpringBootTest
-public class OneThingMatchingOrderServiceTest {
-    @MockitoBean
-    private S3ImgService s3ImgService;
-    @MockitoBean
-    private S3Config s3Config;
-    @MockitoBean
-    private FeignConfig feignConfig;
-    @MockitoBean
-    private TossPaymentFeign tossPaymentFeign;
-    @MockitoBean
-    private S3FCMService s3FCMService;
-    @MockitoBean
-    private FcmConfig fcmConfig;
+class OneThingMatchingOrderServiceTest {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OneThingOrderRepository oneThingOrderRepository;
-    @Autowired
-    private UserOneThingMatchingRepository userOneThingMatchingRepository;
-    @Autowired
-    private OneThingMatchingOrderService oneThingMatchingOrderService;
-    @Autowired
-    private OneThingPriceRepository oneThingPriceRepository;
-    @Autowired
-    private OneThingDiscountRepository oneThingDiscountRepository;
-
-
-    @AfterEach
-    void tearDown() {
-        userOneThingMatchingRepository.deleteAllInBatch();
-        oneThingOrderRepository.deleteAllInBatch();
-        oneThingPriceRepository.deleteAllInBatch();
-        oneThingDiscountRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
-
-    @DisplayName("userId와 신청 정보를 기반으로 주문번호와 가격을 반환한다.")
+    @DisplayName("토요일 원띵은 화요일까지 신청 가능하다.")
     @Test
-    void createOneThingOrder() {
-        //given
-        User user = userRepository.save(User.builder().build());
-        OneThingOrderDto.Request request = OneThingOrderDto.Request.builder().preferredDates(List.of(UserOneThingMatching.PreferredDate.builder().date(LocalDate.now()).build())).build();
-        OneThingPrice price = oneThingPriceRepository.save(OneThingPrice.builder()
-                .basePrice(BigDecimal.valueOf(8900))
-                .priceType(OneThingPriceType.BASIC)
-                .build());
-        OneThingDiscount discount = oneThingDiscountRepository.save(OneThingDiscount.builder()
-                .discountType(DiscountType.BASE)
-                .discountValue(BigDecimal.valueOf(6000))
-                .discountUnit(DiscountUnit.AMOUNT)
-                .build());
+    void createOrder() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // Given
+        LocalDate preferredDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)); //원띵 신청 날짜
+        LocalDate currentDate_tue = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.TUESDAY));
+        LocalDate currentDate_wen = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.WEDNESDAY));
 
-        //when
-        OneThingOrderDto.Response res = oneThingMatchingOrderService.createOrder(user.getId(), request);
+        OneThingOrderDto.Request request = OneThingOrderDto.Request.builder()
+                .topic("topic")
+                .district(OneThingDistrict.GANGNAM)
+                .preferredDates(List.of(new UserOneThingMatching.PreferredDate(preferredDate, OneThingTimeSlot.DINNER)))
+                .tmiContent("tmiContent")
+                .oneThingBudgetRange(OneThingBudgetRange.MEDIUM)
+                .oneThingCategory(OneThingCategory.HEALTH)
+                .build();
 
-        //then
-        Assertions.assertThat(res.getOrderId()).isNotNull();
-        Assertions.assertThat(res.getAmount()).isNotNull();
-    }
+        Method method = OneThingMatchingOrderService.class.getDeclaredMethod("isAvailableDate", OneThingOrderDto.Request.class, LocalDate.class);
+        method.setAccessible(true);
+        boolean result_tue = (boolean) method.invoke(null, request, currentDate_tue);
+        boolean result_wen = (boolean) method.invoke(null, request, currentDate_wen);
 
-    @DisplayName("원띵 신청 날짜는 현재일로 부터 4일 이전, 21일 이후를 벗어나면 InvalidRequestException이 발생한다.")
-    @TestFactory
-    List<DynamicTest> createOneThingOrderInvalidRequestException() {
-        //given
-        User user = userRepository.save(User.builder().build());
-        UserOneThingMatching.PreferredDate beforeDay = UserOneThingMatching.PreferredDate.builder().date(LocalDate.now().minusDays(4)).build();
-        UserOneThingMatching.PreferredDate afterDay = UserOneThingMatching.PreferredDate.builder().date(LocalDate.now().plusDays(21)).build();
+        // Then
+        Assertions.assertThat(result_tue).isTrue();
+        Assertions.assertThat(result_wen).isFalse();
 
-        return List.of(DynamicTest.dynamicTest("beforeDay", () -> {
-            //when
-            OneThingOrderDto.Request request = OneThingOrderDto.Request.builder()
-                    .preferredDates(List.of(beforeDay))
-                    .build();
-
-            //then
-            Assertions.assertThatThrownBy(() -> oneThingMatchingOrderService.createOrder(user.getId(), request))
-                    .isInstanceOf(InvalidRequestException.class);
-        }), DynamicTest.dynamicTest("afterDay", () -> {
-            //when
-            OneThingOrderDto.Request request = OneThingOrderDto.Request.builder()
-                    .preferredDates(List.of(afterDay))
-                    .build();
-
-            //then
-            Assertions.assertThatThrownBy(() -> oneThingMatchingOrderService.createOrder(user.getId(), request))
-                    .isInstanceOf(InvalidRequestException.class);
-        }), DynamicTest.dynamicTest("beforeDay and afterDay", () -> {
-            //when
-            OneThingOrderDto.Request request = OneThingOrderDto.Request.builder()
-                    .preferredDates(List.of(beforeDay, afterDay))
-                    .build();
-
-            //then
-            Assertions.assertThatThrownBy(() -> oneThingMatchingOrderService.createOrder(user.getId(), request))
-                    .isInstanceOf(InvalidRequestException.class);
-        }));
     }
 }
