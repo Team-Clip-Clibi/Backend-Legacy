@@ -40,18 +40,7 @@ public class OneThingMatchingInfoNotificationBatchConfig {
     private static final int CHUNK_SIZE = 100;
     private static final int PAGE_SIZE = 100;
 
-    @Scheduled(cron = "0 0 17 * * TUE,WED,THU") // 3일 전 알림 스케줄러 (화/수/목)
-    @SchedulerLock(name = "oneThingMatchingInfo_threeDaysPrior", lockAtMostFor = "5m", lockAtLeastFor = "1m")
-    public void runThreeDaysPriorJob() throws Exception {
-        JobParameters params = new JobParametersBuilder()
-                .addLong("run.id", System.currentTimeMillis())
-                .addString("notificationType", "MATCHING_INFO_OPENED")
-                .addLocalDate("targetDate", LocalDate.now().plusDays(3))
-                .toJobParameters();
-        jobLauncher.run(sendOneThingMatchingInfoFcmJob(), params);
-    }
-
-    @Scheduled(cron = "0 10 17 * * THU,FRI,SAT") // 1일 전 알림 스케줄러 (목/금/토)
+    @Scheduled(cron = "0 0 19 * * FRI,SAT") // 1일 전 알림 스케줄러 (금/토)
     @SchedulerLock(name = "oneThingMatchingInfo_oneDayPrior", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runOneDayPriorJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -62,7 +51,7 @@ public class OneThingMatchingInfoNotificationBatchConfig {
         jobLauncher.run(sendOneThingMatchingInfoFcmJob(), params);
     }
 
-    @Scheduled(cron = "0 0 9 * * FRI,SAT,SUN") // 당일 알림 스케줄러 (금/토/일)
+    @Scheduled(cron = "0 0 9 * * SAT,SUN") // 당일 알림 스케줄러 (토/일)
     @SchedulerLock(name = "oneThingMatchingInfo_today", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runTodayJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -102,6 +91,7 @@ public class OneThingMatchingInfoNotificationBatchConfig {
                         join fetch um.oneThingMatching om
                         join fetch um.user u
                         where function('DATE', om.meetingTime) = :targetDate
+                        and um.matchingStatus = 'CONFIRMED'
                         and u.fcmToken is not null
                         and u.isAllowNotify = true
                         """)
