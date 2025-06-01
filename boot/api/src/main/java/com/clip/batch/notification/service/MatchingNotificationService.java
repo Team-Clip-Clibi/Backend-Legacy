@@ -1,13 +1,15 @@
 package com.clip.batch.notification.service;
 
+import com.clip.batch.matching.service.SaveNotificationService;
 import com.clip.infra.fcm.event.FcmNotificationEvent;
 import com.clip.infra.fcm.service.MessageParams;
 import com.clip.infra.fcm.service.MessageTemplateType;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.notification.entity.Notification;
+import com.clip.notification.entity.NotificationBanner;
+import com.clip.notification.entity.NotificationBannerType;
 import com.clip.notification.entity.NotificationType;
-import com.clip.notification.service.NotificationService;
 import com.clip.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,8 +25,8 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class MatchingNotificationService {
-    private final NotificationService notificationService;
     private final ApplicationEventPublisher sendFCMEventPublisher;
+    private final SaveNotificationService saveNotificationService;
 
     public void processOneThingMatchingNotifications(
             List<UserOneThingMatching> items,
@@ -67,6 +69,7 @@ public class MatchingNotificationService {
     ) {
         List<Notification> notifications = new ArrayList<>();
         List<FcmNotificationEvent.UserFcmData> fcmDataList = new ArrayList<>();
+        List<NotificationBanner> notificationBanners = new ArrayList<>();
 
         for (T item : items) {
             // FCM 데이터 준비
@@ -90,6 +93,14 @@ public class MatchingNotificationService {
                     user
             ));
 
+            if(templateType.equals(MessageTemplateType.MATCHING_TOMORROW)) {
+                notificationBanners.add(new NotificationBanner(
+                        user,
+                        NotificationBannerType.MATCHING_INFO,
+                        false
+                ));
+            }
+
             fcmDataList.add(new FcmNotificationEvent.UserFcmData(
                     matchingIdExtractor.apply(item),
                     deviceType,
@@ -98,17 +109,22 @@ public class MatchingNotificationService {
             ));
         }
 
-        sendNotificationsAndPublishEvent(notifications, fcmDataList, templateType, matchingType);
+        sendNotificationsAndPublishEvent(notifications, notificationBanners, fcmDataList, templateType, matchingType);
     }
 
     private void sendNotificationsAndPublishEvent(
             List<Notification> notifications,
+            List<NotificationBanner> notificationBanners,
             List<FcmNotificationEvent.UserFcmData> fcmDataList,
             MessageTemplateType templateType,
             String matchingType
     ) {
         // 알림 저장
-        List<Notification> savedNotifications = notificationService.saveNotifications(notifications);
+        List<Notification> savedNotifications = saveNotificationService.saveNotifications(notifications);
+
+        if(templateType.equals(MessageTemplateType.MATCHING_TOMORROW)) {
+            saveNotificationService.saveNotificationBanners(notificationBanners);
+        }
 
         // 저장된 알림 ID와 FCM 데이터 매핑
         Map<Long, FcmNotificationEvent.UserFcmData> userDataMap = new HashMap<>();
