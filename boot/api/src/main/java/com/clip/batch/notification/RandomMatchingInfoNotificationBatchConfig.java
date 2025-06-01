@@ -40,18 +40,7 @@ public class RandomMatchingInfoNotificationBatchConfig {
     private static final int CHUNK_SIZE = 100;
     private static final int PAGE_SIZE = 100;
 
-    @Scheduled(cron = "0 0 17 * * FRI") // 3일 전 알림 스케줄러 (금)
-    @SchedulerLock(name = "randomMatchingInfo_threeDaysPrior", lockAtMostFor = "5m", lockAtLeastFor = "1m")
-    public void runThreeDaysPriorJob() throws Exception {
-        JobParameters params = new JobParametersBuilder()
-                .addLong("run.id", System.currentTimeMillis())
-                .addString("notificationType", "MATCHING_INFO_OPENED")
-                .addLocalDate("targetDate", LocalDate.now().plusDays(3))
-                .toJobParameters();
-        jobLauncher.run(sendRandomMatchingInfoFcmJob(), params);
-    }
-
-    @Scheduled(cron = "0 0 17 * * SUN") // 1일 전 알림 스케줄러 (일)
+    @Scheduled(cron = "0 0 19 * * THU") // 1일 전 알림 스케줄러 (목)
     @SchedulerLock(name = "randomMatchingInfo_oneDayPrior", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runOneDayPriorJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -62,7 +51,7 @@ public class RandomMatchingInfoNotificationBatchConfig {
         jobLauncher.run(sendRandomMatchingInfoFcmJob(), params);
     }
 
-    @Scheduled(cron = "0 0 9 * * MON") // 당일 알림 스케줄러 (월)
+    @Scheduled(cron = "0 0 9 * * FRI") // 당일 알림 스케줄러 (금)
     @SchedulerLock(name = "randomMatchingInfo_today", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runTodayJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -102,6 +91,7 @@ public class RandomMatchingInfoNotificationBatchConfig {
                         join fetch um.randomMatching rm
                         join fetch um.user u
                         where function('DATE', rm.meetingTime) = :targetDate
+                        and um.matchingStatus = 'CONFIRMED'
                         and u.fcmToken is not null
                         and u.isAllowNotify = true
                         """)

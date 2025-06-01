@@ -42,8 +42,7 @@ public class OneThingMatchingProgressNotificationBatchConfig {
     private static final int CHUNK_SIZE = 100;
     private static final int PAGE_SIZE = 100;
 
-    @Scheduled(cron = "0 0 12,18,19 * * SAT,SUN") // 원띵 매칭 당일(매주 토요일, 일요일 오후 12시, 6시, 7시)
-    @Scheduled(cron = "0 0 19 * * FRI") // 원띵 매칭 당일(매주 월요일 오후 7시)
+    @Scheduled(cron = "0 0 19 * * SAT,SUN") // 원띵 매칭 당일(매주 토요일, 일요일 오후 7시)
     @SchedulerLock(name = "oneThingMatchingInfo_matchingStart", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runMatchingStartJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -54,8 +53,7 @@ public class OneThingMatchingProgressNotificationBatchConfig {
         jobLauncher.run(sendOneThingMatchingProgressFcmJob(), params);
     }
 
-    @Scheduled(cron = "0 0 16,22,23 * * SAT,SUN") // 원띵 매칭 종료알(매주 토요일, 일요일 오후 4시, 10시, 11시)
-    @Scheduled(cron = "0 0 23 * * FRI") // 원띵 매칭 종료일(매주 금요일 오후 11시)
+    @Scheduled(cron = "0 0 22 * * SAT,SUN") // 원띵 매칭 종료일(매주 토요일, 일요일 오후 10시)
     @SchedulerLock(name = "oneThingMatchingInfo_matchingEnd", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runMatchingEndJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -96,6 +94,7 @@ public class OneThingMatchingProgressNotificationBatchConfig {
                         join fetch um.oneThingMatching om
                         join fetch um.user u
                         where om.meetingTime = :targetDate
+                        and um.matchingStatus = 'CONFIRMED'
                         and u.fcmToken is not null
                         and u.isAllowNotify = true
                         """)

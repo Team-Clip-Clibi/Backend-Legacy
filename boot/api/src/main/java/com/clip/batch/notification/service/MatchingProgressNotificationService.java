@@ -1,13 +1,15 @@
 package com.clip.batch.notification.service;
 
+import com.clip.batch.matching.service.SaveNotificationService;
 import com.clip.infra.fcm.event.FcmNotificationEvent;
 import com.clip.infra.fcm.service.MessageParams;
 import com.clip.infra.fcm.service.MessageTemplateType;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.notification.entity.Notification;
+import com.clip.notification.entity.NotificationBanner;
+import com.clip.notification.entity.NotificationBannerType;
 import com.clip.notification.entity.NotificationType;
-import com.clip.notification.service.NotificationService;
 import com.clip.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,10 +26,10 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class MatchingProgressNotificationService {
-    private final NotificationService notificationService;
+    private final SaveNotificationService saveNotificationService;
     private final ApplicationEventPublisher sendFCMEventPublisher;
 
-    // 원씽 매칭 처리
+    // 원띵 매칭 처리
     public void processOneThingProgressNotifications(
             List<UserOneThingMatching> items,
             MessageTemplateType templateType
@@ -70,6 +72,7 @@ public class MatchingProgressNotificationService {
 
         // 모든 알림과 FCM 데이터를 저장할 리스트
         List<Notification> allNotifications = new ArrayList<>();
+        List<NotificationBanner> allNotificationBanners = new ArrayList<>();
         List<FcmNotificationEvent.UserFcmData> allFcmDataList = new ArrayList<>();
 
         // 각 그룹별로 처리
@@ -79,6 +82,7 @@ public class MatchingProgressNotificationService {
 
             // 각 그룹별 알림 객체와 FCM 데이터 준비
             List<Notification> groupNotifications = new ArrayList<>();
+            List<NotificationBanner> groupNotificationBanners = new ArrayList<>();
             List<FcmNotificationEvent.UserFcmData> groupFcmDataList = new ArrayList<>();
 
             // 랜덤 닉네임 선택 (MATCHING_STARTED 타입인 경우)
@@ -109,6 +113,14 @@ public class MatchingProgressNotificationService {
                         user
                 ));
 
+                if (templateType.equals(MessageTemplateType.MATCHING_ENDED)) {
+                    groupNotificationBanners.add(new NotificationBanner(
+                            user,
+                            NotificationBannerType.REVIEW,
+                            false
+                    ));
+                }
+
                 groupFcmDataList.add(new FcmNotificationEvent.UserFcmData(
                         matchingId,
                         deviceType,
@@ -119,14 +131,16 @@ public class MatchingProgressNotificationService {
 
             // 그룹별 데이터를 전체 리스트에 추가
             allNotifications.addAll(groupNotifications);
+            allNotificationBanners.addAll(groupNotificationBanners);
             allFcmDataList.addAll(groupFcmDataList);
         }
 
-        sendNotificationsAndPublishEvent(allNotifications, allFcmDataList, templateType, matchingType);
+        sendNotificationsAndPublishEvent(allNotifications, allNotificationBanners, allFcmDataList, templateType, matchingType);
     }
 
     private void sendNotificationsAndPublishEvent(
             List<Notification> notifications,
+            List<NotificationBanner> notificationBanners,
             List<FcmNotificationEvent.UserFcmData> fcmDataList,
             MessageTemplateType templateType,
             String matchingType
@@ -134,7 +148,11 @@ public class MatchingProgressNotificationService {
         if (notifications.isEmpty()) return;
 
         // 알림 저장
-        List<Notification> savedNotifications = notificationService.saveNotifications(notifications);
+        List<Notification> savedNotifications = saveNotificationService.saveNotifications(notifications);
+
+        if (templateType.equals(MessageTemplateType.MATCHING_ENDED)) {
+            saveNotificationService.saveNotificationBanners(notificationBanners);
+        }
 
         // 저장된 알림 ID와 FCM 데이터 매핑
         Map<Long, FcmNotificationEvent.UserFcmData> userDataMap = new HashMap<>();

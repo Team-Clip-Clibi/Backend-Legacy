@@ -12,15 +12,6 @@ public enum MessageTemplateType {
             true
     ),
 
-    MATCHING_INFO_OPENED(
-            params -> params instanceof MessageParams.DayOfWeekAndTimeParams p ?
-                    String.format("%s요일 %s시에 있을 모임 정보가 오픈되었어요! 두근두근 어떤 사람을 만나게 될지 보러가볼까요 👀",
-                            p.dayOfWeek(), p.time()) :
-                    "모임 정보가 오픈되었어요!",
-            false,
-            true
-    ),
-
     MATCHING_TOMORROW(
             params -> "내일 모임이 예정되어있네요. 모임 전 주의사항을 꼭 확인해주세요.",
             false,
@@ -50,16 +41,6 @@ public enum MessageTemplateType {
                     String.format("안녕하세요! 원띵 모임에 오신 여러분 환영해요. %s님은 휴대폰을 가운데 두고, 아이스브레이킹 원띵 모임을 시작해보세요 😆",
                             p.nickname()) :
                     "원띵 모임을 시작해보세요!",
-            false,
-            true
-    ),
-
-    MATCHING_MEETUP(
-            params -> params instanceof MessageParams.NicknameParams p ?
-                    String.format("오늘 퇴근하고 뭐해? \n" +
-                                    "%s님의 퇴근길에 오늘 열리는 번개 모임이 있어요.",
-                            p.nickname()) :
-                    "번개 모임을 시작해보세요!",
             false,
             true
     ),

@@ -21,8 +21,8 @@ class OneThingMatchingOrderServiceTest {
     void createOrder() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // Given
         LocalDate preferredDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)); //원띵 신청 날짜
-        LocalDate currentDate_tue = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.TUESDAY));
-        LocalDate currentDate_wen = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.WEDNESDAY));
+        LocalDate currentDate_tue = preferredDate.with(TemporalAdjusters.previous(DayOfWeek.TUESDAY));
+        LocalDate currentDate_wen = preferredDate.with(TemporalAdjusters.previous(DayOfWeek.WEDNESDAY));
 
         OneThingOrderDto.Request request = OneThingOrderDto.Request.builder()
                 .topic("topic")
