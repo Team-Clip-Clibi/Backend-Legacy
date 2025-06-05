@@ -17,7 +17,6 @@ public class RandomMatchingOrderDto {
     @Schema(name = "RandomOrderRequest")
     public static class Request {
         private final String topic;
-        @Size(max = 2)
         private final RandomDistrict district;
         private final String tmiContent;
 
