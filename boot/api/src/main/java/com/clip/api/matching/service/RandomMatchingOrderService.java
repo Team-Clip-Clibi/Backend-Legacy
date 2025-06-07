@@ -55,7 +55,8 @@ public class RandomMatchingOrderService {
     public RandomMatchingOrderDto.Response createOrder(long userId, RandomMatchingOrderDto.Request request) {
         User user = userService.findUser(userId);
         LocalDateTime matchingTime = calculateMatchingDate(LocalDate.now());
-        List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findClosestUpcomingRandomMatchingCapacitiesWithDistrict(request.getDistrict(), matchingTime);
+        LocalDateTime matchingTimeEnd = matchingTime.plusSeconds(1);
+        List<RandomMatchingCapacity> randomMatchingCapacities = matchingService.findRandomMatchingCapacitiesWithDistrict(request.getDistrict(), matchingTime, matchingTimeEnd);
         RandomPrice basicRandomPrice = randomPriceService.findBasicRandomPrice();
         RandomDiscount baseDiscount = randomDiscountService.findBasicRandomDiscount();
 

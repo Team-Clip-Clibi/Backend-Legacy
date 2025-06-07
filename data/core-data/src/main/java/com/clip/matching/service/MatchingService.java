@@ -34,8 +34,8 @@ public class MatchingService {
         return randomMatchingRepository.findById(matchingId).orElseThrow(()->new ResourceNotFoundException("randomMatching", matchingId));
     }
 
-    public List<RandomMatchingCapacity> findClosestUpcomingRandomMatchingCapacitiesWithDistrict(RandomDistrict district, LocalDateTime matchingTime) {
-        return randomMatchingCapacityRepository.findClosestUpcomingRandomMatchingCapacities(district, matchingTime);
+    public List<RandomMatchingCapacity> findRandomMatchingCapacitiesWithDistrict(RandomDistrict district, LocalDateTime matchingTime, LocalDateTime matchingTimeEnd) {
+        return randomMatchingCapacityRepository.findRandomMatchingCapacitiesWithDistrict(district, matchingTime, matchingTimeEnd);
     }
 
     public RandomMatchingCapacity findRandomMatchingCapacity(final Long randomMatchingId) {

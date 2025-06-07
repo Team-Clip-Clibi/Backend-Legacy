@@ -1,7 +1,6 @@
 package com.clip.batch.matching;
 
-import com.clip.batch.matching.service.DeleteExpiredOrderService;
-import com.clip.batch.matching.service.UpdateCapacityService;
+import com.clip.batch.matching.service.HandleExpiredOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -23,8 +22,7 @@ public class ExpiredOrderBatchConfig {
 
     private final JobLauncher jobLauncher;
     private final JobRepository jobRepository;
-    private final UpdateCapacityService updateCapacityService;
-    private final DeleteExpiredOrderService deleteExpiredOrderService;
+    private final HandleExpiredOrderService handleExpiredOrderService;
     private final PlatformTransactionManager transactionManager;
 
     @Scheduled(cron = "0 */1 * * * *")
@@ -39,32 +37,17 @@ public class ExpiredOrderBatchConfig {
     @Bean
     public Job expiredOrderJob() {
         return new JobBuilder("expiredOrderJob", jobRepository)
-                .start(updateCapacityStep())
-                .next(deleteExpiredOrderStep())
+                .start(deleteAndRestoreStep())
                 .build();
     }
 
-    // 수량 복구
     @Bean
-    public Step updateCapacityStep() {
-        return new StepBuilder("updateCapacityStep", jobRepository)
+    public Step deleteAndRestoreStep() {
+        return new StepBuilder("deleteAndRestoreStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    updateCapacityService.updateAvailableCapacity();
+                    handleExpiredOrderService.deleteExpiredOrdersAndUpdateCapacity();
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
                 .build();
     }
-
-    // 주문서 삭제
-    @Bean
-    public Step deleteExpiredOrderStep() {
-        return new StepBuilder("deleteExpiredOrderStep", jobRepository)
-                .tasklet((contribution, chunkContext) -> {
-                    deleteExpiredOrderService.deleteExpiredOrder();
-                    return RepeatStatus.FINISHED;
-                }, transactionManager)
-                .build();
-    }
-
-
 }
