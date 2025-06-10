@@ -3,6 +3,9 @@ package com.clip.api.payment.service;
 import com.clip.api.payment.feign.dto.PaymentObject;
 import com.clip.api.payment.mapper.TossPaymentMapper;
 import com.clip.api.payment.service.event.PaymentExceptionEvent;
+import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.UserRandomMatching;
+import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
 import com.clip.order.entity.RandomOrder;
@@ -27,6 +30,7 @@ public class UserPaymentService {
 
     private final OneThingOrderService oneThingOrderService;
     private final RandomOrderService randomOrderService;
+    private final UserRandomMatchingService userRandomMatchingService;
     private final ApplicationEventPublisher eventPublisher;
 
     public OneThingOrder findOneThingOrder(long userId, UUID orderId) {
@@ -51,7 +55,7 @@ public class UserPaymentService {
     }
 
     @Transactional
-    public void updateRandomOrderStatus(long userId, PaymentObject paymentObject) {
+    public void updateRandomStatus(long userId, PaymentObject paymentObject) {
         eventPublisher.publishEvent(PaymentExceptionEvent.builder()
                 .paymentKey(paymentObject.getPaymentKey())
                 .build()
@@ -61,5 +65,8 @@ public class UserPaymentService {
         TossPayment tossPayment = tossPaymentMapper.toTossPayment(paymentObject);
         randomOrder.updateStatus(RandomOrderStatus.DONE);
         randomOrder.addTossPayment(tossPayment);
+
+        UserRandomMatching userRandomMatching = userRandomMatchingService.findUserRandomMatching(userId, randomOrder.getId());
+        userRandomMatching.updateStatus(MatchingStatus.CONFIRMED);
     }
 }

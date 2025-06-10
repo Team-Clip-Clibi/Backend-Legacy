@@ -1,5 +1,6 @@
 package com.clip.matching.service;
 
+import com.clip.global.exception.ResourceNotFoundException;
 import com.clip.matching.entity.MatchingStatus;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.UserRandomMatchingRepository;
@@ -27,5 +28,10 @@ public class UserRandomMatchingService {
 
     public boolean isDuplicatedMatching(long userId, LocalDateTime meetingTime) {
         return userRandomMatchingRepository.findUserRandomMatching(userId, meetingTime, MatchingStatus.CONFIRMED).isPresent();
+    }
+
+    public UserRandomMatching findUserRandomMatching(long userId, Long randomOrderId) {
+        return userRandomMatchingRepository.findUserRandomMatching(userId, randomOrderId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserRandomMatching", userId, randomOrderId));
     }
 }
