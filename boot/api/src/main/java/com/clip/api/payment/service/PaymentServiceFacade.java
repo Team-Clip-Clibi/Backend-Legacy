@@ -7,8 +7,10 @@ import com.clip.api.payment.feign.dto.PaymentObject;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.RandomOrder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceFacade {
@@ -27,6 +29,7 @@ public class PaymentServiceFacade {
                         .amount(randomOrder.getDiscountedPrice())
                         .build()
                 );
+                log.info("paymentObject info: {}", paymentObject.toString());
                 userPaymentService.updateRandomOrderStatus(userId, paymentObject);
             }
             case ONETHING -> {
@@ -37,6 +40,7 @@ public class PaymentServiceFacade {
                         .amount(oneThingOrder.getDiscountedPrice())
                         .build()
                 );
+                log.info("paymentObject info: {}", paymentObject.toString());
                 userPaymentService.updateOneThingOrderStatus(userId, paymentObject);
             }
         }
