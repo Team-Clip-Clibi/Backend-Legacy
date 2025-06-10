@@ -81,6 +81,8 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             from UserRandomMatching u
             where u.user.id = :userId
             and u.randomMatching.meetingTime = :meetingTime
+            and u.matchingStatus = :matchingStatus
             """)
-    Optional<UserRandomMatching> findUserRandomMatching(@Param("userId") long userId, @Param("meetingTime") LocalDateTime meetingTime);
+    Optional<UserRandomMatching> findUserRandomMatching(@Param("userId") long userId, @Param("meetingTime") LocalDateTime meetingTime,
+                                                        @Param("matchingStatus") MatchingStatus matchingStatus);
 }
