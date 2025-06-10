@@ -30,7 +30,7 @@ public class PaymentServiceFacade {
                         .build()
                 );
                 log.info("paymentObject info: {}", paymentObject.toString());
-                userPaymentService.updateRandomOrderStatus(userId, paymentObject);
+                userPaymentService.updateRandomStatus(userId, paymentObject);
             }
             case ONETHING -> {
                 OneThingOrder oneThingOrder = userPaymentService.findOneThingOrder(userId, paymentDto.getOrderId());

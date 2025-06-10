@@ -54,4 +54,8 @@ public class UserRandomMatching extends BaseEntity {
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
     }
+
+    public void updateStatus(MatchingStatus matchingStatus) {
+        this.matchingStatus = matchingStatus;
+    }
 }

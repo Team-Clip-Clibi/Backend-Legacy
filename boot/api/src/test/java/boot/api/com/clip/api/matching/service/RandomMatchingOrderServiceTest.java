@@ -218,7 +218,7 @@ public class RandomMatchingOrderServiceTest {
                     .user(user)
                     .randomMatching(randomMatching)
                     .myOneThingContent("테스트 주제")
-                    .matchingStatus(MatchingStatus.APPLIED)
+                    .matchingStatus(MatchingStatus.CONFIRMED)
                     .build();
 
             userRandomMatchingRepository.save(userRandomMatching);
