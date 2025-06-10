@@ -2,12 +2,14 @@ package com.clip.api.payment.feign.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
 @Data
+@ToString
 public class PaymentObject {
     private String mId;
     private String lastTransactionKey;
