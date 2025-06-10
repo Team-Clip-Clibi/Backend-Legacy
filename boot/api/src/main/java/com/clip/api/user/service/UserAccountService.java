@@ -15,6 +15,7 @@ import com.clip.matching.service.RandomMatchingReviewService;
 import com.clip.matching.service.UserOneThingMatchingService;
 import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.notification.service.NotificationService;
+import com.clip.user.entity.Job;
 import com.clip.user.entity.JobCategory;
 import com.clip.user.entity.RelationshipStatus;
 import com.clip.user.entity.User;
@@ -154,8 +155,11 @@ public class UserAccountService {
 
     @Transactional(readOnly = true)
     public JobDto getJob(long userId) {
-        if (Objects.isNull(userService.findUser(userId).getJob())) {
-            throw new NoContentAvailableException("Job", userId);
+        Job job = userService.findUser(userId).getJob();
+        if (Objects.isNull(job)) {
+            return JobDto.builder()
+                    .job(null)
+                    .build();
         }
         return JobDto.builder()
                 .job(userService.findUser(userId).getJob().getJobCategory())
