@@ -43,9 +43,10 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         from UserRandomMatching urm
         join urm.randomMatching rm
         left join RandomMatchingReview rmr on rmr.randomMatching.id = rm.id and rmr.user.id = :userId
-        where (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
-        and (:lastMeetingTime is null or urm.randomMatching.meetingTime < :lastMeetingTime)
-        and urm.user.id = :userId
+        where urm.user.id = :userId
+          and urm.matchingStatus != 'APPLIED'
+          and (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
+          and (:lastMeetingTime is null or rm.meetingTime < :lastMeetingTime)
         order by urm.randomMatching.meetingTime desc
         """)
     List<MatchingProjectionDto> findAllMatchingsByStatus(
