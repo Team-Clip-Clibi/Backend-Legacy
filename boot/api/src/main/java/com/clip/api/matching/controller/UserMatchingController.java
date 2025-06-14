@@ -41,4 +41,11 @@ public class UserMatchingController implements UserMatchingDocs {
     public List<MatchingDto> findMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, UserDetails userDetails) {
         return userMatchingService.getMatchings(matchingStatus, lastMeetingTime, Long.parseLong(userDetails.getUsername()));
     }
+
+    @Override
+    public MatchingDetailDto getMatchingDetail(UserDetails userDetails, MatchingType matchingType, long id) {
+        return userMatchingService.getMatchingDetail(
+                Long.parseLong(userDetails.getUsername()), matchingType, id);
+    }
+
 }
