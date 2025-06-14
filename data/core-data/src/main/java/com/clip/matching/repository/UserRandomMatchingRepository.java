@@ -93,4 +93,16 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             and u.randomOrder.id = :randomOrderId
             """)
     Optional<UserRandomMatching> findUserRandomMatching(@Param("userId") long userId, @Param("randomOrderId") Long randomOrderId);
+
+    @Query("""
+            select u
+            from UserRandomMatching u
+            join fetch u.randomMatching
+            join fetch u.user
+            join fetch u.user.job
+            join fetch u.randomOrder
+            join fetch u.randomOrder.price
+            where u.id = :id
+            """)
+    Optional<UserRandomMatching> findUserRandomMatchingWithFetch(@Param("id") long id);
 }

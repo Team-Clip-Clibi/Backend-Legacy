@@ -74,4 +74,17 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
     @Modifying
     @Query("delete from UserOneThingMatching u where u.user.id = :userId ")
     void deleteOneThingMatching(@Param("userId") long userId);
+
+    @Query("""
+            select u
+            from UserOneThingMatching u
+            join fetch u.preferredDates
+            join fetch u.oneThingMatching
+            join fetch u.user
+            join fetch u.user.job
+            join fetch u.oneThingOrder
+            join fetch u.oneThingOrder.price
+            where u.id = :id
+            """)
+    Optional<UserOneThingMatching> findUserOneThingMatchingWithFetch(@Param("id") long id);
 }

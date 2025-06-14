@@ -1,8 +1,6 @@
 package com.clip.api.matching.mapper;
 
-import com.clip.api.matching.controller.dto.MatchingDto;
-import com.clip.api.matching.controller.dto.OnethingMatchingSummaryDto;
-import com.clip.api.matching.controller.dto.RandomMatchingSummaryDto;
+import com.clip.api.matching.controller.dto.*;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.projection.MatchingProjectionDto;
@@ -32,6 +30,55 @@ public interface MatchingMapper {
                 .daysUntilMeeting(userRandomMatching.getRandomMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
                 .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
                 .meetingPlace(userRandomMatching.getRandomMatching().getLocation())
+                .build();
+    }
+
+    default OneThingMatchingDetailDto toOneThingMatchingDetailDto(final UserOneThingMatching userOneThingMatching) {
+        return OneThingMatchingDetailDto.builder()
+                .matchingId(userOneThingMatching.getOneThingMatching().getId())
+                .meetingTime(userOneThingMatching.getOneThingMatching().getMeetingTime())
+                .matchingStatus(userOneThingMatching.getMatchingStatus())
+                .matchingType(MatchingType.ONE_THING)
+                .myOneThingContent(userOneThingMatching.getMyOneThingContent())
+                .applicationInfo(OneThingMatchingDetailDto.ApplicationInfo.builder()
+                    .district(userOneThingMatching.getOneThingDistrict().name())
+                    .preferredDates(userOneThingMatching.getPreferredDates())
+                    .oneThingBudgetRange(userOneThingMatching.getOneThingBudgetRange())
+                    .oneThingCategory(userOneThingMatching.getOneThingCategory())
+                    .build())
+                .myMatchingInfo(MatchingDetailDto.MyMatchingInfo.builder()
+                        .job(userOneThingMatching.getUser().getJob().getJobCategory())
+                        .relationshipStatus(userOneThingMatching.getUser().getRelationshipStatus())
+                        .dietaryOption(userOneThingMatching.getUser().getDietaryOption())
+                        .language(userOneThingMatching.getUser().getLanguage())
+                        .build())
+                .paymentInfo(OneThingMatchingDetailDto.PaymentInfo.builder()
+                        .matchingPrice(userOneThingMatching.getOneThingOrder().getPrice().getBasePrice().intValue())
+                        .paymentPrice(userOneThingMatching.getOneThingOrder().getDiscountedPrice().intValue())
+                        .build())
+                .build();
+    }
+
+    default RandomMatchingDetailDto toRandomMatchingDetailDto(final UserRandomMatching userRandomMatching) {
+        return RandomMatchingDetailDto.builder()
+                .matchingId(userRandomMatching.getRandomMatching().getId())
+                .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
+                .matchingStatus(userRandomMatching.getMatchingStatus())
+                .matchingType(MatchingType.RANDOM)
+                .myOneThingContent(userRandomMatching.getMyOneThingContent())
+                .applicationInfo(RandomMatchingDetailDto.ApplicationInfo.builder()
+                    .district(userRandomMatching.getRandomMatching().getRandomDistrict().name())
+                    .build())
+                .myMatchingInfo(MatchingDetailDto.MyMatchingInfo.builder()
+                        .job(userRandomMatching.getUser().getJob().getJobCategory())
+                        .relationshipStatus(userRandomMatching.getUser().getRelationshipStatus())
+                        .dietaryOption(userRandomMatching.getUser().getDietaryOption())
+                        .language(userRandomMatching.getUser().getLanguage())
+                        .build())
+                .paymentInfo(RandomMatchingDetailDto.PaymentInfo.builder()
+                        .matchingPrice(userRandomMatching.getRandomOrder().getPrice().getBasePrice().intValue())
+                        .paymentPrice(userRandomMatching.getRandomOrder().getDiscountedPrice().intValue())
+                        .build())
                 .build();
     }
 
