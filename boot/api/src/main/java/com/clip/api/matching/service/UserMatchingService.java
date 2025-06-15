@@ -203,4 +203,20 @@ public class UserMatchingService {
         return matchingMapper.toDto(matchingService.findAllMatchings(matchingStatus, lastMeetingTime, userId));
     }
 
+    public MatchingDetailDto getMatchingDetail(long userId, MatchingType matchingType, long id) {
+        switch (matchingType) {
+            case ONE_THING -> {
+                UserOneThingMatching  matchingInfo = matchingService.findUserOneThingMatchingWithMatchingInfo(id);
+                UserOneThingMatching  paymentInfo = matchingService.findUserOneThingMatchingWithPaymentInfo(id);
+                return matchingMapper.toOneThingMatchingDetailDto(
+                        matchingInfo, paymentInfo);
+            }
+            case RANDOM -> {
+                return matchingMapper.toRandomMatchingDetailDto(
+                        matchingService.findUserRandomMatching(id));
+            }
+            default -> throw new IllegalArgumentException("Invalid Matching Type: " + matchingType);
+        }
+    }
+
 }

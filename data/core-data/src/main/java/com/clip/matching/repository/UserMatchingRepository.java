@@ -15,10 +15,10 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
 
     @Query("""
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
+            uotm.id,
             otm.meetingTime,
             uotm.matchingStatus,
             'ONE_THING',
-            otm.id,
             uotm.myOneThingContent,
             case when uotm.matchingStatus = 'COMPLETED' and otr.id is not null then true else false end
         )
@@ -33,10 +33,10 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         union all
         
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
+            urm.id,
             rm.meetingTime,
             urm.matchingStatus,
             'RANDOM',
-            rm.id,
             urm.myOneThingContent,
             case when urm.matchingStatus = 'COMPLETED' and rmr.id is not null then true else false end
         )

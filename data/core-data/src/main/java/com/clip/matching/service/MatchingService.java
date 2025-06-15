@@ -98,4 +98,19 @@ public class MatchingService {
         }
         return matchings;
     }
+
+    public UserRandomMatching findUserRandomMatching(long id) {
+        return userRandomMatchingRepository.findUserRandomMatchingWithFetch(id)
+                .orElseThrow(() -> new ResourceNotFoundException("userRandomMatching", id));
+    }
+
+    public UserOneThingMatching findUserOneThingMatchingWithMatchingInfo(long id) {
+        return userOneThingMatchingRepository.findUserOneThingMatchingWithMatchingInfo(id)
+                .orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching MatchingInfo", id));
+    }
+
+    public UserOneThingMatching findUserOneThingMatchingWithPaymentInfo(long id) {
+        return userOneThingMatchingRepository.findUserOneThingMatchingWithPaymentInfo(id)
+                .orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching PaymentInfo", id));
+    }
 }

@@ -124,5 +124,33 @@ public interface UserMatchingDocs {
             @AuthenticationPrincipal UserDetails userDetails
     );
 
+    @Operation(
+            summary = "모임 상세 조회 API",
+            description = """
+                    - 모임의 상세 정보를 조회합니다.
+                    - 모임 ID를 통해 해당 모임의 상세 정보를 가져옵니다.
+                    - 반환된 정보에는 모임의 시간, 신청 정보, 나의 모임 정보 등이 포함됩니다.
+                    - 매칭 타입으로는 ONE_THING, RANDOM이 있습니다.
+                   \s""",
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                            implementation = MatchingDetailDto.class,
+                            oneOf = {OneThingMatchingDetailDto.class, RandomMatchingDetailDto.class},
+                            discriminatorProperty = "matchingType"
+                    )
+            )
+    )
+    @GetMapping("/{matchingType}/{id}")
+    MatchingDetailDto getMatchingDetail(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable MatchingType matchingType,
+            @PathVariable long id
+    );
 
 }
