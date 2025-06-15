@@ -77,8 +77,7 @@ class BannerServiceTest {
 
         CreateBannerDto createBannerDto = CreateBannerDto.builder()
                 .bannerType(BannerType.HOME)
-                .head("배너 헤드")
-                .sub("배너 서브")
+                .text("배너 text")
                 .exposureDate(LocalDate.of(2025, 3, 20))
                 .isExposure(true)
                 .build();
@@ -93,15 +92,13 @@ class BannerServiceTest {
         // then
         assertThat(savedBanner).isNotNull();
         assertThat(savedBanner).extracting(
-                CreateBannerDto::getHead,
-                CreateBannerDto::getSub,
+                CreateBannerDto::getText,
                 CreateBannerDto::getImageUrl,
                 CreateBannerDto::getBannerType,
                 CreateBannerDto::getExposureDate,
                 CreateBannerDto::isExposure
         ).containsExactly(
-                "배너 헤드",
-                "배너 서브",
+                "배너 text",
                 "ff/test.jpg",
                 BannerType.HOME,
                 LocalDate.of(2025, 3, 20),
@@ -122,8 +119,7 @@ class BannerServiceTest {
 
         CreateBannerDto createBannerDto = CreateBannerDto.builder()
                 .bannerType(BannerType.HOME)
-                .head("배너 헤드")
-                .sub("배너 서브")
+                .text("배너 text")
                 .exposureDate(LocalDate.of(2025, 3, 20))
                 .isExposure(true)
                 .build();
@@ -140,8 +136,7 @@ class BannerServiceTest {
                 savedBanner.getId(),
                 UpdateBannerDto.builder()
                         .bannerType(BannerType.HOME)
-                        .head("수정된 배너 헤드")
-                        .sub("수정된 배너 서브")
+                        .text("수정된 배너 text")
                         .exposureDate(LocalDate.of(2025, 4, 20))
                         .isExposure(false)
                         .build(),
@@ -152,15 +147,13 @@ class BannerServiceTest {
         assertThat(updatedBanner).isNotNull();
         assertThat(updatedBanner).extracting(
                 UpdateBannerDto::getBannerType,
-                UpdateBannerDto::getHead,
-                UpdateBannerDto::getSub,
+                UpdateBannerDto::getText,
                 UpdateBannerDto::getImageUrl,
                 UpdateBannerDto::getExposureDate,
                 UpdateBannerDto::isExposure
         ).containsExactly(
                 BannerType.HOME,
-                "수정된 배너 헤드",
-                "수정된 배너 서브",
+                "수정된 배너 text",
                 "ff/test.jpg",
                 LocalDate.of(2025, 4, 20),
                 false
@@ -180,8 +173,7 @@ class BannerServiceTest {
 
         CreateBannerDto createBannerDto = CreateBannerDto.builder()
                 .bannerType(BannerType.HOME)
-                .head("배너 헤드")
-                .sub("배너 서브")
+                .text("배너 text")
                 .exposureDate(LocalDate.of(2025, 3, 20))
                 .isExposure(true)
                 .build();
@@ -209,8 +201,7 @@ class BannerServiceTest {
                 savedBanner.getId(),
                 UpdateBannerDto.builder()
                         .bannerType(savedBanner.getBannerType())  // 기존 값 유지
-                        .head(savedBanner.getHead())
-                        .sub(savedBanner.getSub())
+                        .text(savedBanner.getText())
                         .exposureDate(savedBanner.getExposureDate())
                         .isExposure(savedBanner.isExposure())
                         .build(),
@@ -221,15 +212,13 @@ class BannerServiceTest {
         assertThat(updatedBanner).isNotNull();
         assertThat(updatedBanner).extracting(
                 UpdateBannerDto::getBannerType,
-                UpdateBannerDto::getHead,
-                UpdateBannerDto::getSub,
+                UpdateBannerDto::getText,
                 UpdateBannerDto::getImageUrl,
                 UpdateBannerDto::getExposureDate,
                 UpdateBannerDto::isExposure
         ).containsExactly(
                 savedBanner.getBannerType(),
-                savedBanner.getHead(),
-                savedBanner.getSub(),
+                savedBanner.getText(),
                 "ff/updated.jpg",
                 savedBanner.getExposureDate(),
                 savedBanner.isExposure()
@@ -249,8 +238,7 @@ class BannerServiceTest {
 
         CreateBannerDto createBannerDto = CreateBannerDto.builder()
                 .bannerType(BannerType.HOME)
-                .head("배너 헤드")
-                .sub("배너 서브")
+                .text("배너 text")
                 .exposureDate(LocalDate.of(2025, 3, 20))
                 .isExposure(true)
                 .build();

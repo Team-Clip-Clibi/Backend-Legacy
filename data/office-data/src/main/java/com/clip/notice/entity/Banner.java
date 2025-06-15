@@ -19,17 +19,15 @@ public class Banner extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private BannerType bannerType;
-    private String head;
-    private String sub;
+    private String text;
     private String imageUrl;
     private LocalDate exposureDate;
     private boolean isExposure;
 
     @Builder
-    public Banner(BannerType bannerType, String head, String sub, String imageUrl, LocalDate exposureDate, boolean isExposure) {
+    public Banner(BannerType bannerType, String text, String imageUrl, LocalDate exposureDate, boolean isExposure) {
         this.bannerType = bannerType;
-        this.head = head;
-        this.sub = sub;
+        this.text = text;
         this.imageUrl = imageUrl;
         this.exposureDate = exposureDate;
         this.isExposure = isExposure;
@@ -39,10 +37,9 @@ public class Banner extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    public void update(BannerType bannerType, String head, String sub, LocalDate exposureDate, boolean exposure) {
+    public void update(BannerType bannerType, String text, LocalDate exposureDate, boolean exposure) {
         this.bannerType = bannerType;
-        this.head = head;
-        this.sub = sub;
+        this.text = text;
         this.exposureDate = exposureDate;
         this.isExposure = exposure;
     }
