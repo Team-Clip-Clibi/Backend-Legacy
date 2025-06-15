@@ -66,11 +66,15 @@ public abstract class MatchingDetailDto {
     public static class PaymentInfo {
         private int matchingPrice;
         private int paymentPrice;
+        private LocalDateTime requestedAt;
+        private LocalDateTime approvedAt;
 
         @Builder
-        public PaymentInfo(int matchingPrice, int paymentPrice) {
+        public PaymentInfo(int matchingPrice, int paymentPrice, LocalDateTime requestedAt, LocalDateTime approvedAt) {
             this.matchingPrice = matchingPrice;
             this.paymentPrice = paymentPrice;
+            this.requestedAt = requestedAt;
+            this.approvedAt = approvedAt;
         }
     }
 

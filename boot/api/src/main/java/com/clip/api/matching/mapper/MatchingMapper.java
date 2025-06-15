@@ -4,6 +4,8 @@ import com.clip.api.matching.controller.dto.*;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.projection.MatchingProjectionDto;
+import com.clip.toss.entity.TossPayment;
+import com.clip.toss.entity.TossPaymentStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
@@ -15,12 +17,12 @@ import java.util.List;
 public interface MatchingMapper {
 
 
-    default OnethingMatchingSummaryDto toDto(final UserOneThingMatching userOneThingMatching){
+    default OnethingMatchingSummaryDto toDto(final UserOneThingMatching matchingInfo){
         return OnethingMatchingSummaryDto.builder()
-                .matchingId(userOneThingMatching.getOneThingMatching().getId())
-                .daysUntilMeeting(userOneThingMatching.getOneThingMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
-                .meetingTime(userOneThingMatching.getOneThingMatching().getMeetingTime())
-                .meetingPlace(userOneThingMatching.getOneThingMatching().getLocation())
+                .matchingId(matchingInfo.getOneThingMatching().getId())
+                .daysUntilMeeting(matchingInfo.getOneThingMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
+                .meetingTime(matchingInfo.getOneThingMatching().getMeetingTime())
+                .meetingPlace(matchingInfo.getOneThingMatching().getLocation())
                 .build();
     }
 
@@ -33,33 +35,43 @@ public interface MatchingMapper {
                 .build();
     }
 
-    default OneThingMatchingDetailDto toOneThingMatchingDetailDto(final UserOneThingMatching userOneThingMatching) {
+    default OneThingMatchingDetailDto toOneThingMatchingDetailDto(final UserOneThingMatching matchingInfo, final UserOneThingMatching paymentInfo) {
+        TossPayment donePayment = paymentInfo.getOneThingOrder().getTossPayment().stream()
+                .filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(TossPaymentStatus.DONE))
+                .findFirst()
+                .orElse(null);
         return OneThingMatchingDetailDto.builder()
-                .matchingId(userOneThingMatching.getOneThingMatching().getId())
-                .meetingTime(userOneThingMatching.getOneThingMatching().getMeetingTime())
-                .matchingStatus(userOneThingMatching.getMatchingStatus())
+                .matchingId(matchingInfo.getOneThingMatching().getId())
+                .meetingTime(matchingInfo.getOneThingMatching().getMeetingTime())
+                .matchingStatus(matchingInfo.getMatchingStatus())
                 .matchingType(MatchingType.ONE_THING)
-                .myOneThingContent(userOneThingMatching.getMyOneThingContent())
+                .myOneThingContent(matchingInfo.getMyOneThingContent())
                 .applicationInfo(OneThingMatchingDetailDto.ApplicationInfo.builder()
-                    .district(userOneThingMatching.getOneThingDistrict().name())
-                    .preferredDates(userOneThingMatching.getPreferredDates())
-                    .oneThingBudgetRange(userOneThingMatching.getOneThingBudgetRange())
-                    .oneThingCategory(userOneThingMatching.getOneThingCategory())
+                    .district(matchingInfo.getOneThingDistrict().name())
+                    .preferredDates(matchingInfo.getPreferredDates())
+                    .oneThingBudgetRange(matchingInfo.getOneThingBudgetRange())
+                    .oneThingCategory(matchingInfo.getOneThingCategory())
                     .build())
                 .myMatchingInfo(MatchingDetailDto.MyMatchingInfo.builder()
-                        .job(userOneThingMatching.getUser().getJob().getJobCategory())
-                        .relationshipStatus(userOneThingMatching.getUser().getRelationshipStatus())
-                        .dietaryOption(userOneThingMatching.getUser().getDietaryOption())
-                        .language(userOneThingMatching.getUser().getLanguage())
+                        .job(matchingInfo.getUser().getJob().getJobCategory())
+                        .relationshipStatus(matchingInfo.getUser().getRelationshipStatus())
+                        .dietaryOption(matchingInfo.getUser().getDietaryOption())
+                        .language(matchingInfo.getUser().getLanguage())
                         .build())
                 .paymentInfo(OneThingMatchingDetailDto.PaymentInfo.builder()
-                        .matchingPrice(userOneThingMatching.getOneThingOrder().getPrice().getBasePrice().intValue())
-                        .paymentPrice(userOneThingMatching.getOneThingOrder().getDiscountedPrice().intValue())
+                        .matchingPrice(paymentInfo.getOneThingOrder().getPrice().getBasePrice().intValue())
+                        .paymentPrice(paymentInfo.getOneThingOrder().getDiscountedPrice().intValue())
+                        .requestedAt(donePayment == null ? null : donePayment.getRequested_at().toLocalDateTime())
+                        .approvedAt(donePayment == null ? null : donePayment.getApprovedAt().toLocalDateTime())
                         .build())
                 .build();
     }
 
     default RandomMatchingDetailDto toRandomMatchingDetailDto(final UserRandomMatching userRandomMatching) {
+        TossPayment donePayment = userRandomMatching.getRandomOrder().getTossPayment().stream()
+                .filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(TossPaymentStatus.DONE))
+                .findFirst()
+                .orElse(null);
         return RandomMatchingDetailDto.builder()
                 .matchingId(userRandomMatching.getRandomMatching().getId())
                 .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
@@ -78,6 +90,8 @@ public interface MatchingMapper {
                 .paymentInfo(RandomMatchingDetailDto.PaymentInfo.builder()
                         .matchingPrice(userRandomMatching.getRandomOrder().getPrice().getBasePrice().intValue())
                         .paymentPrice(userRandomMatching.getRandomOrder().getDiscountedPrice().intValue())
+                        .requestedAt(donePayment == null ? null : donePayment.getRequested_at().toLocalDateTime())
+                        .approvedAt(donePayment == null ? null : donePayment.getApprovedAt().toLocalDateTime())
                         .build())
                 .build();
     }
