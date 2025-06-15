@@ -44,11 +44,11 @@ public class MatchingService {
     }
 
     public List<UserOneThingMatching> findUserOneThingMatchings(final Long userId) {
-        return userOneThingMatchingRepository.findUserOneThingMatching(userId, LocalDateTime.now(), MatchingStatus.CONFIRMED);
+        return userOneThingMatchingRepository.findUserOneThingMatching(userId, LocalDateTime.now(), OneThingMatchingStatus.CONFIRMED);
     }
 
     public List<UserRandomMatching> findUserRandomMatchings(final Long userId) {
-        return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now(), MatchingStatus.CONFIRMED);
+        return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now(), RandomMatchingStatus.CONFIRMED);
     }
 
     public Optional<UserOneThingMatching> findOptLatestUserOneThingMatching(long userId, LocalDateTime dateTime) {
@@ -75,23 +75,23 @@ public class MatchingService {
         userRandomMatchingRepository.updateStatusChecked(userId, userRandomMatchingId);
     }
 
-    public List<UserOneThingMatching> findAllConfirmedOneThingMatching(long userId, MatchingStatus matchingStatus) {
+    public List<UserOneThingMatching> findAllConfirmedOneThingMatching(long userId, OneThingMatchingStatus matchingStatus) {
         return userOneThingMatchingRepository.findConfirmedUserOneThingMatching(userId, matchingStatus);
     }
 
-    public List<UserRandomMatching> findAllConfirmedRandomMatching(long userId, MatchingStatus matchingStatus) {
+    public List<UserRandomMatching> findAllConfirmedRandomMatching(long userId, RandomMatchingStatus matchingStatus) {
         return userRandomMatchingRepository.findConfirmedUserRandomMatching(userId, matchingStatus);
     }
 
-    public List<UserOneThingMatching> findAllAppliedOneThingMatching(long userId, MatchingStatus matchingStatus) {
+    public List<UserOneThingMatching> findAllAppliedOneThingMatching(long userId, OneThingMatchingStatus matchingStatus) {
         return userOneThingMatchingRepository.findAppliedUserOneThingMatching(userId, matchingStatus, OneThingOrderStatus.DONE);
     }
 
-    public List<UserRandomMatching> findAllAppliedRandomMatching(long userId, MatchingStatus matchingStatus) {
+    public List<UserRandomMatching> findAllAppliedRandomMatching(long userId, RandomMatchingStatus matchingStatus) {
         return userRandomMatchingRepository.findAppliedUserRandomMatching(userId, matchingStatus, RandomOrderStatus.DONE);
     }
 
-    public List<MatchingProjectionDto> findAllMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
+    public List<MatchingProjectionDto> findAllMatchings(RandomMatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
         List<MatchingProjectionDto> matchings = userMatchingRepository.findAllMatchingsByStatus(matchingStatus, lastMeetingTime, userId, PageRequest.ofSize(PAGE_SIZE));
         if (matchings.isEmpty()) {
             throw new NoContentAvailableException("userMatchings", userId);

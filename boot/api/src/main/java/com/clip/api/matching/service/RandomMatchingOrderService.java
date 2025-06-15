@@ -3,7 +3,7 @@ package com.clip.api.matching.service;
 import com.clip.api.matching.controller.dto.RandomMatchingDuplicateCheckDto;
 import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import com.clip.api.matching.service.exception.MatchingFailedException;
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.entity.RandomMatchingCapacity;
 import com.clip.matching.entity.UserRandomMatching;
@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -96,7 +95,7 @@ public class RandomMatchingOrderService {
                 .randomMatching(assignedMatching)
                 .randomOrder(order)
                 .myOneThingContent(request.getTopic())
-                .matchingStatus(MatchingStatus.APPLIED)
+                .matchingStatus(RandomMatchingStatus.APPLIED)
                 .build();
 
         userRandomMatchingService.save(userRandomMatching);

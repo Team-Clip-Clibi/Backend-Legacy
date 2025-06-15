@@ -1,6 +1,7 @@
 package com.clip.matching.repository;
 
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.OneThingMatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.repository.projection.MatchingProjectionDto;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +24,12 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
             case when uotm.matchingStatus = 'COMPLETED' and otr.id is not null then true else false end
         )
         from UserOneThingMatching uotm
-        join uotm.oneThingMatching otm
+        left join uotm.oneThingMatching otm
         left join OneThingMatchingReview otr on otr.oneThingMatching.id = otm.id and otr.user.id = :userId
         where (:matchingStatus is null or uotm.matchingStatus = :matchingStatus)
         and (:lastMeetingTime is null or uotm.oneThingMatching.meetingTime < :lastMeetingTime)
         and uotm.user.id = :userId
+        and uotm.matchingStatus != 'WAIT_FOR_PAYMENT'
         order by uotm.oneThingMatching.meetingTime desc
         
         union all
@@ -50,7 +52,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         order by urm.randomMatching.meetingTime desc
         """)
     List<MatchingProjectionDto> findAllMatchingsByStatus(
-            @Param("matchingStatus") MatchingStatus matchingStatus,
+            @Param("matchingStatus") RandomMatchingStatus matchingStatus,
             @Param("lastMeetingTime") LocalDateTime lastMeetingTime,
             @Param("userId") long userId,
             Pageable page);

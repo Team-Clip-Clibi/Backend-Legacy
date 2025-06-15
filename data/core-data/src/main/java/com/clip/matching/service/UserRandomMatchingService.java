@@ -1,7 +1,7 @@
 package com.clip.matching.service;
 
 import com.clip.global.exception.ResourceNotFoundException;
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.UserRandomMatchingRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ public class UserRandomMatchingService {
         return userRandomMatchingRepository.save(userRandomMatching);
     }
 
-    public boolean isRandomMatchingExist(long userId) {
-        return userRandomMatchingRepository.findLatestUserRandomMatching(userId, LocalDateTime.now()).isPresent();
+    public boolean isScheduledRandomMatchingExist(long userId) {
+        return userRandomMatchingRepository.findLastestAppliedOrConfirmStatusUserRandomMatching(userId).isPresent();
     }
 
     public void deleteRandomMatching(long userId) {
@@ -27,7 +27,7 @@ public class UserRandomMatchingService {
     }
 
     public boolean isDuplicatedMatching(long userId, LocalDateTime meetingTime) {
-        return userRandomMatchingRepository.findUserRandomMatching(userId, meetingTime, MatchingStatus.CONFIRMED).isPresent();
+        return userRandomMatchingRepository.findUserRandomMatching(userId, meetingTime, RandomMatchingStatus.CONFIRMED).isPresent();
     }
 
     public UserRandomMatching findUserRandomMatching(long userId, Long randomOrderId) {

@@ -2,6 +2,7 @@ package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.OneThingOrderDto;
 import com.clip.global.exception.InvalidRequestException;
+import com.clip.matching.entity.OneThingMatchingStatus;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.service.UserOneThingMatchingService;
 import com.clip.order.entity.OneThingOrder;
@@ -50,6 +51,7 @@ public class OneThingMatchingOrderService {
                 .preferredDates(request.getPreferredDates())
                 .oneThingBudgetRange(request.getOneThingBudgetRange())
                 .oneThingOrder(order)
+                .matchingStatus(OneThingMatchingStatus.WAIT_FOR_PAYMENT)
                 .oneThingCategory(request.getOneThingCategory())
                 .build();
         userOneThingMatchingService.save(userOneThingMatching);

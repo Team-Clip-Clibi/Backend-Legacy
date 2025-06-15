@@ -1,6 +1,7 @@
 package com.clip.matching.repository.projection;
 
 import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

@@ -65,7 +65,7 @@ public class UserOneThingMatching extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private MatchingStatus matchingStatus;
+    private OneThingMatchingStatus matchingStatus;
 
     @Column
     private boolean isNoticeRead;
@@ -73,7 +73,7 @@ public class UserOneThingMatching extends BaseEntity {
     @Builder
     public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
-        MatchingStatus matchingStatus, boolean isNoticeRead) {
+                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.oneThingOrder = oneThingOrder;

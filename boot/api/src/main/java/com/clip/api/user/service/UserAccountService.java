@@ -8,7 +8,6 @@ import com.clip.api.user.service.exception.TokenValidationException;
 import com.clip.auth.entity.Token;
 import com.clip.auth.service.TokenService;
 import com.clip.global.config.jwt.TokenProvider;
-import com.clip.global.exception.NoContentAvailableException;
 import com.clip.global.exception.ResourceAlreadyExistException;
 import com.clip.matching.service.OneThingMatchingReviewService;
 import com.clip.matching.service.RandomMatchingReviewService;
@@ -201,8 +200,8 @@ public class UserAccountService {
             throw new TokenValidationException();
         }
         long userId = Long.parseLong(tokenProvider.extractUserId(refreshToken));
-        if (isMyMatchingExist(userId)) {
-            throw new IllegalStateException("매칭이 존재하는 유저는 탈퇴할 수 없습니다.");
+        if (isScheduledMatchingExist(userId)) {
+            throw new ResourceAlreadyExistException("매칭이 존재하는 유저는 탈퇴할 수 없습니다.",userId);
         }
         User user = userService.findUser(userId);
         notificationService.deleteNotification(userId);
@@ -214,9 +213,9 @@ public class UserAccountService {
         userService.deleteUser(user);
     }
 
-    public boolean isMyMatchingExist(long userId) {
-        boolean isOneThingMatchingExist = userOneThingMatchingService.isOneThingMatchingExist(userId);
-        boolean isRandomMatchingExist = userRandomMatchingService.isRandomMatchingExist(userId);
+    public boolean isScheduledMatchingExist(long userId) {
+        boolean isOneThingMatchingExist = userOneThingMatchingService.isScheduledOneThingMatchingExist(userId);
+        boolean isRandomMatchingExist = userRandomMatchingService.isScheduledRandomMatchingExist(userId);
         return isOneThingMatchingExist || isRandomMatchingExist;
     }
 }

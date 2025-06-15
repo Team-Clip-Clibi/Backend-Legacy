@@ -5,7 +5,6 @@ import com.clip.matching.repository.UserOneThingMatchingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +15,8 @@ public class UserOneThingMatchingService {
         return userOneThingMatchingRepository.save(userOneThingMatching);
     }
 
-    public boolean isOneThingMatchingExist(long userId) {
-        return userOneThingMatchingRepository.findLatestUserOneThingMatching(userId, LocalDateTime.now()).isPresent();
+    public boolean isScheduledOneThingMatchingExist(long userId) {
+        return userOneThingMatchingRepository.findLastestAppliedOrConfirmStatusUserOneThingMatching(userId).isPresent();
     }
 
     public void deleteOneThingMatching(long userId) {

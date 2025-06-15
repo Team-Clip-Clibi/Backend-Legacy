@@ -1,6 +1,7 @@
 package com.clip.matching.repository;
 
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.OneThingMatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.order.entity.OneThingOrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,7 +26,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             order by u.oneThingMatching.meetingTime asc
             """)
     List<UserOneThingMatching> findUserOneThingMatching(@Param("userId") Long userId, @Param("date") LocalDateTime date,
-                                                        @Param("matchingStatus") MatchingStatus matchingStatus);
+                                                        @Param("matchingStatus") OneThingMatchingStatus matchingStatus);
 
     @Query("""
             select u
@@ -37,6 +38,13 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             limit 1
             """)
     Optional<UserOneThingMatching> findLatestUserOneThingMatching(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
+
+    @Query("select u " +
+            "from UserOneThingMatching u " +
+            "where u.user.id = :userId " +
+                "and (u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.APPLIED or u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.CONFIRMED) " +
+            "order by u.id limit 1")
+    Optional<UserOneThingMatching> findLastestAppliedOrConfirmStatusUserOneThingMatching(@Param("userId") long userId);
 
     @Query("""
             select u
@@ -57,7 +65,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             where u.user.id = :userId
             and u.matchingStatus = :matchingStatus
             """)
-    List<UserOneThingMatching> findConfirmedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus);
+    List<UserOneThingMatching> findConfirmedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") OneThingMatchingStatus matchingStatus);
 
     //todo / to.세은 / 2025-05-18 / OnethingOrder entity 변경으로 인한 쿼리 수정, 정상 동작하는지 확인해주세요!
     @Query("""
@@ -67,7 +75,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             and u.matchingStatus = :matchingStatus
             and u.oneThingOrder.status = :oneThingOrderStatus
             """)
-    List<UserOneThingMatching> findAppliedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus
+    List<UserOneThingMatching> findAppliedUserOneThingMatching(@Param("userId") long userId, @Param("matchingStatus") OneThingMatchingStatus matchingStatus
     , @Param("oneThingOrderStatus") OneThingOrderStatus oneThingOrderStatus);
 
     @Transactional
