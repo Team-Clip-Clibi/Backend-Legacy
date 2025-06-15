@@ -102,6 +102,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             join fetch u.user.job
             join fetch u.randomOrder
             join fetch u.randomOrder.price
+            join fetch u.randomOrder.tossPayment
             where u.id = :id
             """)
     Optional<UserRandomMatching> findUserRandomMatchingWithFetch(@Param("id") long id);

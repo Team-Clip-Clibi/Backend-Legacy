@@ -104,8 +104,13 @@ public class MatchingService {
                 .orElseThrow(() -> new ResourceNotFoundException("userRandomMatching", id));
     }
 
-    public UserOneThingMatching findUserOneThingMatching(long id) {
-        return userOneThingMatchingRepository.findUserOneThingMatchingWithFetch(id)
-                .orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching", id));
+    public UserOneThingMatching findUserOneThingMatchingWithMatchingInfo(long id) {
+        return userOneThingMatchingRepository.findUserOneThingMatchingWithMatchingInfo(id)
+                .orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching MatchingInfo", id));
+    }
+
+    public UserOneThingMatching findUserOneThingMatchingWithPaymentInfo(long id) {
+        return userOneThingMatchingRepository.findUserOneThingMatchingWithPaymentInfo(id)
+                .orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching PaymentInfo", id));
     }
 }

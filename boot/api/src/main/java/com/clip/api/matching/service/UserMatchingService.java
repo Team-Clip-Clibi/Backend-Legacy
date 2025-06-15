@@ -5,7 +5,6 @@ import com.clip.api.matching.mapper.MatchingMapper;
 import com.clip.global.exception.NoContentAvailableException;
 import com.clip.matching.entity.*;
 import com.clip.matching.service.MatchingService;
-import com.clip.matching.service.UserRandomMatchingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -206,13 +205,19 @@ public class UserMatchingService {
     }
 
     public MatchingDetailDto getMatchingDetail(long userId, MatchingType matchingType, long id) {
-        return switch (matchingType) {
-            case ONE_THING -> matchingMapper.toOneThingMatchingDetailDto(
-                    matchingService.findUserOneThingMatching(id));
-            case RANDOM -> matchingMapper.toRandomMatchingDetailDto(
-                    matchingService.findUserRandomMatching(id));
+        switch (matchingType) {
+            case ONE_THING -> {
+                UserOneThingMatching  matchingInfo = matchingService.findUserOneThingMatchingWithMatchingInfo(id);
+                UserOneThingMatching  paymentInfo = matchingService.findUserOneThingMatchingWithPaymentInfo(id);
+                return matchingMapper.toOneThingMatchingDetailDto(
+                        matchingInfo, paymentInfo);
+            }
+            case RANDOM -> {
+                return matchingMapper.toRandomMatchingDetailDto(
+                        matchingService.findUserRandomMatching(id));
+            }
             default -> throw new IllegalArgumentException("Invalid Matching Type: " + matchingType);
-        };
+        }
     }
 
 }
