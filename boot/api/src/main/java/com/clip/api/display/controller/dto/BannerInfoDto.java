@@ -10,14 +10,12 @@ import lombok.NoArgsConstructor;
 public class BannerInfoDto {
 
     private String imagePresignedUrl;
-    private String headText;
-    private String subText;
+    private String text;
 
     @Builder
-    public BannerInfoDto(String imagePresignedUrl, String headText, String subText) {
+    public BannerInfoDto(String imagePresignedUrl, String text) {
         this.imagePresignedUrl = imagePresignedUrl;
-        this.headText = headText;
-        this.subText = subText;
+        this.text = text;
     }
 
 }

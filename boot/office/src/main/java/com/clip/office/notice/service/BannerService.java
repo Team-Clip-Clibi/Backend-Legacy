@@ -23,8 +23,7 @@ public class BannerService {
 
         Banner banner = Banner.builder()
                 .bannerType(dto.getBannerType())
-                .head(dto.getHead())
-                .sub(dto.getSub())
+                .text(dto.getText())
                 .imageUrl(imageUrl)
                 .exposureDate(dto.getExposureDate())
                 .isExposure(dto.isExposure())
@@ -35,8 +34,7 @@ public class BannerService {
         return CreateBannerDto.builder()
                 .id(banner.getId())
                 .bannerType(banner.getBannerType())
-                .head(banner.getHead())
-                .sub(banner.getSub())
+                .text(banner.getText())
                 .imageUrl(banner.getImageUrl())
                 .exposureDate(banner.getExposureDate())
                 .isExposure(banner.isExposure())
@@ -54,8 +52,7 @@ public class BannerService {
 
         banner.update(
                 updateBannerDto.getBannerType(),
-                updateBannerDto.getHead(),
-                updateBannerDto.getSub(),
+                updateBannerDto.getText(),
                 updateBannerDto.getExposureDate(),
                 updateBannerDto.isExposure()
         );
@@ -63,8 +60,7 @@ public class BannerService {
         return UpdateBannerDto.builder()
                 .id(banner.getId())
                 .bannerType(banner.getBannerType())
-                .head(banner.getHead())
-                .sub(banner.getSub())
+                .text(banner.getText())
                 .imageUrl(banner.getImageUrl())
                 .exposureDate(banner.getExposureDate())
                 .isExposure(banner.isExposure())

@@ -13,18 +13,16 @@ public class CreateBannerDto {
 
     private Long id;
     private BannerType bannerType;
-    private String head;
-    private String sub;
+    private String text;
     private String imageUrl;
     private LocalDate exposureDate;
     private boolean isExposure;
 
     @Builder
-    public CreateBannerDto(Long id,BannerType bannerType, String head, String sub,String imageUrl, LocalDate exposureDate, boolean isExposure) {
+    public CreateBannerDto(Long id,BannerType bannerType, String text, String imageUrl, LocalDate exposureDate, boolean isExposure) {
         this.id = id;
         this.bannerType = bannerType;
-        this.head = head;
-        this.sub = sub;
+        this.text = text;
         this.imageUrl = imageUrl;
         this.exposureDate = exposureDate;
         this.isExposure = isExposure;
