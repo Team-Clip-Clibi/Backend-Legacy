@@ -84,7 +84,6 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             join fetch u.user.job
             where u.id = :id
             """)
-    Optional<UserOneThingMatching> findUserOneThingMatchingWithFetch(@Param("id") long id);
     Optional<UserOneThingMatching> findUserOneThingMatchingWithMatchingInfo(@Param("id") long id);
 
     @Query("""

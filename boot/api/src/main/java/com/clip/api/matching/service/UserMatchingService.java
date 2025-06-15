@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 public class UserMatchingService {
 
     private final MatchingService matchingService;
-    private final UserRandomMatchingService userRandomMatchingService;
     private final MatchingMapper matchingMapper;
 
     public MatchingSummaryDto getUserMatchings(final long userId) {
