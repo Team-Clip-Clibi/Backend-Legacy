@@ -1,6 +1,7 @@
 package com.clip.api.matching.controller.dto;
 
 import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

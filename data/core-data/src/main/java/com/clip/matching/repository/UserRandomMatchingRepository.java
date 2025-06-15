@@ -1,6 +1,6 @@
 package com.clip.matching.repository;
 
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.order.entity.RandomOrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,7 +25,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             order by u.randomMatching.meetingTime asc
             """)
     List<UserRandomMatching> findUserRandomMatching(Long userId, LocalDateTime date,
-                                                    MatchingStatus matchingStatus);
+                                                    RandomMatchingStatus matchingStatus);
 
     @Query("""
             select u
@@ -37,6 +37,13 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             limit 1
             """)
     Optional<UserRandomMatching> findLatestUserRandomMatching(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
+
+    @Query("select u " +
+            "from UserRandomMatching u " +
+            "where u.user.id = :userId " +
+                "and (u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.APPLIED or u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.CONFIRMED) " +
+            "order by u.id limit 1")
+    Optional<UserRandomMatching> findLastestAppliedOrConfirmStatusUserRandomMatching(@Param("userId") long userId);
 
     @Query("""
             select u
@@ -57,7 +64,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             where u.user.id = :userId
             and u.matchingStatus = :matchingStatus
             """)
-    List<UserRandomMatching> findConfirmedUserRandomMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus);
+    List<UserRandomMatching> findConfirmedUserRandomMatching(@Param("userId") long userId, @Param("matchingStatus") RandomMatchingStatus matchingStatus);
 
     @Query("""
             select u
@@ -68,7 +75,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             and u.matchingStatus = :matchingStatus
             and r.status = :randomOrderStatus
             """)
-    List<UserRandomMatching> findAppliedUserRandomMatching(@Param("userId") long userId, @Param("matchingStatus") MatchingStatus matchingStatus
+    List<UserRandomMatching> findAppliedUserRandomMatching(@Param("userId") long userId, @Param("matchingStatus") RandomMatchingStatus matchingStatus
             , @Param("randomOrderStatus") RandomOrderStatus randomOrderStatus);
 
     @Transactional
@@ -84,7 +91,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             and u.matchingStatus = :matchingStatus
             """)
     Optional<UserRandomMatching> findUserRandomMatching(@Param("userId") long userId, @Param("meetingTime") LocalDateTime meetingTime,
-                                                        @Param("matchingStatus") MatchingStatus matchingStatus);
+                                                        @Param("matchingStatus") RandomMatchingStatus matchingStatus);
 
     @Query("""
             select u

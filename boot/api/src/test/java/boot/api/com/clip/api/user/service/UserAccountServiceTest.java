@@ -549,10 +549,10 @@ public class UserAccountServiceTest {
             //given
             User user = userRepository.findUser("socialId", Platform.APPLE).get();
             OneThingMatching oneThingMatching = oneThingMatchingRepository.findAll().get(0);
-            userOneThingMatchingRepository.save(UserOneThingMatching.builder().user(user).oneThingMatching(oneThingMatching).build());
+            userOneThingMatchingRepository.save(UserOneThingMatching.builder().user(user).oneThingMatching(oneThingMatching).matchingStatus(OneThingMatchingStatus.APPLIED).build());
 
             //when
-            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
+            boolean existsMyMatching = userAccountService.isScheduledMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isTrue();
@@ -564,10 +564,10 @@ public class UserAccountServiceTest {
             //given
             User user = userRepository.findUser("socialId", Platform.APPLE).get();
             RandomMatching randomMatching = randomMatchingRepository.findAll().get(0);
-            userRandomMatchingRepository.save(UserRandomMatching.builder().user(user).randomMatching(randomMatching).build());
+            userRandomMatchingRepository.save(UserRandomMatching.builder().user(user).randomMatching(randomMatching).matchingStatus(RandomMatchingStatus.APPLIED).build());
 
             //when
-            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
+            boolean existsMyMatching = userAccountService.isScheduledMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isTrue();
@@ -579,12 +579,12 @@ public class UserAccountServiceTest {
             //given
             User user = userRepository.findUser("socialId", Platform.APPLE).get();
             OneThingMatching oneThingMatching = oneThingMatchingRepository.findAll().get(0);
-            userOneThingMatchingRepository.save(UserOneThingMatching.builder().user(user).oneThingMatching(oneThingMatching).build());
+            userOneThingMatchingRepository.save(UserOneThingMatching.builder().user(user).oneThingMatching(oneThingMatching).matchingStatus(OneThingMatchingStatus.APPLIED).build());
             RandomMatching randomMatching = randomMatchingRepository.findAll().get(0);
-            userRandomMatchingRepository.save(UserRandomMatching.builder().user(user).randomMatching(randomMatching).build());
+            userRandomMatchingRepository.save(UserRandomMatching.builder().user(user).randomMatching(randomMatching).matchingStatus(RandomMatchingStatus.APPLIED).build());
 
             //when
-            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
+            boolean existsMyMatching = userAccountService.isScheduledMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isTrue();
@@ -597,7 +597,7 @@ public class UserAccountServiceTest {
             User user = userRepository.findUser("socialId", Platform.APPLE).get();
 
             //when
-            boolean existsMyMatching = userAccountService.isMyMatchingExist(user.getId());
+            boolean existsMyMatching = userAccountService.isScheduledMatchingExist(user.getId());
 
             //then
             assertThat(existsMyMatching).isFalse();

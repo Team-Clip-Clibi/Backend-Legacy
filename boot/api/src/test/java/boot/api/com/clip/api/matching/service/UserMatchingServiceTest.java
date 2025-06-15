@@ -6,7 +6,6 @@ import com.clip.api.matching.controller.dto.MatchingOverviewDto;
 import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingService;
-import com.clip.api.matching.service.exception.NotExistAnyMatchingException;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
 import com.clip.global.exception.NoContentAvailableException;
@@ -239,7 +238,7 @@ public class UserMatchingServiceTest {
                 UserOneThingMatching.builder()
                         .user(user)
                         .oneThingMatching(oneThingMatching)
-                        .matchingStatus(MatchingStatus.APPLIED)
+                        .matchingStatus(OneThingMatchingStatus.APPLIED)
                         .oneThingOrder(oneThingOrder)
                         .build()
         );
@@ -248,7 +247,7 @@ public class UserMatchingServiceTest {
                 UserRandomMatching.builder()
                         .user(user)
                         .randomMatching(randomMatching)
-                        .matchingStatus(MatchingStatus.CONFIRMED)
+                        .matchingStatus(RandomMatchingStatus.CONFIRMED)
                         .build()
         );
 
@@ -279,7 +278,7 @@ public class UserMatchingServiceTest {
                 UserOneThingMatching.builder()
                         .user(user)
                         .oneThingMatching(oneThingMatching)
-                        .matchingStatus(MatchingStatus.APPLIED)
+                        .matchingStatus(OneThingMatchingStatus.APPLIED)
                         .myOneThingContent(oneThingContent)
                         .build()
         );
@@ -288,15 +287,15 @@ public class UserMatchingServiceTest {
                 UserRandomMatching.builder()
                         .user(user)
                         .randomMatching(randomMatching)
-                        .matchingStatus(MatchingStatus.CONFIRMED)
+                        .matchingStatus(RandomMatchingStatus.CONFIRMED)
                         .myOneThingContent(oneThingContent)
                         .build()
         );
 
         //when
         List<MatchingDto> matchings = userMatchingService.getMatchings(null, null, user.getId());
-        List<MatchingDto> appliedMatchings = userMatchingService.getMatchings(MatchingStatus.APPLIED, null, user.getId());
-        List<MatchingDto> confirmedMatchings = userMatchingService.getMatchings(MatchingStatus.CONFIRMED, null, user.getId());
+        List<MatchingDto> appliedMatchings = userMatchingService.getMatchings(RandomMatchingStatus.APPLIED, null, user.getId());
+        List<MatchingDto> confirmedMatchings = userMatchingService.getMatchings(RandomMatchingStatus.CONFIRMED, null, user.getId());
 
         //then
         Assertions.assertThat(matchings).hasSize(2);
@@ -321,7 +320,7 @@ public class UserMatchingServiceTest {
                 UserOneThingMatching.builder()
                         .user(user)
                         .oneThingMatching(oneThingMatching)
-                        .matchingStatus(MatchingStatus.APPLIED)
+                        .matchingStatus(OneThingMatchingStatus.APPLIED)
                         .myOneThingContent(oneThingContent)
                         .build()
         );

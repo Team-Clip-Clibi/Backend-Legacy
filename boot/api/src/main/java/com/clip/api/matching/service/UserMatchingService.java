@@ -164,13 +164,13 @@ public class UserMatchingService {
     public MatchingOverviewDto getMatchingOverview(Long userId) {
         // 매칭 신청한 매칭 수와 확정된 매칭 수 계산
         long appliedMatchingCount =
-                matchingService.findAllAppliedOneThingMatching(userId, MatchingStatus.APPLIED).size() +
-                        matchingService.findAllAppliedRandomMatching(userId, MatchingStatus.APPLIED).size();
+                matchingService.findAllAppliedOneThingMatching(userId, OneThingMatchingStatus.APPLIED).size() +
+                        matchingService.findAllAppliedRandomMatching(userId, RandomMatchingStatus.APPLIED).size();
 
         List<UserOneThingMatching> confirmedOneThingMatchings =
-                matchingService.findAllConfirmedOneThingMatching(userId, MatchingStatus.CONFIRMED);
+                matchingService.findAllConfirmedOneThingMatching(userId, OneThingMatchingStatus.CONFIRMED);
         List<UserRandomMatching> confirmedRandomMatchings =
-                matchingService.findAllConfirmedRandomMatching(userId, MatchingStatus.CONFIRMED);
+                matchingService.findAllConfirmedRandomMatching(userId, RandomMatchingStatus.CONFIRMED);
         long confirmedMatchingCount = confirmedOneThingMatchings.size() + confirmedRandomMatchings.size();
 
         // 매칭 안내문 확인 여부
@@ -199,7 +199,7 @@ public class UserMatchingService {
                 .build();
     }
 
-    public List<MatchingDto> getMatchings(MatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
+    public List<MatchingDto> getMatchings(RandomMatchingStatus matchingStatus, LocalDateTime lastMeetingTime, long userId) {
         return matchingMapper.toDto(matchingService.findAllMatchings(matchingStatus, lastMeetingTime, userId));
     }
 

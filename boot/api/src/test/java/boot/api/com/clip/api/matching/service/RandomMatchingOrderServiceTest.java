@@ -35,7 +35,6 @@ import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,11 +109,11 @@ public class RandomMatchingOrderServiceTest {
 
             // 2개 지역의 랜덤 매칭 생성
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 6), 6));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 20), 20));
             RandomMatchingCapacity hongdaeCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", meetingDateTime, 6), 6));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", meetingDateTime, 20), 20));
 
-            int threadCount = 40;
+            int threadCount = 400;
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
             CountDownLatch latch = new CountDownLatch(threadCount);
 
@@ -140,7 +139,7 @@ public class RandomMatchingOrderServiceTest {
 
                         try {
                             // 사용자별로 선호하는 지역 다르게 설정 (20명씩 강남/홍대)
-                            RandomDistrict district = index < 20
+                            RandomDistrict district = index < 200
                                     ? RandomDistrict.GANGNAM
                                     : RandomDistrict.HONGDAE_HAPJEONG;
 
@@ -169,10 +168,10 @@ public class RandomMatchingOrderServiceTest {
 
             // Then
             // 총 처리된 요청은 12개여야 함 (강남 6명 + 홍대 6명)
-            assertThat(successResponses).hasSize(12);
+            assertThat(successResponses).hasSize(40);
 
             // 실패한 요청은 28개여야 함
-            assertThat(exceptions).hasSize(28);
+            assertThat(exceptions).hasSize(360);
 
             // 강남 매칭과 홍대 매칭의 가용 인원이 모두 0이 되어야 함
             RandomMatchingCapacity updatedGangnamCapacity = randomMatchingCapacityRepository.findById(gangnamCapacity.getId()).orElseThrow();
@@ -189,8 +188,8 @@ public class RandomMatchingOrderServiceTest {
                     .filter(urm -> urm.getRandomMatching().getId().equals(hongdaeCapacity.getRandomMatching().getId()))
                     .count();
 
-            assertThat(gangnamMatchCount).isEqualTo(6);
-            assertThat(hongdaeMatchCount).isEqualTo(6);
+            assertThat(gangnamMatchCount).isEqualTo(20);
+            assertThat(hongdaeMatchCount).isEqualTo(20);
         }
     }
 
@@ -218,7 +217,7 @@ public class RandomMatchingOrderServiceTest {
                     .user(user)
                     .randomMatching(randomMatching)
                     .myOneThingContent("테스트 주제")
-                    .matchingStatus(MatchingStatus.CONFIRMED)
+                    .matchingStatus(RandomMatchingStatus.CONFIRMED)
                     .build();
 
             userRandomMatchingRepository.save(userRandomMatching);

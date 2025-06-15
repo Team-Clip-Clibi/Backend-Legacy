@@ -1,7 +1,8 @@
 package com.clip.api.docs.matching;
 
 import com.clip.api.matching.controller.dto.*;
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.OneThingMatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -119,7 +120,7 @@ public interface UserMatchingDocs {
     )
     @GetMapping
     List<MatchingDto> findMatchings(
-            @RequestParam(required = false) MatchingStatus status,
+            @RequestParam(required = false) RandomMatchingStatus status,
             @RequestParam(required = false) LocalDateTime lastMeetingTime,
             @AuthenticationPrincipal UserDetails userDetails
     );

@@ -3,7 +3,7 @@ package com.clip.api.payment.service;
 import com.clip.api.payment.feign.dto.PaymentObject;
 import com.clip.api.payment.mapper.TossPaymentMapper;
 import com.clip.api.payment.service.event.PaymentExceptionEvent;
-import com.clip.matching.entity.MatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.order.entity.OneThingOrder;
@@ -67,6 +67,6 @@ public class UserPaymentService {
         randomOrder.addTossPayment(tossPayment);
 
         UserRandomMatching userRandomMatching = userRandomMatchingService.findUserRandomMatching(userId, randomOrder.getId());
-        userRandomMatching.updateStatus(MatchingStatus.CONFIRMED);
+        userRandomMatching.updateStatus(RandomMatchingStatus.CONFIRMED);
     }
 }
