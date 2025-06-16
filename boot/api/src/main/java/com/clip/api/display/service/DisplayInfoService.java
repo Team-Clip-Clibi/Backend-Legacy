@@ -24,7 +24,7 @@ public class DisplayInfoService {
         return banners.stream()
                 .map(banner -> BannerInfoDto.builder()
                         .imagePresignedUrl(s3ImgService.generateGetPresignedUrl(banner.getImageUrl()))
-                        .text(banner.getText())
+                        .text(banner.getText().replace("\\n", "\n"))
                         .build())
                 .toList();
     }
