@@ -39,6 +39,7 @@ public class OneThingOrderDto {
     }
 
     @Getter
+    @Schema(name = "OneThingOrderResponse")
     public static class Response{
         private final UUID orderId;
         private final int amount;
