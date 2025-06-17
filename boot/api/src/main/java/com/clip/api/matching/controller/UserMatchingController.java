@@ -49,4 +49,9 @@ public class UserMatchingController implements UserMatchingDocs {
                 Long.parseLong(userDetails.getUsername()), matchingType, id);
     }
 
+    @Override
+    public void cancelMatching(UserDetails userDetails, MatchingType matchingType, long id) {
+        userMatchingService.cancelMatching(Long.parseLong(userDetails.getUsername()), matchingType, id);
+    }
+
 }
