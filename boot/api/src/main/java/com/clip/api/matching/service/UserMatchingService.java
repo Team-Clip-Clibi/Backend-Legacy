@@ -219,4 +219,11 @@ public class UserMatchingService {
         }
     }
 
+    public void cancelMatching(long userId, MatchingType matchingType, long id) {
+        switch (matchingType) {
+            case ONE_THING -> matchingService.cancelUserOneThingMatching(id);
+            case RANDOM -> matchingService.cancelUserRandomMatching(id);
+            default -> throw new IllegalArgumentException("Invalid Matching Type: " + matchingType);
+        }
+    }
 }

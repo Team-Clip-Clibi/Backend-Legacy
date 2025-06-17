@@ -113,4 +113,12 @@ public class MatchingService {
         return userOneThingMatchingRepository.findUserOneThingMatchingWithPaymentInfo(id)
                 .orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching PaymentInfo", id));
     }
+
+    public void cancelUserOneThingMatching(long id) {
+        userOneThingMatchingRepository.updateMatchingStatus(id, OneThingMatchingStatus.CANCELED);
+    }
+
+    public void cancelUserRandomMatching(long id) {
+        userRandomMatchingRepository.updateMatchingStatus(id, RandomMatchingStatus.CANCELED);
+    }
 }
