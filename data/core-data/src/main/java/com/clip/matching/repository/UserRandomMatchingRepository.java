@@ -113,4 +113,13 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             where u.id = :id
             """)
     Optional<UserRandomMatching> findUserRandomMatchingWithFetch(@Param("id") long id);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            update UserRandomMatching u
+            set u.matchingStatus = :matchingStatus
+            where u.id = :id
+            """)
+    void updateMatchingStatus(@Param("id") long id, @Param("matchingStatus") RandomMatchingStatus matchingStatus);
 }

@@ -1,7 +1,6 @@
 package com.clip.matching.repository;
 
 import com.clip.matching.entity.OneThingMatchingStatus;
-import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.order.entity.OneThingOrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -103,4 +102,13 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             where u.id = :id
             """)
     Optional<UserOneThingMatching> findUserOneThingMatchingWithPaymentInfo(@Param("id") long id);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            update UserOneThingMatching u
+            set u.matchingStatus = :matchingStatus
+            where u.id = :id
+            """)
+    void updateMatchingStatus(@Param("id") long id, @Param("matchingStatus") OneThingMatchingStatus matchingStatus);
 }

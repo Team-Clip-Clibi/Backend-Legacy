@@ -1,7 +1,6 @@
 package com.clip.api.docs.matching;
 
 import com.clip.api.matching.controller.dto.*;
-import com.clip.matching.entity.OneThingMatchingStatus;
 import com.clip.matching.entity.RandomMatchingStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -149,6 +148,27 @@ public interface UserMatchingDocs {
     )
     @GetMapping("/{matchingType}/{id}")
     MatchingDetailDto getMatchingDetail(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable MatchingType matchingType,
+            @PathVariable long id
+    );
+
+    @Operation(
+            summary = "모임 신청 취소 API",
+            description = """
+                    - 모임 신청을 취소합니다.
+                    - 모임 ID를 통해 해당 모임의 신청을 취소합니다.
+                    - 매칭 타입으로는 ONE_THING, RANDOM이 있습니다.
+                   \s""",
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "취소 성공"
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{matchingType}/{id}")
+    void cancelMatching(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable MatchingType matchingType,
             @PathVariable long id

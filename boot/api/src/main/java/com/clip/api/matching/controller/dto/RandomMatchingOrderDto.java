@@ -29,6 +29,7 @@ public class RandomMatchingOrderDto {
     }
 
     @Getter
+    @Schema(name = "RandomOrderResponse")
     public static class Response{
         private final UUID orderId;
         private final int amount;
