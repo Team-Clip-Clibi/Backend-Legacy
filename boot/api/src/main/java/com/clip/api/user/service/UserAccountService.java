@@ -218,4 +218,12 @@ public class UserAccountService {
         boolean isRandomMatchingExist = userRandomMatchingService.isScheduledRandomMatchingExist(userId);
         return isOneThingMatchingExist || isRandomMatchingExist;
     }
+
+    public TokenProvider.Token getReissueToken(TokenProvider.RefreshToken refreshToken) {
+        if (!tokenProvider.isValidRefreshToken(refreshToken.refreshToken())) {
+            throw new TokenValidationException();
+        }
+        User user = tokenService.findRefreshToken(refreshToken.refreshToken());
+        return tokenProvider.reissueToken(user.getId(), refreshToken.refreshToken());
+    }
 }

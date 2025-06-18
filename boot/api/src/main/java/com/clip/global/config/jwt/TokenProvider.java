@@ -45,6 +45,27 @@ public class TokenProvider {
         return generateToken(new CustomClaims(userId,TokenType.REFRESH_TOKEN), currentDateTime, currentDateTime.plusMonths(jwtProperties.getRefreshTokenExpirationPeriodMonth()));
     }
 
+    public Token reissueToken(long userId, String refreshToken) {
+        return new Token(
+                generateAccessToken(userId, LocalDateTime.now()),
+                generateToken(new CustomClaims(userId, TokenType.REFRESH_TOKEN), LocalDateTime.now(), getExpirationToLocalDateTime(refreshToken))
+        );
+    }
+
+    private LocalDateTime getExpirationToLocalDateTime(String token) {
+        try {
+            JwtParser jwtParser = initParser();
+            Date expiration = jwtParser.parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration();
+            return expiration.toInstant()
+                    .atZone(ZONE_ID)
+                    .toLocalDateTime();
+        } catch (Exception e) {
+            throw new InvalidTokenException();
+        }
+    }
+
     public String extractUserId(String token) {
         return initParser()
                 .parseSignedClaims(token)
