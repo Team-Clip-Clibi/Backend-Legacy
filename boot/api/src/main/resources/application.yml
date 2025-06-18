@@ -37,6 +37,8 @@ exclude-auth-path-patterns:
       method: GET
     - path-pattern: /users/tokens
       method: POST
+    - path-pattern: /v2/users/tokens
+      method: POST
     - path-pattern: /health-check
       method: GET
     - path-pattern: /zzilit/img/upload
