@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.5
+    command: start
+    environment:
+      KC_DB: ${KC_DB}
+      KC_DB_URL: ${URL}
+      KC_DB_USERNAME: ${USERNAME}
+      KC_DB_PASSWORD: ${PASSWORD}
+      KC_HOSTNAME_STRICT: false
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_PROXY: edge
+    ports:
+      - "9001:8080"
+    networks:
+      - office
+
+  office-api-server:
+    image: ${OFFICE_API_IMAGE_URI}
+    container_name: office-api-server
+    environment:
+      - OAUTH_ISSUER_URI= ${OAUTH_ISSUER_URI}
+      - spring.datasource.url= ${URL}
+      - spring.datasource.username= ${USERNAME}
+      - spring.datasource.password=${PASSWORD}
+      - spring.datasource.redis.host= ${REDIS_HOST}
+      - spring.datasource.redis.port= ${REDIS_PORT}
+      - jwt.secret-key= ${JWT_KEY}
+      - cloud.aws.credentials.access-key= ${S3_ACCESS_KEY}
+      - cloud.aws.credentials.secret-key= $S3_SECRET_KEY}
+      - cloud.aws.s3.bucket= ${S3_BUCKET_NAME}
+      - toss.secret-key= ${TOSS_KEY}
+      - cloud.aws.s3.fcm.sdk= ${FCM_SDK}
+      - user.timezone=Asia/Seoul
+    ports:
+      - "8080:8080"
+    depends_on:
+      - keycloak
+    networks:
+      - office
+
+
+networks:
+  office:
+    driver: bridge
