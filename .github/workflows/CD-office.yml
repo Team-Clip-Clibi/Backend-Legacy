@@ -33,7 +33,7 @@ jobs:
       ecr-repository: 442042528525.dkr.ecr.ap-northeast-2.amazonaws.com/clibi/office
       ecr-repository-name: clibi/office
       secret-manager: arn:aws:secretsmanager:ap-northeast-2:442042528525:secret:dev/clibi/rds-eCWfXL
-      container-name: office-server
+      container-name: office-api-server
       workflow-id: ${{ github.run_id }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
