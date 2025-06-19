@@ -123,4 +123,4 @@ jobs:
             
             docker system prune -f
 
-            docker compose -d --env-file ./secrets.env --restart always
+            docker compose --env-file ./secrets.env up -d --restart always
