@@ -27,6 +27,9 @@ on:
       workflow-id:
         required: false
         type: string
+      deployment-type:
+        required: false
+        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -59,7 +62,7 @@ jobs:
           path: ./boot/${{ inputs.project-name }}/build/libs
 
       - name: Configure AWS credentials For ECR and Secrets Manager
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -67,7 +70,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Docker Build And Push
         env:
@@ -97,9 +100,19 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy to EC2
+      - name: Send docker-compose.yml to EC2
+        uses: appleboy/scp-action@v1.0.0
+        if: steps.verify-image.outputs.status == 'success' && inputs.deployment-type == 'docker-compose'
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          source: ./boot/${{ inputs.project-name }}/docker-compose.yml
+          target: /home/${{ secrets.EC2_USER }}/
+          strip_components: 3
+
+      - name: Setup Environment Variables from Secret Manager
         uses: appleboy/ssh-action@v1.2.2
-        if: steps.verify-image.outputs.status == 'success'
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
@@ -107,20 +120,55 @@ jobs:
           script: |
             export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            
+            echo "Fetching secrets from AWS Secret Manager..."
             aws secretsmanager get-secret-value \
             --region ${{ secrets.AWS_REGION }} \
             --secret-id ${{ inputs.secret-manager }} \
             --query 'SecretString' \
             --output text | \
-            jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > secrets.env
+            jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > .env
+            
+            if [ "${{ inputs.deployment-type }}" = "docker-compose" ]; then
+            echo "Adding Docker Compose specific environment variables..."
+            echo "OFFICE_API_IMAGE_URI=${{ inputs.ecr-repository }}" >> .env
+            echo "OFFICE_CONTAINER_NAME=${{ inputs.container-name }}" >> .env
+            fi
+
+      - name: Deploy to EC2 with Docker Compose
+        uses: appleboy/ssh-action@v1.2.2
+        if: steps.verify-image.outputs.status == 'success' && inputs.deployment-type == 'docker-compose'
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker pull ${{ inputs.ecr-repository }}
+            docker system prune -f
+            
+            docker compose down --remove-orphans || true
+            docker compose up -d
+
+      - name: Deploy to EC2 with Docker
+        uses: appleboy/ssh-action@v1.2.2
+        if: steps.verify-image.outputs.status == 'success' && inputs.deployment-type == 'docker'
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
             docker pull ${{ inputs.ecr-repository }}
             
             if [ "$(docker ps -q -f name=${{ inputs.container-name }})" ]; then
-            # docker stop ${{ inputs.container-name }} && docker rm ${{ inputs.container-name }}
-            docker compose stop ${{ inputs.container-name }}
+            docker stop ${{ inputs.container-name }} && docker rm ${{ inputs.container-name }}
             fi
             
             docker system prune -f
 
-            docker compose --env-file ./secrets.env up -d
+            docker run -d --name ${{ inputs.container-name }} \
+            --env-file ./.env \
+            --restart always \
+            ${{ inputs.ecr-repository }}
