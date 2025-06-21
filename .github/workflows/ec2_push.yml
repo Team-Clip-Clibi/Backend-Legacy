@@ -101,7 +101,7 @@ jobs:
           fi
 
       - name: Send docker-compose.yml to EC2
-        uses: appleboy/scp-action@v1.0.0
+        uses: appleboy/scp-action@master
         if: steps.verify-image.outputs.status == 'success' && inputs.deployment-type == 'docker-compose'
         with:
           host: ${{ secrets.EC2_HOST }}
