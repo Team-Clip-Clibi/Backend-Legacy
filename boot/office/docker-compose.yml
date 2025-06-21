@@ -7,6 +7,7 @@ services:
       - start
       - --http-enabled=true
       - --http-port=8080
+      - --hostname=ec2-43-203-109-89.ap-northeast-2.compute.amazonaws.com
 
     environment:
       KC_DB: ${KC_DB}
