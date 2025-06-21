@@ -3,7 +3,11 @@ version: "3.9"
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.2.5
-    command: start
+    command:
+      - start
+      - --http-enabled=true
+      - --http-port=8080
+
     environment:
       KC_DB: ${KC_DB}
       KC_DB_URL: ${URL}
