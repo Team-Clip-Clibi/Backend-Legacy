@@ -70,10 +70,13 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private boolean isNoticeRead;
 
+    @Column
+    private int lateMinutes;
+
     @Builder
     public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
-                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead) {
+                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, int lateMinutes) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.oneThingOrder = oneThingOrder;
@@ -86,6 +89,7 @@ public class UserOneThingMatching extends BaseEntity {
         this.oneThingBudgetRange = oneThingBudgetRange;
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
+        this.lateMinutes = lateMinutes;
     }
 
     @Embeddable
@@ -106,5 +110,9 @@ public class UserOneThingMatching extends BaseEntity {
         public int compareTo(PreferredDate o) {
             return this.date.compareTo(o.date);
         }
+    }
+
+    public void updateLateMinutes(int lastMinutes) {
+        this.lateMinutes = lateMinutes;
     }
 }
