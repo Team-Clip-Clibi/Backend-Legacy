@@ -53,6 +53,16 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             """)
     List<UserOneThingMatching> findUserOneThingMatching(@Param("oneThingMatchingId") long oneThingMatchingId);
 
+    @Query("""
+            select u
+            from UserOneThingMatching u
+            join fetch u.user
+            where u.oneThingMatching.id = :oneThingMatchingId
+            and u.user.firebaseToken is not null
+            and u.user.isAllowNotify = true
+            """)
+    List<UserOneThingMatching> findAllUserOneThingMatchingsForNotification(@Param("oneThingMatchingId") long oneThingMatchingId);
+
     @Transactional
     @Modifying
     @Query("update UserOneThingMatching u set u.isCheckedMatchingStart = true where u.user.id = :userId and u.id = :id")
@@ -111,4 +121,13 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             where u.id = :id
             """)
     void updateMatchingStatus(@Param("id") long id, @Param("matchingStatus") OneThingMatchingStatus matchingStatus);
+
+    @Query("""
+        select u
+        from UserOneThingMatching u
+        join fetch u.oneThingMatching
+        join fetch u.user
+        where u.id = :id
+    """)
+    Optional<UserOneThingMatching> findByIdWithOneThingMatchingAndUser(@Param("id") long id);
 }

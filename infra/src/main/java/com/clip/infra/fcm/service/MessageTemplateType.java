@@ -44,6 +44,15 @@ public enum MessageTemplateType {
             false,
             true
     ),
+
+    LATE_ARRIVAL(
+            params -> params instanceof MessageParams.NicknameAndTimeParams p ?
+                    String.format("이번 모임의 %s님께서 약 %d분 이상 늦을 예정이에요. 먼저 메뉴를 주문하고 모임을 진행하세요.",
+                            p.nickname(), p.time()) :
+                    "이번 모임의 누군가가 약간 늦을 예정이에요. 먼저 메뉴를 주문하고 모임을 진행하세요.",
+            false,
+            true
+    )
     ;
 
 

@@ -174,4 +174,25 @@ public interface UserMatchingDocs {
             @PathVariable long id
     );
 
+    @Operation(
+            summary = "모임 지각 상태 업데이트 및 FCM 알림 전송 API",
+            description = """
+                    - 모임 ID를 통해 해당 모임의 지각 상태를 업데이트하고 FCM 알림을 전송합니다.
+                    - 매칭 타입으로는 ONE_THING, RANDOM이 있습니다.
+                   \s""",
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "업데이트 성공"
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/{matchingType}/{id}")
+    void updateLastMinutesAndSendNotification(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable MatchingType matchingType,
+            @PathVariable long id,
+            @RequestBody LateMinutesUpdateDto lateMinutesUpdateDto
+    );
+
 }

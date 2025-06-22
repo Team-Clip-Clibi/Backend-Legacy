@@ -99,7 +99,7 @@ public class MatchingService {
         return matchings;
     }
 
-    public UserRandomMatching findUserRandomMatching(long id) {
+    public UserRandomMatching findUserRandomMatchingWithFetch(long id) {
         return userRandomMatchingRepository.findUserRandomMatchingWithFetch(id)
                 .orElseThrow(() -> new ResourceNotFoundException("userRandomMatching", id));
     }
@@ -120,5 +120,21 @@ public class MatchingService {
 
     public void cancelUserRandomMatching(long id) {
         userRandomMatchingRepository.updateMatchingStatus(id, RandomMatchingStatus.CANCELED);
+    }
+
+    public UserOneThingMatching findUserOneThingMatching(long id) {
+        return userOneThingMatchingRepository.findByIdWithOneThingMatchingAndUser(id).orElseThrow(() -> new ResourceNotFoundException("userOneThingMatching", id));
+    }
+
+    public UserRandomMatching findUserRandomMatching(long id) {
+        return userRandomMatchingRepository.findByIdWithRandomMatchingAndUser(id).orElseThrow(() -> new ResourceNotFoundException("userRandomMatching", id));
+    }
+
+    public List<UserOneThingMatching> findAllUserOneThingMatchingsForNotification(long oneThingMatchingId) {
+        return userOneThingMatchingRepository.findAllUserOneThingMatchingsForNotification(oneThingMatchingId);
+    }
+
+    public List<UserRandomMatching> findAllUserRandomMatchingsForNotification(long randomMatchingId) {
+        return userRandomMatchingRepository.findAllUserRandomMatchingsForNotification(randomMatchingId);
     }
 }

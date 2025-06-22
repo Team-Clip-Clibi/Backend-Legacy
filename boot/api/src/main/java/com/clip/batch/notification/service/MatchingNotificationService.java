@@ -133,7 +133,7 @@ public class MatchingNotificationService {
 
         // FCM 이벤트 발행
         if (!userDataMap.isEmpty()) {
-            sendFCMEventPublisher.publishEvent(new FcmNotificationEvent.GeneralFcmBatchSendEvent(
+            sendFCMEventPublisher.publishEvent(new FcmNotificationEvent.GeneralFcmMultiSendEvent(
                     this,
                     templateType,
                     matchingType,

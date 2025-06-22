@@ -13,36 +13,32 @@ public class SendFCMService {
     private final FCMMsgGenerator fcmMsgGenerator;
     private final FCMMsgSender fcmMsgSender;
 
-    public void sendMatchingMeetupMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public void sendMatchingCompletedMsg(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
         fcmMsgSender.send(messageMap);
     }
 
-    public void sendMatchingCompletedMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
-        Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
-        fcmMsgSender.send(messageMap);
-    }
-    public void sendMatchingInfoOpenedMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public void sendMatchingTomorrowMsg(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
         fcmMsgSender.send(messageMap);
     }
 
-    public void sendMatchingTomorrowMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public void sendMatchingTodayMsg(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
         fcmMsgSender.send(messageMap);
     }
 
-    public void sendMatchingTodayMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public void sendMatchingFinishedMsg(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
         fcmMsgSender.send(messageMap);
     }
 
-    public void sendMatchingFinishedMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public void sendMatchingStartedMsg(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
         fcmMsgSender.send(messageMap);
     }
 
-    public void sendMatchingStartedMsg(FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public void sendLateArrivalMsg(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = fcmMsgGenerator.generateGeneralMsg(fcmEvent);
         fcmMsgSender.send(messageMap);
     }
