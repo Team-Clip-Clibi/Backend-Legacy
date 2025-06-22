@@ -11,7 +11,7 @@ import java.util.Map;
 class FCMMsgGenerator {
     private static final String TITLE = "OneThing";
 
-    public Map<Long, Message> generateGeneralMsg(final FcmNotificationEvent.GeneralFcmBatchEvent fcmEvent) {
+    public Map<Long, Message> generateGeneralMsg(final FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         Map<Long, Message> messageMap = new HashMap<>();
 
         for (Map.Entry<Long, FcmNotificationEvent.UserFcmData> entry : fcmEvent.getUserDataMap().entrySet()) {

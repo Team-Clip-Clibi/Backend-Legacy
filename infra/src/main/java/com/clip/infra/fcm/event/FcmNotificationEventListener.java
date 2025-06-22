@@ -15,13 +15,14 @@ public class FcmNotificationEventListener {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
-    public void sendGeneralFCM(FcmNotificationEvent.GeneralFcmBatchSendEvent fcmEvent) {
+    public void sendGeneralFCM(FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
         switch (fcmEvent.getMessageTemplateType()) {
             case MATCHING_COMPLETED -> sendFCMService.sendMatchingCompletedMsg(fcmEvent);
             case MATCHING_TOMORROW -> sendFCMService.sendMatchingTomorrowMsg(fcmEvent);
             case MATCHING_TODAY -> sendFCMService.sendMatchingTodayMsg(fcmEvent);
             case MATCHING_ENDED -> sendFCMService.sendMatchingFinishedMsg(fcmEvent);
             case MATCHING_STARTED -> sendFCMService.sendMatchingStartedMsg(fcmEvent);
+            case LATE_ARRIVAL -> sendFCMService.sendLateArrivalMsg(fcmEvent);
         }
     }
 }

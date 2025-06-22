@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Builder;
 import org.springframework.context.ApplicationEvent;
 
-import java.util.List;
 import java.util.Map;
 
 public class FcmNotificationEvent {
@@ -29,12 +28,13 @@ public class FcmNotificationEvent {
 
     // 일반 사용자 대상 배치 FCM 이벤트 (매칭 관련 알림 등)
     @Getter
-    public static class GeneralFcmBatchEvent extends ApplicationEvent{
+    public static class GeneralFcmMultiSendEvent extends ApplicationEvent {
         private final MessageTemplateType messageTemplateType;
         private final String matchingType;
         private final Map<Long, UserFcmData> userDataMap;
 
-        public GeneralFcmBatchEvent(
+        @Builder
+        public GeneralFcmMultiSendEvent(
                 Object source,
                 MessageTemplateType messageTemplateType,
                 String matchingType,
@@ -44,26 +44,12 @@ public class FcmNotificationEvent {
             this.messageTemplateType = messageTemplateType;
             this.matchingType = matchingType;
             this.userDataMap = userDataMap;
-        }
-    }
 
-    // 일반 대상 FCM 배치 전송 이벤트
-    @Getter
-    public static class GeneralFcmBatchSendEvent extends GeneralFcmBatchEvent {
-        @Builder
-        public GeneralFcmBatchSendEvent(
-                Object source,
-                MessageTemplateType messageTemplateType,
-                String matchingType,
-                Map<Long, UserFcmData> userDataMap
-        ) {
-            super(source, messageTemplateType, matchingType, userDataMap);
             if (!messageTemplateType.isGeneral()) {
                 throw new IllegalArgumentException("NotificationType must be general type");
             }
         }
     }
-
 
     public record UserFcmData(
             Long matchingId,
