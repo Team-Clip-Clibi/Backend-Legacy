@@ -171,4 +171,5 @@ jobs:
             docker run -d --name ${{ inputs.container-name }} \
             --env-file ./.env \
             --restart always \
+            -p ${{ inputs.host-port }}:8080 \
             ${{ inputs.ecr-repository }}
