@@ -53,6 +53,16 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             """)
     List<UserRandomMatching> findUserRandomMatching(@Param("randomMatchingId") long randomMatchingId);
 
+    @Query("""
+            select u
+            from UserRandomMatching u
+            join fetch u.user
+            where u.randomMatching.id = :randomMatchingId
+            and u.user.firebaseToken is not null
+            and u.user.isAllowNotify = true
+            """)
+    List<UserRandomMatching> findAllUserRandomMatchingsForNotification(@Param("randomMatchingId") long randomMatchingId);
+
     @Transactional
     @Modifying
     @Query("update UserRandomMatching u set u.isCheckedMatchingStart = true where u.user.id = :userId and u.id = :id")
@@ -122,4 +132,14 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             where u.id = :id
             """)
     void updateMatchingStatus(@Param("id") long id, @Param("matchingStatus") RandomMatchingStatus matchingStatus);
+
+
+    @Query("""
+            select u
+            from UserRandomMatching u
+            join fetch u.randomMatching
+            join fetch u.user
+            where u.id = :id
+            """)
+    Optional<UserRandomMatching> findByIdWithRandomMatchingAndUser(@Param("id") long id);
 }
