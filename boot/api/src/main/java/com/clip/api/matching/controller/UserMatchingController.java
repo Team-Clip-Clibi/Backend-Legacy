@@ -54,4 +54,10 @@ public class UserMatchingController implements UserMatchingDocs {
         userMatchingService.cancelMatching(Long.parseLong(userDetails.getUsername()), matchingType, id);
     }
 
+    @Override
+    public void updateLastMinutesAndSendNotification(UserDetails userDetails, MatchingType matchingType, long id, LateMinutesUpdateDto lateMinutesUpdateDto) {
+        userMatchingService.updateLastMinutesAndSendNotification(
+                Long.parseLong(userDetails.getUsername()), matchingType, id, lateMinutesUpdateDto.getLateMinutes());
+    }
+
 }
