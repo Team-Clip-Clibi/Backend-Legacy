@@ -195,4 +195,27 @@ public interface UserMatchingDocs {
             @RequestBody LateMinutesUpdateDto lateMinutesUpdateDto
     );
 
+    @Operation(
+            summary = "모임 안내문 API",
+            description = """
+                    - 모임 안내문을 조회합니다.
+                    - 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 meetingTime으로 조회 시 204 No Content를 반환합니다.
+                    - 또한 매칭은 최신순으로 정렬되어 반환됩니다.
+                   \s""",
+            security = @SecurityRequirement(name = "Bearer Token")
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "조회 성공, 다음 페이지 없음"
+    )
+    @GetMapping("/notices")
+    List<MatchingNoticeDto> getMatchingNotice(
+            @RequestParam(required = false) LocalDateTime lastMeetingTime,
+            @AuthenticationPrincipal UserDetails userDetails
+    );
+
 }
