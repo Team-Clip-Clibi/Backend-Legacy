@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MatchingDto {
     private Long id;
+    private Long matchingId;
     private LocalDateTime meetingTime;
     private MatchingStatus matchingStatus;
     private String matchingType;
@@ -19,9 +20,10 @@ public class MatchingDto {
     private Boolean isReviewWritten;
 
     @Builder
-    public MatchingDto(Long id, LocalDateTime meetingTime, MatchingStatus matchingStatus,
+    public MatchingDto(Long id, Long matchingId, LocalDateTime meetingTime, MatchingStatus matchingStatus,
                        String matchingType, String myOneThingContent, Boolean isReviewWritten) {
         this.id = id;
+        this.matchingId = matchingId;
         this.meetingTime = meetingTime;
         this.matchingStatus = matchingStatus;
         this.matchingType = matchingType;

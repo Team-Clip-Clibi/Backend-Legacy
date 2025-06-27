@@ -17,6 +17,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
     @Query("""
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
             uotm.id,
+            otm.id,
             otm.meetingTime,
             uotm.matchingStatus,
             'ONE_THING',
@@ -36,6 +37,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
             urm.id,
+            rm.id,
             rm.meetingTime,
             urm.matchingStatus,
             'RANDOM',

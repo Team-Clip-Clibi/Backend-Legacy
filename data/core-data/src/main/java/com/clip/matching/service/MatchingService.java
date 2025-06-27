@@ -137,4 +137,12 @@ public class MatchingService {
     public List<UserRandomMatching> findAllUserRandomMatchingsForNotification(long randomMatchingId) {
         return userRandomMatchingRepository.findAllUserRandomMatchingsForNotification(randomMatchingId);
     }
+
+    public List<UserRandomMatching> findRandomMatchingParticipants(long matchingId) {
+        return userRandomMatchingRepository.findRandomMatchingParticipants(matchingId);
+    }
+
+    public List<UserOneThingMatching> findOneThingMatchingParticipants(long matchingId) {
+        return userOneThingMatchingRepository.findRandomMatchingParticipants(matchingId);
+    }
 }

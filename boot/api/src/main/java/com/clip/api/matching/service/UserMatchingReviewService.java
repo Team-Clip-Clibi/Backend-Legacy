@@ -1,6 +1,8 @@
 package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.api.matching.controller.dto.ParticipantsInfoDto;
 import com.clip.api.matching.mapper.MatchingReviewMapper;
 import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.RandomMatching;
@@ -11,6 +13,8 @@ import com.clip.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +27,10 @@ public class UserMatchingReviewService {
 
     @Transactional
     public void saveMatchingReview(final Long userId, final Long matchingId,
-                                   final String matchingType, final MatchingReviewDto request) {
-        switch (matchingType.toUpperCase()) {
-            case "RANDOM" -> handleRandomMatchingReview(userId, matchingId, request);
-            case "ONE_THING" -> handleOneThingMatchingReview(userId, matchingId, request);
-            default -> throw new IllegalArgumentException("존재하지 않는 서비스 명입니다 : " + matchingType);
+                                   final MatchingType matchingType, final MatchingReviewDto request) {
+        switch (matchingType) {
+            case MatchingType.RANDOM -> handleRandomMatchingReview(userId, matchingId, request);
+            case MatchingType.ONE_THING -> handleOneThingMatchingReview(userId, matchingId, request);
         }
     }
 
@@ -41,6 +44,23 @@ public class UserMatchingReviewService {
         final User user = userService.findUser(userId);
         final OneThingMatching oneThingMatching = matchingService.findOneThingMatching(matchingId);
         matchingReviewService.save(matchingReviewMapper.toOneThingMatchingReview(user, oneThingMatching, request));
+    }
+
+    public List<ParticipantsInfoDto> getMatchingParticipants(final Long userId, final Long matchingId, final MatchingType matchingType) {
+        return switch (matchingType) {
+            case MatchingType.RANDOM ->
+                    matchingService.findRandomMatchingParticipants(matchingId).stream()
+                            .map(userMatching -> ParticipantsInfoDto.builder()
+                                    .id(userMatching.getUser().getId())
+                                    .nickname(userMatching.getUser().getNickname()).build())
+                            .toList();
+            case MatchingType.ONE_THING ->
+                matchingService.findOneThingMatchingParticipants(matchingId).stream()
+                        .map(userOneThingMatching -> ParticipantsInfoDto.builder()
+                                .id(userOneThingMatching.getUser().getId())
+                                .nickname(userOneThingMatching.getUser().getNickname()).build())
+                        .toList();
+        };
     }
 }
 

@@ -130,4 +130,12 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
         where u.id = :id
     """)
     Optional<UserOneThingMatching> findByIdWithOneThingMatchingAndUser(@Param("id") long id);
+
+    @Query("""
+        select u
+        from UserOneThingMatching u
+        join fetch u.user
+        where u.oneThingMatching.id = :matchingId
+    """)
+    List<UserOneThingMatching> findRandomMatchingParticipants(@Param("matchingId") long matchingId);
 }

@@ -9,16 +9,18 @@ import java.time.LocalDateTime;
 @Getter
 public class MatchingProjectionDto {
     private Long id;
+    private Long matchingId;
     private LocalDateTime meetingTime;
     private MatchingStatus matchingStatus;
     private String matchingType;
     private String myOneThingContent;
     private Boolean isReviewWritten;
 
-    public MatchingProjectionDto(Long id, LocalDateTime meetingTime, MatchingStatus matchingStatus,
+    public MatchingProjectionDto(Long id, Long matchingId, LocalDateTime meetingTime, MatchingStatus matchingStatus,
                                  String matchingType, String myOneThingContent,
                                  Boolean isReviewWritten) {
         this.id = id;
+        this.matchingId = matchingId;
         this.meetingTime = meetingTime;
         this.matchingStatus = matchingStatus;
         this.matchingType = matchingType;

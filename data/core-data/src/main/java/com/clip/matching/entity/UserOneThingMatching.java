@@ -71,12 +71,12 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isNoticeRead;
 
     @Column
-    private int lateMinutes;
+    private Integer lateMinutes;
 
     @Builder
     public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
-                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, int lateMinutes) {
+                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.oneThingOrder = oneThingOrder;
