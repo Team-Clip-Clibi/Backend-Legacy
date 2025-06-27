@@ -42,5 +42,22 @@ public class UserMatchingReviewService {
         final OneThingMatching oneThingMatching = matchingService.findOneThingMatching(matchingId);
         matchingReviewService.save(matchingReviewMapper.toOneThingMatchingReview(user, oneThingMatching, request));
     }
+
+    public List<ParticipantsInfoDto> getMatchingParticipants(final Long userId, final Long matchingId, final MatchingType matchingType) {
+        return switch (matchingType) {
+            case MatchingType.RANDOM ->
+                    matchingService.findRandomMatchingParticipants(matchingId).stream()
+                            .map(userMatching -> ParticipantsInfoDto.builder()
+                                    .id(userMatching.getUser().getId())
+                                    .nickname(userMatching.getUser().getNickname()).build())
+                            .toList();
+            case MatchingType.ONE_THING ->
+                matchingService.findOneThingMatchingParticipants(matchingId).stream()
+                        .map(userOneThingMatching -> ParticipantsInfoDto.builder()
+                                .id(userOneThingMatching.getUser().getId())
+                                .nickname(userOneThingMatching.getUser().getNickname()).build())
+                        .toList();
+        };
+    }
 }
 
