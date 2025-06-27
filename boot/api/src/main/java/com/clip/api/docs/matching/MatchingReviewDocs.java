@@ -38,7 +38,7 @@ public interface MatchingReviewDocs {
     @PostMapping("/{matchingId}/{matchingType}")
     void createMatchingReview(
             @PathVariable final Long matchingId,
-            @PathVariable final String matchingType,
+            @PathVariable final MatchingType matchingType,
             @RequestBody final MatchingReviewDto request,
             @AuthenticationPrincipal final UserDetails userDetails);
 
