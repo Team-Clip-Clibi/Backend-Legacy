@@ -3,7 +3,12 @@ version: "3.9"
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.2.5
-    command: start
+    command:
+      - start
+      - --http-enabled=true
+      - --http-port=8080
+      - --hostname=ec2-43-203-109-89.ap-northeast-2.compute.amazonaws.com
+
     environment:
       KC_DB: ${KC_DB}
       KC_DB_URL: ${URL}
@@ -20,28 +25,27 @@ services:
 
   office-api-server:
     image: ${OFFICE_API_IMAGE_URI}
-    container_name: office-api-server
+    container_name: ${OFFICE_CONTAINER_NAME}
     environment:
-      - OAUTH_ISSUER_URI= ${OAUTH_ISSUER_URI}
-      - spring.datasource.url= ${URL}
-      - spring.datasource.username= ${USERNAME}
-      - spring.datasource.password=${PASSWORD}
-      - spring.datasource.redis.host= ${REDIS_HOST}
-      - spring.datasource.redis.port= ${REDIS_PORT}
-      - jwt.secret-key= ${JWT_KEY}
-      - cloud.aws.credentials.access-key= ${S3_ACCESS_KEY}
-      - cloud.aws.credentials.secret-key= $S3_SECRET_KEY}
-      - cloud.aws.s3.bucket= ${S3_BUCKET_NAME}
-      - toss.secret-key= ${TOSS_KEY}
-      - cloud.aws.s3.fcm.sdk= ${FCM_SDK}
-      - user.timezone=Asia/Seoul
+      OAUTH_ISSUER_URI: ${OAUTH_ISSUER_URI}
+      spring.datasource.url: ${URL}
+      spring.datasource.username: ${USERNAME}
+      spring.datasource.password: ${PASSWORD}
+      spring.datasource.redis.host: ${REDIS_HOST}
+      spring.datasource.redis.port: ${REDIS_PORT}
+      jwt.secret-key: ${JWT_KEY}
+      cloud.aws.credentials.access-key: ${S3_ACCESS_KEY}
+      cloud.aws.credentials.secret-key: ${S3_SECRET_KEY}
+      cloud.aws.s3.bucket: ${S3_BUCKET_NAME}
+      toss.secret-key: ${TOSS_KEY}
+      cloud.aws.s3.fcm.sdk: ${FCM_SDK}
+      user.timezone: Asia/Seoul
     ports:
       - "8080:8080"
     depends_on:
       - keycloak
     networks:
       - office
-
 
 networks:
   office:
