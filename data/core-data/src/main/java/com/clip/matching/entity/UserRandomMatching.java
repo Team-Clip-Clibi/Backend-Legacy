@@ -44,11 +44,11 @@ public class UserRandomMatching extends BaseEntity {
     private boolean isNoticeRead;
 
     @Column
-    private int lateMinutes;
+    private Integer lateMinutes;
 
     @Builder
     public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String myOneThingContent, boolean isCheckedMatchingStart,
-                              RandomMatchingStatus matchingStatus, boolean isNoticeRead, int lateMinutes) {
+                              RandomMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes) {
         this.user = user;
         this.randomMatching = randomMatching;
         this.randomOrder = randomOrder;
