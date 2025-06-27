@@ -23,4 +23,13 @@ public class MatchingReviewController implements MatchingReviewDocs {
                 request
         );
     }
+
+    @Override
+    public List<ParticipantsInfoDto> getMatchingParticipants(Long matchingId, MatchingType matchingType, UserDetails userDetails) {
+        return userMatchingReviewService.getMatchingParticipants(
+                Long.parseLong(userDetails.getUsername()),
+                matchingId,
+                matchingType
+        );
+    }
 }
