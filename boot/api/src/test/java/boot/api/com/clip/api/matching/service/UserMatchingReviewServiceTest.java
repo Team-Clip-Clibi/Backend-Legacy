@@ -2,6 +2,7 @@ package boot.api.com.clip.api.matching.service;
 
 import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingReviewService;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
@@ -82,7 +83,7 @@ public class UserMatchingReviewServiceTest {
         String negativePoints = "Negative";
 
         //when
-        userMatchingReviewService.saveMatchingReview(user.getId(), randomMatching.getId(), "RANDOM",
+        userMatchingReviewService.saveMatchingReview(user.getId(), randomMatching.getId(), MatchingType.RANDOM,
                 MatchingReviewDto.builder()
                         .mood(mood)
                         .positivePoints(positivePoints)
@@ -101,30 +102,5 @@ public class UserMatchingReviewServiceTest {
                         RandomMatchingReview::isMemberAllAttended, RandomMatchingReview::getNoShowMembers)
                 .containsExactly(mood, positivePoints, negativePoints, "Review Content", true, "No Show Members");
 
-    }
-
-    @DisplayName("존재하지 않는 매칭 서비스 명으로 리뷰를 작성할 수 없다.")
-    @Test
-    void saveMatchingReviewWithInvalidServiceName() {
-        //given
-        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder().build());
-        User user = userRepository.save(User.builder().build());
-
-        //when
-        String invalidServiceName = "INVALID_SERVICE_NAME";
-
-        //then
-        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            userMatchingReviewService.saveMatchingReview(user.getId(), randomMatching.getId(), invalidServiceName,
-                    MatchingReviewDto.builder()
-                            .mood(Mood.NEUTRAL)
-                            .positivePoints("Positive")
-                            .negativePoints("Negative")
-                            .reviewContent("Review Content")
-                            .isMemberAllAttended(true)
-                            .noShowMembers("No Show Members")
-                            .build()
-            );
-        });
     }
 }
