@@ -1,16 +1,17 @@
 package com.clip.api.docs.matching;
 
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.api.matching.controller.dto.ParticipantsInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "매칭 후기 관리", description = "매칭 후기 등록, 후기 작성 여부 조회 etc ")
 @RequestMapping("/reviews")
@@ -39,5 +40,23 @@ public interface MatchingReviewDocs {
             @PathVariable final Long matchingId,
             @PathVariable final String matchingType,
             @RequestBody final MatchingReviewDto request,
+            @AuthenticationPrincipal final UserDetails userDetails);
+
+    @Operation(
+            summary = "매칭 참여자 리스트 조회 API"
+            , description = """
+                    - 매칭 참여자 리스트를 조회합니다.
+                    - matchingType은 매칭 종류를 나타내며, 'RANDOM' 또는 'ONE_THING' 둘 중 하나로 보내주세요.
+                    - matchingId는 매칭의 고유 ID입니다. 내 모임에서 후기 작성하기 버튼을 누를 경우, 응답 필드에 보내드린 matchingId를 사용하여 해당 API를 호출해주세요.
+                   \s"""
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @GetMapping("/{matchingId}/{matchingType}/participants")
+    List<ParticipantsInfoDto> getMatchingParticipants(
+            @PathVariable final Long matchingId,
+            @PathVariable final MatchingType matchingType,
             @AuthenticationPrincipal final UserDetails userDetails);
 }
