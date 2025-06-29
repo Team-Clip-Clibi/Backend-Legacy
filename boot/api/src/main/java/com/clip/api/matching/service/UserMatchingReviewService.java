@@ -62,5 +62,12 @@ public class UserMatchingReviewService {
                         .toList();
         };
     }
+
+    public List<MatchingReviewPopupDto> getMatchingReviewPopupInfo(final Long userId) {
+        List<UserOneThingMatching> oneThingMatchings = matchingService.findUserOneThingMatchingsReviewUnwritten(userId);
+        List<UserRandomMatching> randomMatchings = matchingService.findUserRandomMatchingsReviewUnwritten(userId);
+        return matchingReviewMapper.toMatchingReviewPopupDtoList(oneThingMatchings, randomMatchings);
+    }
+
 }
 

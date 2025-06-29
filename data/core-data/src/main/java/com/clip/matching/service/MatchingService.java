@@ -145,4 +145,12 @@ public class MatchingService {
     public List<UserOneThingMatching> findOneThingMatchingParticipants(long matchingId) {
         return userOneThingMatchingRepository.findRandomMatchingParticipants(matchingId);
     }
+
+    public List<UserOneThingMatching> findUserOneThingMatchingsReviewUnwritten(long userId) {
+        return userOneThingMatchingRepository.findUserOneThingMatchingsReviewUnwritten(userId);
+    }
+    public List<UserRandomMatching> findUserRandomMatchingsReviewUnwritten(long userId) {
+        return userRandomMatchingRepository.findUserRandomMatchingsReviewUnwritten(userId);
+    }
+
 }

@@ -150,4 +150,14 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             where u.randomMatching.id = :matchingId
             """)
     List<UserRandomMatching> findRandomMatchingParticipants(@Param("matchingId") long matchingId);
+
+    @Query("""
+            select u
+            from UserRandomMatching u
+            join fetch u.randomMatching
+            where u.user.id = :userId
+            and u.isReviewPopupDismissed = false
+            """)
+    List<UserRandomMatching> findUserRandomMatchingsReviewUnwritten(@Param("userId") long userId);
+
 }

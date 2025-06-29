@@ -138,4 +138,14 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
         where u.oneThingMatching.id = :matchingId
     """)
     List<UserOneThingMatching> findRandomMatchingParticipants(@Param("matchingId") long matchingId);
+
+    @Query("""
+        select u
+        from UserOneThingMatching u
+        join fetch u.oneThingMatching
+        where u.user.id = :userId
+        and u.isReviewPopupDismissed = false
+    """)
+    List<UserOneThingMatching> findUserOneThingMatchingsReviewUnwritten(@Param("userId") long userId);
+
 }
