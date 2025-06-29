@@ -148,4 +148,14 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
     """)
     List<UserOneThingMatching> findUserOneThingMatchingsReviewUnwritten(@Param("userId") long userId);
 
+    @Modifying
+    @Transactional
+    @Query("""
+            update UserOneThingMatching u
+            set u.isReviewPopupDismissed = true
+            where u.user.id = :userId
+            and u.oneThingMatching.id = :matchingId
+            """)
+    void postponeOneThingMatchingReview(@Param("userId") long userId, @Param("matchingId") long matchingId);
+
 }

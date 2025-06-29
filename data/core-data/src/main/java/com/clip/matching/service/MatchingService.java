@@ -153,4 +153,11 @@ public class MatchingService {
         return userRandomMatchingRepository.findUserRandomMatchingsReviewUnwritten(userId);
     }
 
+    public void postponeOneThingMatchingReview(long userId, long matchingId) {
+        userOneThingMatchingRepository.postponeOneThingMatchingReview(userId, matchingId);
+    }
+
+    public void postponeRandomMatchingReview(long userId, long matchingId) {
+        userRandomMatchingRepository.postponeRandomMatchingReview(userId, matchingId);
+    }
 }
