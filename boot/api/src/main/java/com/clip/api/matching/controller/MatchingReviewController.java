@@ -36,4 +36,12 @@ public class MatchingReviewController implements MatchingReviewDocs {
                 matchingType
         );
     }
+
+    @Override
+    public List<MatchingReviewPopupDto> getMatchingReviewPopupInfo(UserDetails userDetails) {
+        return userMatchingReviewService.getMatchingReviewPopupInfo(
+                Long.parseLong(userDetails.getUsername())
+        );
+    }
+
 }
