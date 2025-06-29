@@ -2,6 +2,7 @@ package com.clip.api.matching.controller;
 
 import com.clip.api.docs.matching.MatchingReviewDocs;
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingReviewPopupDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.controller.dto.ParticipantsInfoDto;
 import com.clip.api.matching.service.UserMatchingReviewService;
@@ -36,4 +37,21 @@ public class MatchingReviewController implements MatchingReviewDocs {
                 matchingType
         );
     }
+
+    @Override
+    public List<MatchingReviewPopupDto> getMatchingReviewPopupInfo(UserDetails userDetails) {
+        return userMatchingReviewService.getMatchingReviewPopupInfo(
+                Long.parseLong(userDetails.getUsername())
+        );
+    }
+
+    @Override
+    public void postponeMatchingReview(Long matchingId, MatchingType matchingType, UserDetails userDetails) {
+        userMatchingReviewService.postponeMatchingReview(
+                Long.parseLong(userDetails.getUsername()),
+                matchingId,
+                matchingType
+        );
+    }
+
 }

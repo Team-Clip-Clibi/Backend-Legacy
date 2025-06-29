@@ -44,13 +44,10 @@ public class OneThingMatchingReview extends BaseEntity {
     @Column
     private String noShowMembers;
 
-    @Column
-    private boolean isReviewPopupDismissed;
-
     @Builder
     public OneThingMatchingReview(OneThingMatching oneThingMatching, User user, Mood mood,
                                   String positivePoints, String negativePoints, String reviewContent,
-                                  boolean isMemberAllAttended, String noShowMembers, boolean isReviewPopupDismissed) {
+                                  boolean isMemberAllAttended, String noShowMembers) {
         this.oneThingMatching = oneThingMatching;
         this.user = user;
         this.mood = mood;
@@ -59,6 +56,5 @@ public class OneThingMatchingReview extends BaseEntity {
         this.reviewContent = reviewContent;
         this.isMemberAllAttended = isMemberAllAttended;
         this.noShowMembers = noShowMembers;
-        this.isReviewPopupDismissed = isReviewPopupDismissed;
     }
 }

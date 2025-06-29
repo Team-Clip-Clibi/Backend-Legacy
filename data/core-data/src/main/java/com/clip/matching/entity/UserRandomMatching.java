@@ -46,9 +46,12 @@ public class UserRandomMatching extends BaseEntity {
     @Column
     private Integer lateMinutes;
 
+    @Column
+    private boolean isReviewPopupDismissed;
+
     @Builder
     public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String myOneThingContent, boolean isCheckedMatchingStart,
-                              RandomMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes) {
+                              RandomMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
         this.user = user;
         this.randomMatching = randomMatching;
         this.randomOrder = randomOrder;
@@ -57,6 +60,7 @@ public class UserRandomMatching extends BaseEntity {
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
         this.lateMinutes = lateMinutes;
+        this.isReviewPopupDismissed = isReviewPopupDismissed;
     }
 
     public void updateStatus(RandomMatchingStatus matchingStatus) {

@@ -1,6 +1,7 @@
 package com.clip.api.docs.matching;
 
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingReviewPopupDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.controller.dto.ParticipantsInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,4 +60,39 @@ public interface MatchingReviewDocs {
             @PathVariable final Long matchingId,
             @PathVariable final MatchingType matchingType,
             @AuthenticationPrincipal final UserDetails userDetails);
+
+    @Operation(
+            summary = "작성해야할 후기 팝업 조회 API"
+            , description = """
+                    - 작성해야할 매칭 후기 팝업을 조회합니다.
+                    - matchingType은 매칭 종류를 나타내며, 'RANDOM' 또는 'ONE_THING' 둘 중 하나로 보내주세요.
+                    - matchingId는 매칭의 고유 ID입니다. 응답 필드에 보내드린 matchingId를 매칭 후기 작성 API,
+                      매칭 참여자 리스트 조회 API에 사용해주세요.
+                   \s"""
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공"
+    )
+    @GetMapping
+    List<MatchingReviewPopupDto> getMatchingReviewPopupInfo(
+            @AuthenticationPrincipal final UserDetails userDetails
+    );
+
+    @Operation(
+            summary = "작성해야할 후기 팝업 다음에 작성하기 API",
+            description = """
+                    - 작성해야할 매칭 후기 팝업에서 다음에 작성하기 버튼을 누르면 해당 API를 호출합니다.
+                   \s"""
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "다음에 작성하기 성공"
+    )
+    @PatchMapping("/{matchingId}/{matchingType}/postpone")
+    void postponeMatchingReview(
+            @PathVariable final Long matchingId,
+            @PathVariable final MatchingType matchingType,
+            @AuthenticationPrincipal final UserDetails userDetails
+    );
 }

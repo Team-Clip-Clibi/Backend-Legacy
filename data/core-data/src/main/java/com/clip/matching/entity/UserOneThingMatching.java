@@ -73,10 +73,13 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private Integer lateMinutes;
 
+    @Column
+    private boolean isReviewPopupDismissed;
+
     @Builder
     public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
-                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes) {
+                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.oneThingOrder = oneThingOrder;
@@ -90,6 +93,7 @@ public class UserOneThingMatching extends BaseEntity {
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
         this.lateMinutes = lateMinutes;
+        this.isReviewPopupDismissed = isReviewPopupDismissed;
     }
 
     @Embeddable

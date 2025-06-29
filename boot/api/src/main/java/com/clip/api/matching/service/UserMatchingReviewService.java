@@ -1,11 +1,14 @@
 package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingReviewPopupDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.controller.dto.ParticipantsInfoDto;
 import com.clip.api.matching.mapper.MatchingReviewMapper;
 import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.RandomMatching;
+import com.clip.matching.entity.UserOneThingMatching;
+import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.service.MatchingReviewService;
 import com.clip.matching.service.MatchingService;
 import com.clip.user.entity.User;
@@ -61,6 +64,19 @@ public class UserMatchingReviewService {
                                 .nickname(userOneThingMatching.getUser().getNickname()).build())
                         .toList();
         };
+    }
+
+    public List<MatchingReviewPopupDto> getMatchingReviewPopupInfo(final Long userId) {
+        List<UserOneThingMatching> oneThingMatchings = matchingService.findUserOneThingMatchingsReviewUnwritten(userId);
+        List<UserRandomMatching> randomMatchings = matchingService.findUserRandomMatchingsReviewUnwritten(userId);
+        return matchingReviewMapper.toMatchingReviewPopupDtoList(oneThingMatchings, randomMatchings);
+    }
+
+    public void postponeMatchingReview(final Long userId, final Long matchingId, final MatchingType matchingType) {
+        switch (matchingType) {
+            case MatchingType.RANDOM -> matchingService.postponeRandomMatchingReview(userId, matchingId);
+            case MatchingType.ONE_THING -> matchingService.postponeOneThingMatchingReview(userId, matchingId);
+        }
     }
 }
 
