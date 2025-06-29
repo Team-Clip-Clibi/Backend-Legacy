@@ -1,6 +1,7 @@
 package com.clip.api.docs.matching;
 
 import com.clip.api.matching.controller.dto.MatchingReviewDto;
+import com.clip.api.matching.controller.dto.MatchingReviewPopupDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.controller.dto.ParticipantsInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,4 +79,20 @@ public interface MatchingReviewDocs {
             @AuthenticationPrincipal final UserDetails userDetails
     );
 
+    @Operation(
+            summary = "작성해야할 후기 팝업 다음에 작성하기 API",
+            description = """
+                    - 작성해야할 매칭 후기 팝업에서 다음에 작성하기 버튼을 누르면 해당 API를 호출합니다.
+                   \s"""
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "다음에 작성하기 성공"
+    )
+    @PatchMapping("/{matchingId}/{matchingType}/postpone")
+    void postponeMatchingReview(
+            @PathVariable final Long matchingId,
+            @PathVariable final MatchingType matchingType,
+            @AuthenticationPrincipal final UserDetails userDetails
+    );
 }
