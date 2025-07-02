@@ -1,65 +1,58 @@
 package com.clip.global.config;
 
-import com.clip.global.security.CustomAuthenticationFailureHandler;
-import com.clip.global.security.CustomAuthenticationSuccessHandler;
-import com.clip.global.security.LoginAttemptFilter;
-import com.clip.global.security.util.LoginAttemptManager;
+import com.clip.global.security.CsrfCookieFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomAuthenticationFailureHandler failureHandler;
-    private final CustomAuthenticationSuccessHandler successHandler;
-    private final LoginAttemptManager loginAttemptManager;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers(
-                                "/office/admin/login",
-                                "/office/admin/register",
-                                "/css/**", "/js/**", "/icon/**", "/images/**"
-                        ).permitAll()
-                        .anyRequest().authenticated());
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeyCloakRoleConverter());
+        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
 
-        http.addFilterBefore(loginAttemptFilter(loginAttemptManager), UsernamePasswordAuthenticationFilter.class)
-                .formLogin(form -> form
-                        .loginPage("/office/admin/login")
-                        .loginProcessingUrl("/office/admin/login")
-                        .successHandler(successHandler)
-                        .failureHandler(failureHandler)
+        http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(corsConfig -> corsConfig.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(Collections.singletonList("https://next.js/oneThingUrl"));
+                    config.setAllowedMethods(Collections.singletonList("*"));
+                    config.setAllowCredentials(true);
+                    config.setAllowedHeaders(Collections.singletonList("*"));
+                    config.setExposedHeaders(List.of("Authorization"));
+                    config.setMaxAge(3600L);
+                    return config;
+                })).csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
+                        .ignoringRequestMatchers("/contact", "/register")
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+//                .requiresChannel(rcc -> rcc.anyRequest().requiresSecure()) // Only HTTPS
+                .requiresChannel(rcc -> rcc.anyRequest().requiresInsecure()) // Only HTTPS
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/css/**", "/js/**", "/icon/**", "/images/**")
                         .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/office/admin/logout"))
-                        .logoutSuccessUrl("/office/admin/login")
-                        .deleteCookies("JSESSIONID")
-                        .invalidateHttpSession(true)
+                        .anyRequest().authenticated()
                 );
-        return http.build();
-    }
 
-    @Bean
-    public LoginAttemptFilter loginAttemptFilter(LoginAttemptManager loginAttemptManager) {
-        return new LoginAttemptFilter(loginAttemptManager);
+        http.oauth2ResourceServer(rsc -> rsc.jwt(jwtConfigurer ->
+                jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+
+        return http.build();
     }
 }

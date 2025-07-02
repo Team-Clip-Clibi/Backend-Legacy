@@ -11,6 +11,10 @@ spring:
       port: ${REDIS_PORT}
 
   security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWK_SET_URI}
     login:
       max-fail-count: 10
       block-duration-seconds: 3600 # 1 시간
