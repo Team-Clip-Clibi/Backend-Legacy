@@ -1,6 +1,8 @@
 package com.clip.api.matching.mapper;
 
 import com.clip.api.matching.controller.dto.*;
+import com.clip.matching.entity.OneThingMatchingStatus;
+import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.projection.MatchingProjectionDto;
@@ -36,10 +38,15 @@ public interface MatchingMapper {
     }
 
     default OneThingMatchingDetailDto toOneThingMatchingDetailDto(final UserOneThingMatching matchingInfo, final UserOneThingMatching paymentInfo) {
-        TossPayment donePayment = paymentInfo.getOneThingOrder().getTossPayment().stream()
-                .filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(TossPaymentStatus.DONE))
+
+        boolean isCanceled = matchingInfo.getMatchingStatus().equals(OneThingMatchingStatus.CANCELED);
+
+        TossPayment payment = paymentInfo.getOneThingOrder().getTossPayment().stream()
+                .filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(
+                        isCanceled ? TossPaymentStatus.CANCELED : TossPaymentStatus.DONE))
                 .findFirst()
                 .orElse(null);
+
         return OneThingMatchingDetailDto.builder()
                 .matchingId(matchingInfo.getOneThingMatching().getId())
                 .meetingTime(matchingInfo.getOneThingMatching().getMeetingTime())
@@ -47,11 +54,11 @@ public interface MatchingMapper {
                 .matchingType(MatchingType.ONE_THING)
                 .myOneThingContent(matchingInfo.getMyOneThingContent())
                 .applicationInfo(OneThingMatchingDetailDto.ApplicationInfo.builder()
-                    .district(matchingInfo.getOneThingDistrict().name())
-                    .preferredDates(matchingInfo.getPreferredDates())
-                    .oneThingBudgetRange(matchingInfo.getOneThingBudgetRange())
-                    .oneThingCategory(matchingInfo.getOneThingCategory())
-                    .build())
+                        .district(matchingInfo.getOneThingDistrict().name())
+                        .preferredDates(matchingInfo.getPreferredDates())
+                        .oneThingBudgetRange(matchingInfo.getOneThingBudgetRange())
+                        .oneThingCategory(matchingInfo.getOneThingCategory())
+                        .build())
                 .myMatchingInfo(MatchingDetailDto.MyMatchingInfo.builder()
                         .job(matchingInfo.getUser().getJob().getJobCategory())
                         .relationshipStatus(matchingInfo.getUser().getRelationshipStatus())
@@ -61,17 +68,28 @@ public interface MatchingMapper {
                 .paymentInfo(OneThingMatchingDetailDto.PaymentInfo.builder()
                         .matchingPrice(paymentInfo.getOneThingOrder().getPrice().getBasePrice().intValue())
                         .paymentPrice(paymentInfo.getOneThingOrder().getDiscountedPrice().intValue())
-                        .requestedAt(donePayment == null ? null : donePayment.getRequested_at().toLocalDateTime())
-                        .approvedAt(donePayment == null ? null : donePayment.getApprovedAt().toLocalDateTime())
+                        .refundPrice(isCanceled && payment != null && payment.getRefundAmount() != null
+                                ? payment.getRefundAmount()
+                                : null)
+                        .requestedAt(payment != null && payment.getRequested_at() != null
+                                ? payment.getRequested_at().toLocalDateTime()
+                                : null)
+                        .approvedAt(payment != null && payment.getApprovedAt() != null
+                                ? payment.getApprovedAt().toLocalDateTime()
+                                : null)
                         .build())
                 .build();
     }
 
     default RandomMatchingDetailDto toRandomMatchingDetailDto(final UserRandomMatching userRandomMatching) {
-        TossPayment donePayment = userRandomMatching.getRandomOrder().getTossPayment().stream()
-                .filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(TossPaymentStatus.DONE))
+        boolean isCanceled = userRandomMatching.getMatchingStatus().equals(RandomMatchingStatus.CANCELED);
+
+        TossPayment payment = userRandomMatching.getRandomOrder().getTossPayment().stream()
+                .filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(
+                        isCanceled ? TossPaymentStatus.CANCELED : TossPaymentStatus.DONE))
                 .findFirst()
                 .orElse(null);
+
         return RandomMatchingDetailDto.builder()
                 .matchingId(userRandomMatching.getRandomMatching().getId())
                 .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
@@ -90,8 +108,15 @@ public interface MatchingMapper {
                 .paymentInfo(RandomMatchingDetailDto.PaymentInfo.builder()
                         .matchingPrice(userRandomMatching.getRandomOrder().getPrice().getBasePrice().intValue())
                         .paymentPrice(userRandomMatching.getRandomOrder().getDiscountedPrice().intValue())
-                        .requestedAt(donePayment == null ? null : donePayment.getRequested_at().toLocalDateTime())
-                        .approvedAt(donePayment == null ? null : donePayment.getApprovedAt().toLocalDateTime())
+                        .refundPrice(isCanceled && payment != null && payment.getRefundAmount() != null
+                                ? payment.getRefundAmount()
+                                : null)
+                        .requestedAt(payment != null && payment.getRequested_at() != null
+                                ? payment.getRequested_at().toLocalDateTime()
+                                : null)
+                        .approvedAt(payment != null && payment.getApprovedAt() != null
+                                ? payment.getApprovedAt().toLocalDateTime()
+                                : null)
                         .build())
                 .build();
     }
