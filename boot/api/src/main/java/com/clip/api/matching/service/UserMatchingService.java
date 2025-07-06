@@ -48,8 +48,8 @@ public class UserMatchingService {
     }
 
     public MatchingProgressStatusDto getUserMatchingStatus(long userId) {
-        Optional<UserOneThingMatching> myOptUserOneThingMatching = matchingService.findOptLatestUserOneThingMatching(userId, LocalDateTime.now().minusHours(2));
-        Optional<UserRandomMatching> myOptUserRandomMatching = matchingService.findOptLatestUserRandomMatching(userId, LocalDateTime.now().minusHours(2));
+        Optional<UserOneThingMatching> myOptUserOneThingMatching = matchingService.findOptLatestUserOneThingMatchingNotEndedStatus(userId, LocalDateTime.now().minusHours(2));
+        Optional<UserRandomMatching> myOptUserRandomMatching = matchingService.findOptLatestUserRandomMatchingNotEndedStatus(userId, LocalDateTime.now().minusHours(2));
 
         List<UserOneThingMatching> myOneThingMatchingGroup = myOptUserOneThingMatching.map(
                 matching -> matchingService.findAllUserOneThingMatchings(matching.getOneThingMatching().getId())
@@ -104,7 +104,7 @@ public class UserMatchingService {
         );
 
         return MatchingProgressStatusDto.builder()
-                .isCheckedMatchingStart(userRandomMatching.isCheckedMatchingStart())
+                .isCheckedMatchingStart(userRandomMatching.isEnded())
                 .matchingType(MatchingType.RANDOM)
                 .matchingId(userRandomMatching.getId())
                 .nicknameList(shuffledNicknames)
@@ -134,7 +134,7 @@ public class UserMatchingService {
         Map<String, String> oneThingMap = getNicknameAndOneThingContentMap(myOneThingMatchingGroup, isProgress);
 
         return MatchingProgressStatusDto.builder()
-                .isCheckedMatchingStart(userOneThingMatching.isCheckedMatchingStart())
+                .isCheckedMatchingStart(userOneThingMatching.isEnded())
                 .matchingType(MatchingType.ONE_THING)
                 .matchingId(userOneThingMatching.getId())
                 .nicknameList(shuffledNicknames)
@@ -168,8 +168,8 @@ public class UserMatchingService {
 
     public void updateMatchingStatusChecked(long userId, MatchingType matchingType, long matchingId) {
         switch (matchingType) {
-            case ONE_THING -> matchingService.updateUserOneThingMatchingStatusChecked(userId, matchingId);
-            case RANDOM -> matchingService.updateUserRandomMatchingStatusChecked(userId, matchingId);
+            case ONE_THING -> matchingService.updateUserOneThingMatchingStatusToEnded(userId, matchingId);
+            case RANDOM -> matchingService.updateUserRandomMatchingStatusToEnded(userId, matchingId);
         }
     }
 
@@ -190,10 +190,10 @@ public class UserMatchingService {
                         (confirmedRandomMatchings.isEmpty() || confirmedRandomMatchings.stream().allMatch(UserRandomMatching::isNoticeRead));
 
         // 다음 매칭 날짜 계산
-        Optional<LocalDate> oneThingDate = matchingService.findOptLatestUserOneThingMatching(userId, LocalDateTime.now())
+        Optional<LocalDate> oneThingDate = matchingService.findOptLatestUserOneThingMatchingNotEndedStatus(userId, LocalDateTime.now())
                 .map(match -> match.getOneThingMatching().getMeetingTime().toLocalDate());
 
-        Optional<LocalDate> randomDate = matchingService.findOptLatestUserRandomMatching(userId, LocalDateTime.now())
+        Optional<LocalDate> randomDate = matchingService.findOptLatestUserRandomMatchingNotEndedStatus(userId, LocalDateTime.now())
                 .map(match -> match.getRandomMatching().getMeetingTime().toLocalDate());
 
         // 두 날짜 중 더 이른 날짜 선택

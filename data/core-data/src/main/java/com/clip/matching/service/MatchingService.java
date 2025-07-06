@@ -51,12 +51,12 @@ public class MatchingService {
         return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now(), RandomMatchingStatus.CONFIRMED);
     }
 
-    public Optional<UserOneThingMatching> findOptLatestUserOneThingMatching(long userId, LocalDateTime dateTime) {
-        return userOneThingMatchingRepository.findLatestUserOneThingMatching(userId, dateTime);
+    public Optional<UserOneThingMatching> findOptLatestUserOneThingMatchingNotEndedStatus(long userId, LocalDateTime dateTime) {
+        return userOneThingMatchingRepository.findLatestNotEndedStatus(userId, dateTime);
     }
 
-    public Optional<UserRandomMatching> findOptLatestUserRandomMatching(long userId, LocalDateTime dateTime) {
-        return userRandomMatchingRepository.findLatestUserRandomMatching(userId, dateTime);
+    public Optional<UserRandomMatching> findOptLatestUserRandomMatchingNotEndedStatus(long userId, LocalDateTime dateTime) {
+        return userRandomMatchingRepository.findLatestNotEndedStatus(userId, dateTime);
     }
 
     public List<UserRandomMatching> findAllUserRandomMatchings(long randomMatchingId) {
@@ -67,12 +67,12 @@ public class MatchingService {
         return userOneThingMatchingRepository.findUserOneThingMatching(oneThingMatchingId);
     }
 
-    public void updateUserOneThingMatchingStatusChecked(long userId, long userOneThingMatchingId) {
-        userOneThingMatchingRepository.updateStatusChecked(userId, userOneThingMatchingId);
+    public void updateUserOneThingMatchingStatusToEnded(long userId, long userOneThingMatchingId) {
+        userOneThingMatchingRepository.updateStatusToEnded(userId, userOneThingMatchingId);
     }
 
-    public void updateUserRandomMatchingStatusChecked(long userId, long userRandomMatchingId) {
-        userRandomMatchingRepository.updateStatusChecked(userId, userRandomMatchingId);
+    public void updateUserRandomMatchingStatusToEnded(long userId, long userRandomMatchingId) {
+        userRandomMatchingRepository.updateStatusToEnded(userId, userRandomMatchingId);
     }
 
     public List<UserOneThingMatching> findAllConfirmedOneThingMatching(long userId, OneThingMatchingStatus matchingStatus) {

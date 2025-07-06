@@ -55,14 +55,15 @@ public interface UserMatchingDocs {
                     schema = @Schema(implementation = MatchingProgressStatusDto.class)
             )
     )
-    @GetMapping("/progress-status")
+    @GetMapping("/progress")
     MatchingProgressStatusDto getMatchingStatus(@AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
             summary = "진행중인 모임 정보 조회 읽음 상태로 변경",
             description = """
                      - 홈 화면에서 사용되는 API입니다.
-                     - 진행중인 모임이 있는 경우 홈화면 하단에 노출되는 정보를 조회한 상태로 업데이트하는 API입니다.
+                     - 진행중인 모임 팝업을 모두 읽고 종료를 누르면 모임 종료 상태로 업데이트하는 API입니다.
+                     - 모임 종료 상태로 업데이트되면, 해당 모임은 진행중인 모임 조회에서 제외됩니다.
                      - URL 경로의 matchingType은 ONE_THING, RANDOM 중 하나입니다.
                     \s""",
             security = @SecurityRequirement(name = "Bearer Token")
@@ -72,7 +73,7 @@ public interface UserMatchingDocs {
             description = "업데이트 성공"
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{matchingType}/{matchingId}/progress-status/check")
+    @PatchMapping("/{matchingType}/{matchingId}/progress-status/end")
     void updateMatchingStatusChecked(@PathVariable MatchingType matchingType,
                                      @PathVariable long matchingId,
                                      @AuthenticationPrincipal UserDetails userDetails);
