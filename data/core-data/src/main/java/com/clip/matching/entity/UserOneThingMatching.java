@@ -48,7 +48,7 @@ public class UserOneThingMatching extends BaseEntity {
 
     // 변수명 변경
     @Column
-    private boolean isCheckedMatchingStart;
+    private boolean isEnded;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -77,7 +77,7 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isReviewPopupDismissed;
 
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart, OneThingDistrict oneThingDistrict,
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isEnded, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
                                 OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
         this.user = user;
@@ -86,7 +86,7 @@ public class UserOneThingMatching extends BaseEntity {
         this.oneThingCategory = oneThingCategory;
         this.myOneThingContent = myOneThingContent;
         this.myQuizContent = myQuizContent;
-        this.isCheckedMatchingStart = isCheckedMatchingStart;
+        this.isEnded = isEnded;
         this.oneThingDistrict = oneThingDistrict;
         this.preferredDates = preferredDates;
         this.oneThingBudgetRange = oneThingBudgetRange;

@@ -38,7 +38,7 @@ public class UserRandomMatching extends BaseEntity {
     private String myQuizContent;
 
     @Column
-    private boolean isCheckedMatchingStart;
+    private boolean isEnded;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -54,14 +54,14 @@ public class UserRandomMatching extends BaseEntity {
     private boolean isReviewPopupDismissed;
 
     @Builder
-    public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String myOneThingContent, String myQuizContent, boolean isCheckedMatchingStart,
+    public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String myOneThingContent, String myQuizContent, boolean isEnded,
                               RandomMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
         this.user = user;
         this.randomMatching = randomMatching;
         this.randomOrder = randomOrder;
         this.myOneThingContent = myOneThingContent;
+        this.isEnded = isEnded;
         this.myQuizContent = myQuizContent;
-        this.isCheckedMatchingStart = isCheckedMatchingStart;
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
         this.lateMinutes = lateMinutes;

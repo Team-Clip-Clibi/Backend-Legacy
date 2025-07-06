@@ -33,10 +33,11 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             join fetch u.oneThingMatching
             where u.user.id = :userId
             and u.oneThingMatching.meetingTime >= :dateTime
+            and u.isEnded = false
             order by u.oneThingMatching.meetingTime
             limit 1
             """)
-    Optional<UserOneThingMatching> findLatestUserOneThingMatching(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
+    Optional<UserOneThingMatching> findLatestNotEndedStatus(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
 
     @Query("select u " +
             "from UserOneThingMatching u " +
@@ -65,8 +66,8 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 
     @Transactional
     @Modifying
-    @Query("update UserOneThingMatching u set u.isCheckedMatchingStart = true where u.user.id = :userId and u.id = :id")
-    void updateStatusChecked(@Param("userId") long userId, @Param("id") long userOnethingMatchingId);
+    @Query("update UserOneThingMatching u set u.isEnded = true where u.user.id = :userId and u.id = :id")
+    void updateStatusToEnded(@Param("userId") long userId, @Param("id") long userOnethingMatchingId);
 
     @Query("""
             select u
