@@ -60,8 +60,8 @@ public class UserRandomMatching extends BaseEntity {
         this.randomMatching = randomMatching;
         this.randomOrder = randomOrder;
         this.myOneThingContent = myOneThingContent;
-        this.isEnded = isEnded;
         this.myQuizContent = myQuizContent;
+        this.isEnded = isEnded;
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
         this.lateMinutes = lateMinutes;
