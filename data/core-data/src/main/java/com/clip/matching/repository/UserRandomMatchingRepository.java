@@ -33,10 +33,11 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             join fetch u.randomMatching
             where u.user.id = :userId
             and u.randomMatching.meetingTime >= :dateTime
+            and u.isEnded = false
             order by u.randomMatching.meetingTime
             limit 1
             """)
-    Optional<UserRandomMatching> findLatestUserRandomMatching(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
+    Optional<UserRandomMatching> findLatestNotEndedStatus(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
 
     @Query("select u " +
             "from UserRandomMatching u " +
@@ -65,8 +66,8 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
 
     @Transactional
     @Modifying
-    @Query("update UserRandomMatching u set u.isCheckedMatchingStart = true where u.user.id = :userId and u.id = :id")
-    void updateStatusChecked(@Param("userId") long userId, @Param("id") long userRandomMatchingId);
+    @Query("update UserRandomMatching u set u.isEnded = true where u.user.id = :userId and u.id = :id")
+    void updateStatusToEnded(@Param("userId") long userId, @Param("id") long userRandomMatchingId);
 
     @Query("""
             select u
