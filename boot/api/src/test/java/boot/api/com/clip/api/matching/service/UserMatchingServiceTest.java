@@ -174,7 +174,7 @@ public class UserMatchingServiceTest {
         Assertions.assertThat(userMatchingStatus.getMatchingProgressInfo()).usingRecursiveComparison().isEqualTo(progressInfo);
     }
 
-    @DisplayName("userId와 matchingId로 진행중인 매칭 정보를 조회 완료한 상태로 업데이트 할 수 있다.")
+    @DisplayName("userId와 matchingId로 진행중인 매칭을 종료 상태로 업데이트 할 수 있다.")
     @Test
     void updateMatchingStatusCheck() {
         //given
@@ -201,8 +201,8 @@ public class UserMatchingServiceTest {
         userMatchingService.updateMatchingStatusChecked(user.getId(),MatchingType.RANDOM, userRandomMatching.getId());
 
         //then
-        Assertions.assertThat(userOneThingMatchingRepository.findById(userOneThingMatching.getId()).get().isCheckedMatchingStart()).isTrue();
-        Assertions.assertThat(userRandomMatchingRepository.findById(userRandomMatching.getId()).get().isCheckedMatchingStart()).isTrue();
+        Assertions.assertThat(userOneThingMatchingRepository.findById(userOneThingMatching.getId()).get().isEnded()).isTrue();
+        Assertions.assertThat(userRandomMatchingRepository.findById(userRandomMatching.getId()).get().isEnded()).isTrue();
 
     }
 
