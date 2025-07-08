@@ -29,6 +29,7 @@ public class OneThingMatching extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OneThingDistrict oneThingDistrict;
 
+    //추후 제거
     @Column
     @Enumerated(EnumType.STRING)
     private OneThingKeyword oneThingKeyword;
@@ -42,6 +43,7 @@ public class OneThingMatching extends BaseEntity {
     @Column
     private LocalDateTime meetingTime;
 
+    //추후 제거
     @Column
     @Enumerated(EnumType.STRING)
     private OneThingBudgetRange oneThingPrice;
