@@ -68,6 +68,7 @@ public class UserOneThingMatching extends BaseEntity {
     private OneThingMatchingStatus matchingStatus;
 
     //추후 제거
+
     @Column
     private boolean isNoticeRead;
 
