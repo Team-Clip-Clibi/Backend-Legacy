@@ -1,33 +1,24 @@
 package com.clip.office.admin.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/office/admin")
 public class AdminController {
 
-    @GetMapping("/login")
-    public String loginPage(@RequestParam(value = "error", required = false) String error,
-                            @RequestParam(value = "locked", required = false) String locked,
-                            Model model) {
-        if (error != null) {
-            model.addAttribute("error", "아이디 또는 비밀번호가 잘못되었습니다.");
-        }
-        if (locked != null) {
-            model.addAttribute("error", "로그인 시도 횟수를 초과했습니다. 10분 후 다시 시도해주세요.");
-        }
-        return "index";
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        return "testaslkdjflaskdj";
     }
 
-    @GetMapping("/home")
-    public String home(HttpSession session) {
-        return "layout/home";
+    @PostMapping("/test1")
+    @ResponseBody
+    public String test1() {
+        return "111111111111111";
     }
 }
