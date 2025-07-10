@@ -1,29 +1,27 @@
 package com.clip.global.config;
 
-import com.clip.global.security.CustomAuthenticationFailureHandler;
-import com.clip.global.security.CustomAuthenticationSuccessHandler;
-import com.clip.global.security.LoginAttemptFilter;
-import com.clip.global.security.util.LoginAttemptManager;
+import com.clip.global.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.time.Duration;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final CustomAuthenticationFailureHandler failureHandler;
-    private final CustomAuthenticationSuccessHandler successHandler;
-    private final LoginAttemptManager loginAttemptManager;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,8 +30,36 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
+
+        http.cors(corsConfig -> corsConfig.configurationSource(request -> {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.setAllowedOrigins(List.of("localhost:3000"));
+            corsConfiguration.setAllowedMethods(List.of(
+                    HttpMethod.GET.name(),
+                    HttpMethod.POST.name(),
+                    HttpMethod.PATCH.name(),
+                    HttpMethod.PUT.name(),
+                    HttpMethod.DELETE.name())
+            );
+            corsConfiguration.setAllowCredentials(true);
+            corsConfiguration.setAllowedHeaders(List.of("*"));
+            corsConfiguration.setMaxAge(Duration.ofDays(1));
+            return  corsConfiguration;
+        }));
+
+        http.csrf(csrfConfig -> csrfConfig
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+        );
+
+        http.securityContext(contextConfig -> contextConfig.requireExplicitSave(false))
+                .sessionManagement(sessionConfig -> sessionConfig
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .maximumSessions(1)
+//                        .maxSessionsPreventsLogin(true)
+                ).requiresChannel(rcc -> rcc.anyRequest().requiresInsecure());
+
+        http.authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/office/admin/login",
                                 "/office/admin/register",
@@ -41,25 +67,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated());
 
-        http.addFilterBefore(loginAttemptFilter(loginAttemptManager), UsernamePasswordAuthenticationFilter.class)
-                .formLogin(form -> form
-                        .loginPage("/office/admin/login")
-                        .loginProcessingUrl("/office/admin/login")
-                        .successHandler(successHandler)
-                        .failureHandler(failureHandler)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/office/admin/logout"))
-                        .logoutSuccessUrl("/office/admin/login")
-                        .deleteCookies("JSESSIONID")
-                        .invalidateHttpSession(true)
-                );
-        return http.build();
-    }
+        http.httpBasic(Customizer.withDefaults()).formLogin(Customizer.withDefaults());
 
-    @Bean
-    public LoginAttemptFilter loginAttemptFilter(LoginAttemptManager loginAttemptManager) {
-        return new LoginAttemptFilter(loginAttemptManager);
+        return http.build();
     }
 }
