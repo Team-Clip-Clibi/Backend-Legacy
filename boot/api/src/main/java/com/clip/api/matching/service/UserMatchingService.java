@@ -97,7 +97,7 @@ public class UserMatchingService {
         return MatchingProgressInfoDto.builder()
                 .nicknameList(shuffledNicknames)
                 .tmiList(shuffledTmi)
-                .oneThingMap(nicknameOneThingContentMap)
+                .nicknameOnethingMap(nicknameOneThingContentMap)
                 .build();
     }
 
@@ -124,7 +124,7 @@ public class UserMatchingService {
         return MatchingProgressInfoDto.builder()
                 .nicknameList(shuffledNicknames)
                 .tmiList(shuffledTmi)
-                .oneThingMap(nicknameOneThingContentMap)
+                .nicknameOnethingMap(nicknameOneThingContentMap)
                 .build();
     }
 

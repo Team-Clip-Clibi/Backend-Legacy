@@ -172,11 +172,11 @@ public class UserMatchingServiceTest {
         MatchingProgressInfoDto userMatchingProgressInfo = userMatchingService.getUserMatchingProgressInfo(MatchingType.ONE_THING, oneThingMatching.getId(), user1.getId());
 
         // then
-        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameList())
+        assertThat(userMatchingProgressInfo.getNicknameList())
                 .containsExactlyInAnyOrder("nickname1", "nickname2","nickname3", "nickname4");
-        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getTmiList())
+        assertThat(userMatchingProgressInfo.getTmiList())
                 .containsExactlyInAnyOrder("tmi1", "tmi2", "tmi3","tmi4");
-        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameOnethingMap())
+        assertThat(userMatchingProgressInfo.getNicknameOnethingMap())
                 .containsExactlyInAnyOrderEntriesOf(Map.of("nickname1", "onethingTopic1",
                         "nickname2", "onethingTopic2",
                         "nickname3", "onethingTopic3",
@@ -233,11 +233,11 @@ public class UserMatchingServiceTest {
         MatchingProgressInfoDto userMatchingProgressInfo = userMatchingService.getUserMatchingProgressInfo(MatchingType.RANDOM, randomMatching.getId(), user1.getId());
 
         // then
-        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameList())
+        assertThat(userMatchingProgressInfo.getNicknameList())
                 .containsExactlyInAnyOrder("nickname1", "nickname2","nickname3", "nickname4");
-        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getTmiList())
+        assertThat(userMatchingProgressInfo.getTmiList())
                 .containsExactlyInAnyOrder("tmi1", "tmi2", "tmi3","tmi4");
-        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameOnethingMap())
+        assertThat(userMatchingProgressInfo.getNicknameOnethingMap())
                 .containsExactlyInAnyOrderEntriesOf(Map.of("nickname1", "onethingTopic1",
                         "nickname2", "onethingTopic2",
                         "nickname3", "onethingTopic3",
