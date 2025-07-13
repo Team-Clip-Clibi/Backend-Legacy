@@ -30,6 +30,15 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
     @Query("""
             select u
             from UserOneThingMatching u
+            where u.user.id = :userId
+            and u.oneThingMatching.id = :onethingMatchingId
+            and u.isEnded = false
+            """)
+    Optional<UserOneThingMatching> findNotEndedStatus(@Param("onethingMatchingId") long onethingMatchingId, @Param("userId") long userId);
+
+    @Query("""
+            select u
+            from UserOneThingMatching u
             join fetch u.oneThingMatching
             where u.user.id = :userId
             and u.oneThingMatching.meetingTime >= :dateTime
