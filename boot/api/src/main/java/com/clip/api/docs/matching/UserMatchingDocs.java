@@ -52,11 +52,13 @@ public interface UserMatchingDocs {
             description = "조회 성공",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = MatchingProgressStatusDto.class)
+                    schema = @Schema(implementation = MatchingProgressInfoDto.class)
             )
     )
-    @GetMapping("/progress")
-    MatchingProgressStatusDto getMatchingStatus(@AuthenticationPrincipal UserDetails userDetails);
+    @GetMapping("/{matchingType}/{id}/progress")
+    MatchingProgressInfoDto getMatchingProgressInfo(@PathVariable MatchingType matchingType,
+                                                    @PathVariable long id,
+                                                    @AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(
             summary = "진행중인 모임 정보 조회 읽음 상태로 변경",
