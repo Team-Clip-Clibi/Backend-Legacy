@@ -3,7 +3,7 @@ package boot.api.com.clip.api.matching.service;
 import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.MatchingDto;
 import com.clip.api.matching.controller.dto.MatchingOverviewDto;
-import com.clip.api.matching.controller.dto.MatchingProgressStatusDto;
+import com.clip.api.matching.controller.dto.MatchingProgressInfoDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingService;
 import com.clip.api.payment.feign.TossPaymentFeign;
@@ -24,8 +24,10 @@ import com.clip.order.repository.RandomOrderRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,7 +39,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @ContextConfiguration(classes = ApiApplication.class)
 @SpringBootTest
@@ -93,85 +97,151 @@ public class UserMatchingServiceTest {
         User user = userRepository.save(User.builder().build());
 
         // when&then
-        Assertions.assertThatThrownBy(() -> userMatchingService.getUserMatchingStatus(user.getId()))
+        Assertions.assertThatThrownBy(() -> userMatchingService.getUserMatchingProgressInfo(MatchingType.ONE_THING, 1L, user.getId()))
+                .isInstanceOf(NoContentAvailableException.class);
+        Assertions.assertThatThrownBy(() -> userMatchingService.getUserMatchingProgressInfo(MatchingType.RANDOM, 1L, user.getId()))
                 .isInstanceOf(NoContentAvailableException.class);
     }
 
     @Test
-    @DisplayName("참여할 원띵, 랜덤이 둘 다 존재하고 진행중인 모임이 없으면 현재와 가장 가까운 모임 시간 정보를 반환한다.")
-    public void participateInBothMatches() {
-        //given
-        LocalDateTime oneThingTime = LocalDateTime.now().plusHours(1);
-        LocalDateTime randomTime = LocalDateTime.now().plusHours(2);
-        User requester = userRepository.save(User.builder().nickname("requester").build());
-        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().meetingTime(oneThingTime).build());
-        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder().meetingTime(randomTime).build());
+    @DisplayName("종료 상태로 변경된 원띵 모임은 조회되지 않는다.")
+    public void endedStatusOnethingMatchingRetrieve() {
+        // given
+        User user = userRepository.save(User.builder().build());
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().build());
 
-        UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(
-                UserOneThingMatching.builder()
-                        .user(requester)
-                        .myQuizContent("myQuizContent")
-                        .myOneThingContent("myOneThingContent")
-                        .oneThingMatching(oneThingMatching)
-                        .build()
-        );
+        UserOneThingMatching userOnethingMatching = userOneThingMatchingRepository.save(UserOneThingMatching.builder()
+                .user(user)
+                .oneThingMatching(oneThingMatching)
+                .matchingStatus(OneThingMatchingStatus.APPLIED)
+                .isEnded(true)
+                .build());
 
-        UserRandomMatching userRandomMatching = userRandomMatchingRepository.save(
-                UserRandomMatching.builder()
-                        .user(requester)
-                        .randomMatching(randomMatching)
-                        .build()
-        );
-
-        //when
-        MatchingProgressStatusDto userMatchingStatus = userMatchingService.getUserMatchingStatus(requester.getId());
-
-        //then
-        Assertions.assertThat(userMatchingStatus.getMatchingId()).isEqualTo(userOneThingMatching.getId());
-        Assertions.assertThat(userMatchingStatus.getMatchingType()).isEqualTo(MatchingType.ONE_THING);
-        Assertions.assertThat(userMatchingStatus.getLatestMatchingDateTime()).isCloseTo(oneThingTime, Assertions.within(1L, ChronoUnit.MILLIS));
+        // when
+        assertThatThrownBy(() -> userMatchingService.getUserMatchingProgressInfo(MatchingType.ONE_THING, oneThingMatching.getId(), user.getId()))
+                .isInstanceOf(NoContentAvailableException.class);
     }
 
     @Test
-    @DisplayName("참여할 원띵, 랜덤이 둘 다 존재하고 진행중인 모임이 있으면 진행중인 모임의 정보를 반환한다.")
-    public void participatingInBothMatchesAndMeetingsInProgress() {
-        //given
-        LocalDateTime oneThingTime = LocalDateTime.now();
-        LocalDateTime randomTime = LocalDateTime.now().plusHours(2);
-        String nickanme = "requester";
-        String quizContent = "quizContent";
-        String oneThingContent = "oneThingContent";
-        User requester = userRepository.save(User.builder().nickname(nickanme).build());
-        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().meetingTime(oneThingTime).build());
-        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder().meetingTime(randomTime).build());
+    @DisplayName("원띵 모임 id, userId로 원띵 매칭 진행 정보를 조회할 수 있다.")
+    public void onethingMatchingRetrieve() {
+        // given
+        User user1 = userRepository.save(User.builder().nickname("nickname1").build());
+        User user2 = userRepository.save(User.builder().nickname("nickname2").build());
+        User user3 = userRepository.save(User.builder().nickname("nickname3").build());
+        User user4 = userRepository.save(User.builder().nickname("nickname4").build());
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder().build());
 
-        userOneThingMatchingRepository.save(
-                UserOneThingMatching.builder()
-                        .user(requester)
-                        .myQuizContent(quizContent)
-                        .myOneThingContent(oneThingContent)
-                        .oneThingMatching(oneThingMatching)
-                        .build()
-        );
+        userOneThingMatchingRepository.save(UserOneThingMatching.builder()
+                .user(user1)
+                .oneThingMatching(oneThingMatching)
+                .onethingTopic("onethingTopic1")
+                .tmi("tmi1")
+                .matchingStatus(OneThingMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
 
-        userRandomMatchingRepository.save(
-                UserRandomMatching.builder()
-                        .user(requester)
-                        .randomMatching(randomMatching)
-                        .build()
-        );
+        userOneThingMatchingRepository.save(UserOneThingMatching.builder()
+                .user(user2)
+                .oneThingMatching(oneThingMatching)
+                .onethingTopic("onethingTopic2")
+                .tmi("tmi2")
+                .matchingStatus(OneThingMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
 
-        MatchingProgressStatusDto.MatchingProgressInfo progressInfo = MatchingProgressStatusDto.MatchingProgressInfo.builder()
-                .nicknameList(List.of(nickanme))
-                .oneThingMap(Map.of(nickanme, oneThingContent))
-                .quizList(List.of(quizContent))
-                .build();
+        userOneThingMatchingRepository.save(UserOneThingMatching.builder()
+                .user(user3)
+                .oneThingMatching(oneThingMatching)
+                .onethingTopic("onethingTopic3")
+                .tmi("tmi3")
+                .matchingStatus(OneThingMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
 
-        //when
-        MatchingProgressStatusDto userMatchingStatus = userMatchingService.getUserMatchingStatus(requester.getId());
+        userOneThingMatchingRepository.save(UserOneThingMatching.builder()
+                .user(user4)
+                .oneThingMatching(oneThingMatching)
+                .onethingTopic("onethingTopic4")
+                .tmi("tmi4")
+                .matchingStatus(OneThingMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
 
-        //then
-        Assertions.assertThat(userMatchingStatus.getMatchingProgressInfo()).usingRecursiveComparison().isEqualTo(progressInfo);
+        // when
+        MatchingProgressInfoDto userMatchingProgressInfo = userMatchingService.getUserMatchingProgressInfo(MatchingType.ONE_THING, oneThingMatching.getId(), user1.getId());
+
+        // then
+        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameList())
+                .containsExactlyInAnyOrder("nickname1", "nickname2","nickname3", "nickname4");
+        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getTmiList())
+                .containsExactlyInAnyOrder("tmi1", "tmi2", "tmi3","tmi4");
+        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameOnethingMap())
+                .containsExactlyInAnyOrderEntriesOf(Map.of("nickname1", "onethingTopic1",
+                        "nickname2", "onethingTopic2",
+                        "nickname3", "onethingTopic3",
+                        "nickname4", "onethingTopic4"));
+    }
+
+    @Test
+    @DisplayName("랜덤 모임 id, userId로 랜덤 매칭 진행 정보를 조회할 수 있다.")
+    public void randomMatchingRetrieve() {
+        // given
+        User user1 = userRepository.save(User.builder().nickname("nickname1").build());
+        User user2 = userRepository.save(User.builder().nickname("nickname2").build());
+        User user3 = userRepository.save(User.builder().nickname("nickname3").build());
+        User user4 = userRepository.save(User.builder().nickname("nickname4").build());
+        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder().build());
+
+        userRandomMatchingRepository.save(UserRandomMatching.builder()
+                .user(user1)
+                .randomMatching(randomMatching)
+                .tmi("tmi1")
+                .onethingTopic("onethingTopic1")
+                .matchingStatus(RandomMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
+
+        userRandomMatchingRepository.save(UserRandomMatching.builder()
+                .user(user2)
+                .randomMatching(randomMatching)
+                .tmi("tmi2")
+                .onethingTopic("onethingTopic2")
+                .matchingStatus(RandomMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
+
+        userRandomMatchingRepository.save(UserRandomMatching.builder()
+                .user(user3)
+                .randomMatching(randomMatching)
+                .tmi("tmi3")
+                .onethingTopic("onethingTopic3")
+                .matchingStatus(RandomMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
+
+        userRandomMatchingRepository.save(UserRandomMatching.builder()
+                .user(user4)
+                .randomMatching(randomMatching)
+                .tmi("tmi4")
+                .onethingTopic("onethingTopic4")
+                .matchingStatus(RandomMatchingStatus.APPLIED)
+                .isEnded(false)
+                .build());
+
+        // when
+        MatchingProgressInfoDto userMatchingProgressInfo = userMatchingService.getUserMatchingProgressInfo(MatchingType.RANDOM, randomMatching.getId(), user1.getId());
+
+        // then
+        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameList())
+                .containsExactlyInAnyOrder("nickname1", "nickname2","nickname3", "nickname4");
+        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getTmiList())
+                .containsExactlyInAnyOrder("tmi1", "tmi2", "tmi3","tmi4");
+        assertThat(userMatchingProgressInfo.getMatchingProgressInfo().getNicknameOnethingMap())
+                .containsExactlyInAnyOrderEntriesOf(Map.of("nickname1", "onethingTopic1",
+                        "nickname2", "onethingTopic2",
+                        "nickname3", "onethingTopic3",
+                        "nickname4", "onethingTopic4"));
     }
 
     @DisplayName("userId와 matchingId로 진행중인 매칭을 종료 상태로 업데이트 할 수 있다.")
@@ -201,8 +271,8 @@ public class UserMatchingServiceTest {
         userMatchingService.updateMatchingStatusChecked(user.getId(),MatchingType.RANDOM, userRandomMatching.getId());
 
         //then
-        Assertions.assertThat(userOneThingMatchingRepository.findById(userOneThingMatching.getId()).get().isEnded()).isTrue();
-        Assertions.assertThat(userRandomMatchingRepository.findById(userRandomMatching.getId()).get().isEnded()).isTrue();
+        assertThat(userOneThingMatchingRepository.findById(userOneThingMatching.getId()).get().isEnded()).isTrue();
+        assertThat(userRandomMatchingRepository.findById(userRandomMatching.getId()).get().isEnded()).isTrue();
 
     }
 
@@ -255,10 +325,10 @@ public class UserMatchingServiceTest {
         MatchingOverviewDto matchingOverview = userMatchingService.getMatchingOverview(user.getId());
 
         //then
-        Assertions.assertThat(matchingOverview.getAppliedMatchingCount()).isEqualTo(1);
-        Assertions.assertThat(matchingOverview.getConfirmedMatchingCount()).isEqualTo(1);
-        Assertions.assertThat(matchingOverview.getIsAllNoticeRead()).isFalse();
-        Assertions.assertThat(matchingOverview.getNextMatchingDate()).isEqualTo(oneThingMatching.getMeetingTime().toLocalDate());
+        assertThat(matchingOverview.getAppliedMatchingCount()).isEqualTo(1);
+        assertThat(matchingOverview.getConfirmedMatchingCount()).isEqualTo(1);
+        assertThat(matchingOverview.getIsAllNoticeRead()).isFalse();
+        assertThat(matchingOverview.getNextMatchingDate()).isEqualTo(oneThingMatching.getMeetingTime().toLocalDate());
     }
 
     @DisplayName("userId로 매칭된 모임들을 상태에 따라 조회한다.")
@@ -279,7 +349,7 @@ public class UserMatchingServiceTest {
                         .user(user)
                         .oneThingMatching(oneThingMatching)
                         .matchingStatus(OneThingMatchingStatus.APPLIED)
-                        .myOneThingContent(oneThingContent)
+                        .onethingTopic(oneThingContent)
                         .build()
         );
 
@@ -288,7 +358,7 @@ public class UserMatchingServiceTest {
                         .user(user)
                         .randomMatching(randomMatching)
                         .matchingStatus(RandomMatchingStatus.CONFIRMED)
-                        .myOneThingContent(oneThingContent)
+                        .onethingTopic(oneThingContent)
                         .build()
         );
 
@@ -298,9 +368,9 @@ public class UserMatchingServiceTest {
         List<MatchingDto> confirmedMatchings = userMatchingService.getMatchings(RandomMatchingStatus.CONFIRMED, null, user.getId());
 
         //then
-        Assertions.assertThat(matchings).hasSize(2);
-        Assertions.assertThat(appliedMatchings).hasSize(1);
-        Assertions.assertThat(confirmedMatchings).hasSize(1);
+        assertThat(matchings).hasSize(2);
+        assertThat(appliedMatchings).hasSize(1);
+        assertThat(confirmedMatchings).hasSize(1);
     }
 
     @DisplayName("userId로 다음 페이지의 매칭이 존재하지 않는 경우에 마지막 매칭 시간으로 조회 시 204 No Content를 반환한다.")
@@ -321,7 +391,7 @@ public class UserMatchingServiceTest {
                         .user(user)
                         .oneThingMatching(oneThingMatching)
                         .matchingStatus(OneThingMatchingStatus.APPLIED)
-                        .myOneThingContent(oneThingContent)
+                        .onethingTopic(oneThingContent)
                         .build()
         );
 

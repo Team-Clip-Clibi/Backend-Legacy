@@ -24,8 +24,8 @@ public class UserMatchingController implements UserMatchingDocs {
     }
 
     @Override
-    public MatchingProgressStatusDto getMatchingStatus(UserDetails userDetails) {
-        return userMatchingService.getUserMatchingStatus(Long.parseLong(userDetails.getUsername()));
+    public MatchingProgressInfoDto getMatchingProgressInfo(MatchingType matchingType, long id, UserDetails userDetails) {
+        return userMatchingService.getUserMatchingProgressInfo(matchingType, id, Long.parseLong(userDetails.getUsername()));
     }
 
     @Override

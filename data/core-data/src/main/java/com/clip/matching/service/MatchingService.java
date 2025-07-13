@@ -51,6 +51,16 @@ public class MatchingService {
         return userRandomMatchingRepository.findUserRandomMatching(userId, LocalDateTime.now(), RandomMatchingStatus.CONFIRMED);
     }
 
+    public UserOneThingMatching findUserOnethingMatchingNotEndedStatus(long onethingMatchingId, long userId) {
+        return userOneThingMatchingRepository.findNotEndedStatus(onethingMatchingId, userId)
+                .orElseThrow(() -> new NoContentAvailableException("userOneThingMatching", userId));
+    }
+
+    public UserRandomMatching findUserRandomMatchingNotEndedStatus(long randomMatchingId, long userId) {
+        return userRandomMatchingRepository.findNotEndedStatus(randomMatchingId, userId)
+                .orElseThrow(() -> new NoContentAvailableException("userRandomMatching", userId));
+    }
+
     public Optional<UserOneThingMatching> findOptLatestUserOneThingMatchingNotEndedStatus(long userId, LocalDateTime dateTime) {
         return userOneThingMatchingRepository.findLatestNotEndedStatus(userId, dateTime);
     }

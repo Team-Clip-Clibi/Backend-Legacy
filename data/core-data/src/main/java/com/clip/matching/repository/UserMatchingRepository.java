@@ -21,7 +21,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
             otm.meetingTime,
             uotm.matchingStatus,
             'ONE_THING',
-            uotm.myOneThingContent,
+            uotm.onethingTopic,
             case when uotm.matchingStatus = 'COMPLETED' and otr.id is not null then true else false end
         )
         from UserOneThingMatching uotm
@@ -41,7 +41,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
             rm.meetingTime,
             urm.matchingStatus,
             'RANDOM',
-            urm.myOneThingContent,
+            urm.onethingTopic,
             case when urm.matchingStatus = 'COMPLETED' and rmr.id is not null then true else false end
         )
         from UserRandomMatching urm

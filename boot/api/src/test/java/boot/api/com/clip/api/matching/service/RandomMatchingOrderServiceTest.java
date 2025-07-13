@@ -216,7 +216,7 @@ public class RandomMatchingOrderServiceTest {
             UserRandomMatching userRandomMatching = UserRandomMatching.builder()
                     .user(user)
                     .randomMatching(randomMatching)
-                    .myOneThingContent("테스트 주제")
+                    .onethingTopic("테스트 주제")
                     .matchingStatus(RandomMatchingStatus.CONFIRMED)
                     .build();
 

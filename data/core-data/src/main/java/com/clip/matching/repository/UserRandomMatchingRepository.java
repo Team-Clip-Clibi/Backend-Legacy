@@ -30,6 +30,15 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
     @Query("""
             select u
             from UserRandomMatching u
+            where u.user.id = :userId
+            and u.randomMatching.id = :randomMatchingId
+            and u.isEnded = false
+            """)
+    Optional<UserRandomMatching> findNotEndedStatus(@Param("randomMatchingId") long randomMatchingId, @Param("userId") long userId);
+
+    @Query("""
+            select u
+            from UserRandomMatching u
             join fetch u.randomMatching
             where u.user.id = :userId
             and u.randomMatching.meetingTime >= :dateTime

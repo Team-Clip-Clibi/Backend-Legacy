@@ -2,7 +2,6 @@ package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.mapper.MatchingMapper;
-import com.clip.global.exception.NoContentAvailableException;
 import com.clip.infra.fcm.event.FcmNotificationEvent;
 import com.clip.infra.fcm.service.MessageParams;
 import com.clip.infra.fcm.service.MessageTemplateType;
@@ -47,119 +46,94 @@ public class UserMatchingService {
                 .build();
     }
 
-    public MatchingProgressStatusDto getUserMatchingStatus(long userId) {
-        Optional<UserOneThingMatching> myOptUserOneThingMatching = matchingService.findOptLatestUserOneThingMatchingNotEndedStatus(userId, LocalDateTime.now().minusHours(2));
-        Optional<UserRandomMatching> myOptUserRandomMatching = matchingService.findOptLatestUserRandomMatchingNotEndedStatus(userId, LocalDateTime.now().minusHours(2));
+    @Transactional(readOnly = true)
+    public MatchingProgressInfoDto getUserMatchingProgressInfo(MatchingType matchingType, long matchingId, long userId) {
 
-        List<UserOneThingMatching> myOneThingMatchingGroup = myOptUserOneThingMatching.map(
-                matching -> matchingService.findAllUserOneThingMatchings(matching.getOneThingMatching().getId())
-        ).orElse(List.of());
+        switch (matchingType) {
+            case RANDOM -> {
+                Long userRandomMatchingId = matchingService.findUserRandomMatchingNotEndedStatus(matchingId, userId)
+                        .getRandomMatching()
+                        .getId();
 
-        List<UserRandomMatching> myRandomMatchingGroup = myOptUserRandomMatching.map(
-                matching -> matchingService.findAllUserRandomMatchings(matching.getRandomMatching().getId())
-        ).orElse(List.of());
+                List<UserRandomMatching> allUserRandomMatchings = matchingService.findAllUserRandomMatchings(userRandomMatchingId);
 
-        if (myOptUserOneThingMatching.isEmpty() && myOptUserRandomMatching.isEmpty()) {
-            throw new NoContentAvailableException("userMatching", userId);
-        } else if (myOptUserOneThingMatching.isPresent() && myOptUserRandomMatching.isPresent()) {
-            if (isOneThingMeetingBeforeRandomMeeting(myOptUserOneThingMatching, myOptUserRandomMatching)) {
-                return getOneThingMatchingProgressStatusDto(myOptUserOneThingMatching, myOneThingMatchingGroup);
-            }else {
-                return getRandomMatchingProgressStatusDto(myOptUserRandomMatching, myRandomMatchingGroup);
+                return getRandomMatchingProgressStatusDto(allUserRandomMatchings);
             }
-        }else{
-            if (myOptUserOneThingMatching.isPresent()) {
-                return getOneThingMatchingProgressStatusDto(myOptUserOneThingMatching, myOneThingMatchingGroup);
-            }else {
-                return getRandomMatchingProgressStatusDto(myOptUserRandomMatching, myRandomMatchingGroup);
+
+            case ONE_THING -> {
+                Long userOneThingMatchingId = matchingService.findUserOnethingMatchingNotEndedStatus(matchingId, userId)
+                        .getOneThingMatching()
+                        .getId();
+
+                List<UserOneThingMatching> allUserOneThingMatchings = matchingService.findAllUserOneThingMatchings(userOneThingMatchingId);
+
+                return getOneThingMatchingProgressStatusDto(allUserOneThingMatchings);
             }
+
+            default -> throw new IllegalStateException("지원하지 않는 매칭 타입입니다.: " + matchingType);
         }
     }
 
-    private static boolean isOneThingMeetingBeforeRandomMeeting(
-            Optional<UserOneThingMatching> optUserOneThingMatching,
-            Optional<UserRandomMatching> optUserRandomMatching
-    ) {
-        return optUserOneThingMatching.get()
-                .getOneThingMatching()
-                .getMeetingTime()
-                .isBefore(
-                        optUserRandomMatching.get()
-                                .getRandomMatching()
-                                .getMeetingTime()
-                );
-    }
-
-    private static MatchingProgressStatusDto getRandomMatchingProgressStatusDto(
-            Optional<UserRandomMatching> myOptUserRandomMatching,
+    private static MatchingProgressInfoDto getRandomMatchingProgressStatusDto(
             List<UserRandomMatching> myRandomMatchingGroup
     ) {
-        UserRandomMatching userRandomMatching = myOptUserRandomMatching.get();
-        boolean isProgress = userRandomMatching.getRandomMatching().getMeetingTime().isBefore(LocalDateTime.now());
 
-        List<String> shuffledNicknames = getShuffledResultIfExecuted(
+        List<String> shuffledNicknames = getShuffledResult(
                 myRandomMatchingGroup,
-                isProgress,
                 oneThing -> oneThing.getUser().getNickname()
         );
 
-        return MatchingProgressStatusDto.builder()
-                .isCheckedMatchingStart(userRandomMatching.isEnded())
-                .matchingType(MatchingType.RANDOM)
-                .matchingId(userRandomMatching.getId())
+        List<String> shuffledTmi = getShuffledResult(
+                myRandomMatchingGroup,
+                UserRandomMatching::getTmi
+        );
+
+        Map<String, String> nicknameOneThingContentMap = myRandomMatchingGroup.stream()
+                .collect(Collectors.toMap(
+                        userRandom -> userRandom.getUser().getNickname(),
+                        UserRandomMatching::getOnethingTopic)
+                );
+
+        return MatchingProgressInfoDto.builder()
                 .nicknameList(shuffledNicknames)
-                .latestMatchingDateTime(userRandomMatching.getRandomMatching().getMeetingTime())
+                .tmiList(shuffledTmi)
+                .oneThingMap(nicknameOneThingContentMap)
                 .build();
     }
 
-    private static MatchingProgressStatusDto getOneThingMatchingProgressStatusDto(
-            Optional<UserOneThingMatching> myOptUserOneThingMatching,
+    private static MatchingProgressInfoDto getOneThingMatchingProgressStatusDto(
             List<UserOneThingMatching> myOneThingMatchingGroup
     ) {
-        UserOneThingMatching userOneThingMatching = myOptUserOneThingMatching.get();
-        boolean isProgress = userOneThingMatching.getOneThingMatching().getMeetingTime().isBefore(LocalDateTime.now());
 
-        List<String> shuffledNicknames = getShuffledResultIfExecuted(
+        List<String> shuffledNicknames = getShuffledResult(
                 myOneThingMatchingGroup,
-                isProgress,
                 oneThing -> oneThing.getUser().getNickname()
         );
 
-        List<String> shuffledQuiz = getShuffledResultIfExecuted(
+        List<String> shuffledTmi = getShuffledResult(
                 myOneThingMatchingGroup,
-                isProgress,
-                UserOneThingMatching::getMyQuizContent
+                UserOneThingMatching::getTmi
         );
 
-        Map<String, String> oneThingMap = getNicknameAndOneThingContentMap(myOneThingMatchingGroup, isProgress);
+        Map<String, String> nicknameOneThingContentMap = myOneThingMatchingGroup.stream()
+                .collect(Collectors.toMap(
+                        userOneThing -> userOneThing.getUser().getNickname(),
+                        UserOneThingMatching::getOnethingTopic)
+                );
 
-        return MatchingProgressStatusDto.builder()
-                .isCheckedMatchingStart(userOneThingMatching.isEnded())
-                .matchingType(MatchingType.ONE_THING)
-                .matchingId(userOneThingMatching.getId())
+        return MatchingProgressInfoDto.builder()
                 .nicknameList(shuffledNicknames)
-                .quizList(shuffledQuiz)
-                .latestMatchingDateTime(userOneThingMatching.getOneThingMatching().getMeetingTime())
-                .oneThingMap(oneThingMap)
+                .tmiList(shuffledTmi)
+                .oneThingMap(nicknameOneThingContentMap)
                 .build();
     }
 
-    private static Map<String, String> getNicknameAndOneThingContentMap(List<UserOneThingMatching> oneThingMatchings, boolean isExecute) {
-        return oneThingMatchings.stream().filter(oneThingMatching -> isExecute)
-                .collect(Collectors.toMap(
-                        userOneThing -> userOneThing.getUser().getNickname(),
-                        UserOneThingMatching::getMyOneThingContent)
-                );
-    }
-
-    private static <T, R> List<R> getShuffledResultIfExecuted(
+    private static <T, R> List<R> getShuffledResult(
             List<T> targetList,
-            boolean isExecute,
-            Function<T, R> func
+            Function<T, R> getElementFunc
     ) {
         return targetList.stream()
-                .filter(a -> isExecute)
-                .map(func)
+                .map(getElementFunc)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
                     Collections.shuffle(list);
                     return list;
