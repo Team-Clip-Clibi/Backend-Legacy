@@ -38,15 +38,12 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private OneThingCategory oneThingCategory;
 
-    // 변수명 변경
     @Column
-    private String myOneThingContent;
+    private String onethingTopic;
 
-    // 변수명 변경
     @Column
-    private String myQuizContent;
+    private String tmi;
 
-    // 변수명 변경
     @Column
     private boolean isEnded;
 
@@ -78,15 +75,15 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isReviewPopupDismissed;
 
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String myOneThingContent, String myQuizContent, boolean isEnded, OneThingDistrict oneThingDistrict,
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String onethingTopic, String tmi, boolean isEnded, OneThingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
                                 OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.oneThingOrder = oneThingOrder;
         this.oneThingCategory = oneThingCategory;
-        this.myOneThingContent = myOneThingContent;
-        this.myQuizContent = myQuizContent;
+        this.onethingTopic = onethingTopic;
+        this.tmi = tmi;
         this.isEnded = isEnded;
         this.oneThingDistrict = oneThingDistrict;
         this.preferredDates = preferredDates;

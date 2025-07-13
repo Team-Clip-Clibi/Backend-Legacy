@@ -94,8 +94,8 @@ public class RandomMatchingOrderService {
                 .user(user)
                 .randomMatching(assignedMatching)
                 .randomOrder(order)
-                .myOneThingContent(request.getTopic())
-                .myQuizContent(request.getTmiContent())
+                .onethingTopic(request.getTopic())
+                .tmi(request.getTmiContent())
                 .matchingStatus(RandomMatchingStatus.APPLIED)
                 .build();
 

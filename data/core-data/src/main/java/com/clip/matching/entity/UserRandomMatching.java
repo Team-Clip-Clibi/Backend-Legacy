@@ -31,11 +31,10 @@ public class UserRandomMatching extends BaseEntity {
     private RandomOrder randomOrder;
 
     @Column
-    private String myOneThingContent;
+    private String onethingTopic;
 
-    // TODO 추후 칼럼명 변경 필요
     @Column
-    private String myQuizContent;
+    private String tmi;
 
     @Column
     private boolean isEnded;
@@ -54,13 +53,13 @@ public class UserRandomMatching extends BaseEntity {
     private boolean isReviewPopupDismissed;
 
     @Builder
-    public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String myOneThingContent, String myQuizContent, boolean isEnded,
+    public UserRandomMatching(User user, RandomMatching randomMatching, RandomOrder randomOrder, String onethingTopic, String tmi, boolean isEnded,
                               RandomMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
         this.user = user;
         this.randomMatching = randomMatching;
         this.randomOrder = randomOrder;
-        this.myOneThingContent = myOneThingContent;
-        this.myQuizContent = myQuizContent;
+        this.onethingTopic = onethingTopic;
+        this.tmi = tmi;
         this.isEnded = isEnded;
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
