@@ -25,7 +25,7 @@ public interface UserAccountV2Docs {
                     description = "조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TokenProvider.AccessToken.class)
+                            schema = @Schema(implementation = TokenProvider.Token.class)
                     )
             )
     })
