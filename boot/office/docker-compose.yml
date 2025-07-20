@@ -6,7 +6,6 @@ services:
     image: ${OFFICE_API_IMAGE_URI}
     container_name: ${OFFICE_CONTAINER_NAME}
     environment:
-      OAUTH_ISSUER_URI: ${OAUTH_ISSUER_URI}
       spring.datasource.url: ${URL}
       spring.datasource.username: ${USERNAME}
       spring.datasource.password: ${PASSWORD}
@@ -21,8 +20,6 @@ services:
       user.timezone: Asia/Seoul
     ports:
       - "8080:8080"
-    depends_on:
-      - keycloak
     networks:
       - office
 
