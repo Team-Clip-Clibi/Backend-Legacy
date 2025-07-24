@@ -4,7 +4,7 @@ import com.clip.api.display.controller.dto.BannerInfoDto;
 import com.clip.api.display.controller.dto.NoticeInfoDto;
 import com.clip.api.display.service.DisplayInfoService;
 import com.clip.api.docs.display.DisplayInfoDocs;
-import com.clip.notice.entity.BannerType;
+import com.clip.banner.entity.BannerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,28 +20,20 @@ public class Notice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NoticeType noticeType;
 
-    private String content;
+    private String text;
 
-    private String link;
-
-    private LocalDate exposureDate;
-
-    private boolean isExposure;
+    private LocalDateTime exposureDateTime;
 
     @Builder
-    public Notice(NoticeType noticeType,String content, String link, LocalDate exposureDate, boolean isExposure) {
+    public Notice(NoticeType noticeType, String text, LocalDateTime exposureDateTime) {
         this.noticeType = noticeType;
-        this.content = content;
-        this.link = link;
-        this.exposureDate = exposureDate;
-        this.isExposure = isExposure;
+        this.text = text;
+        this.exposureDateTime = exposureDateTime;
     }
 
-    public void updateNotice(NoticeType noticeType,String content, String link, LocalDate exposureDate, boolean isExposure) {
+    public void updateNotice(NoticeType noticeType,String content, LocalDateTime exposureDate) {
         this.noticeType = noticeType;
-        this.content = content;
-        this.link = link;
-        this.exposureDate = exposureDate;
-        this.isExposure = isExposure;
+        this.text = content;
+        this.exposureDateTime = exposureDate;
     }
 }

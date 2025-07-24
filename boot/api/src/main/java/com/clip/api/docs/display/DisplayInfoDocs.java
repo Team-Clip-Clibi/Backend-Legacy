@@ -2,10 +2,8 @@ package com.clip.api.docs.display;
 
 import com.clip.api.display.controller.dto.BannerInfoDto;
 import com.clip.api.display.controller.dto.NoticeInfoDto;
-import com.clip.notice.entity.BannerType;
+import com.clip.banner.entity.BannerType;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;

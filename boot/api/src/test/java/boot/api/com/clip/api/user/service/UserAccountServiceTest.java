@@ -11,9 +11,10 @@ import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.global.exception.ResourceAlreadyExistException;
 import com.clip.global.exception.ResourceNotFoundException;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.*;
 import com.clip.matching.repository.OneThingMatchingRepository;
@@ -76,6 +77,8 @@ public class UserAccountServiceTest {
     private FeignConfig feignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
     @Autowired
     private OneThingMatchingRepository oneThingMatchingRepository;
     @Autowired
