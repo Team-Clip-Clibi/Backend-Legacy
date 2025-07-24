@@ -6,9 +6,10 @@ import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingReviewService;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.Mood;
 import com.clip.matching.entity.RandomMatching;
@@ -62,6 +63,8 @@ public class UserMatchingReviewServiceTest {
     private FeignConfig feignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
 
     @AfterEach
     void tearDown() {

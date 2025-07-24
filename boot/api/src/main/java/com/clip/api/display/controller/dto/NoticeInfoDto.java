@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 public class NoticeInfoDto {
     private NoticeType noticeType;
     private String content;
-    private String link;
 
     @Builder
-    public NoticeInfoDto(NoticeType noticeType, String content, String link) {
+    public NoticeInfoDto(NoticeType noticeType, String content) {
         this.noticeType = noticeType;
         this.content = content;
-        this.link = link;
     }
 }

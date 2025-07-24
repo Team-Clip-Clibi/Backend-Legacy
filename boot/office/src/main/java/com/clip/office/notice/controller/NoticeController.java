@@ -1,39 +1,32 @@
 package com.clip.office.notice.controller;
 
-import com.clip.office.notice.controller.dto.CreateNoticeDto;
-import com.clip.office.notice.controller.dto.UpdateNoticeDto;
-import com.clip.office.notice.service.NoticeService;
+
+import com.clip.office.notice.controller.dto.NoticeInfo;
+import com.clip.office.notice.controller.dto.NoticeRequest;
+import com.clip.office.notice.service.NoticeAdminService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/office/notice")
+@RequestMapping("/notices")
 @RequiredArgsConstructor
 public class NoticeController {
+    private final NoticeAdminService noticeAdminService;
 
-    private final NoticeService noticeService;
-
-    @PostMapping("/create")
-    public ResponseEntity<CreateNoticeDto> createNotice(
-            @RequestBody CreateNoticeDto createNoticeDto
-    ) {
-        return ResponseEntity.ok(noticeService.createNotice(createNoticeDto));
+    @GetMapping
+    public List<NoticeInfo> getNoticeList() {
+        return noticeAdminService.getNoticeList();
     }
 
-    @PutMapping("/{noticeId}/update")
-    public ResponseEntity<UpdateNoticeDto> updateNotice(
-            @PathVariable(value = "noticeId") Long noticeId,
-            @RequestBody UpdateNoticeDto updateNoticeDto
-    ) {
-        return ResponseEntity.ok(noticeService.updateNotice(noticeId, updateNoticeDto));
+    @DeleteMapping("/{noticeId}")
+    public void deleteNotice(@PathVariable Long noticeId) {
+        noticeAdminService.deleteNotice(noticeId);
     }
 
-    @DeleteMapping("/{noticeId}/delete")
-    public ResponseEntity<Void> deleteNotice(
-            @PathVariable(value = "noticeId") Long noticeId
-    ) {
-        noticeService.deleteNotice(noticeId);
-        return ResponseEntity.ok().build();
+    @PostMapping
+    public void saveNotice(@RequestBody NoticeRequest request) {
+        noticeAdminService.saveNotice(request);
     }
 }

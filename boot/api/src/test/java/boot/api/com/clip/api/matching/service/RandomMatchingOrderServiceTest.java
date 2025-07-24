@@ -6,9 +6,10 @@ import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import com.clip.api.matching.service.RandomMatchingOrderService;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.*;
 import com.clip.matching.repository.RandomMatchingCapacityRepository;
@@ -60,6 +61,8 @@ public class RandomMatchingOrderServiceTest {
     private S3FCMService s3FCMService;
     @MockitoBean
     private FcmConfig fcmConfig;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
 
     @Autowired
     private UserRepository userRepository;

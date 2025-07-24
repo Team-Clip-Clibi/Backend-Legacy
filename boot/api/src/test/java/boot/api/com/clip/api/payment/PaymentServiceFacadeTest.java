@@ -8,9 +8,10 @@ import com.clip.api.payment.feign.dto.PaymentObject;
 import com.clip.api.payment.service.PaymentServiceFacade;
 import com.clip.api.payment.service.event.PaymentExceptionEvent;
 import com.clip.global.config.feign.FeignConfig;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
@@ -68,6 +69,8 @@ public class PaymentServiceFacadeTest {
     private FeignConfig feignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
     @MockitoSpyBean
     private OneThingOrderService oneThingOrderService;
     @Autowired

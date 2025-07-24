@@ -7,9 +7,10 @@ import com.clip.auth.service.TokenService;
 import com.clip.global.config.feign.FeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
@@ -58,6 +59,8 @@ public class UserAccountServiceTokenTest {
     private FeignConfig feignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
 
 
     @DisplayName("RefreshToken의 기간이 유요하며 TokenType이 RefreshToken이면 1일간 유효한 AccessToken이 발급된다.")

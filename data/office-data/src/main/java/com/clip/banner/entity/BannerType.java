@@ -1,4 +1,4 @@
-package com.clip.notice.entity;
+package com.clip.banner.entity;
 
 public enum BannerType {
     HOME,

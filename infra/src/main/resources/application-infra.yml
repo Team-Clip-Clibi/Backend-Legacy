@@ -16,5 +16,6 @@ cloud:
       region: ap-northeast-2
       fcm:
         sdk: ${FCM_SDK}
+      banner_img: banner/
     stack:
       auto: false

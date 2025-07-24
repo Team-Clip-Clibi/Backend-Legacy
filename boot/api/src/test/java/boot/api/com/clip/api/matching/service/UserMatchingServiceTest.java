@@ -9,9 +9,10 @@ import com.clip.api.matching.service.UserMatchingService;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
 import com.clip.global.exception.NoContentAvailableException;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.*;
 import com.clip.matching.repository.*;
@@ -24,10 +25,8 @@ import com.clip.order.repository.RandomOrderRepository;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +40,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.groups.Tuple.tuple;
 
 @ContextConfiguration(classes = ApiApplication.class)
 @SpringBootTest
@@ -78,6 +76,8 @@ public class UserMatchingServiceTest {
     private FeignConfig feignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
 
     @AfterEach
     void tearDown() {

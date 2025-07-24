@@ -3,9 +3,10 @@ package data.coredata.com.clip.notification.service;
 import com.clip.ApiApplication;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.FeignConfig;
-import com.clip.infra.aws.s3.S3Config;
+import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
+import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.notification.entity.Notification;
 import com.clip.notification.entity.NotificationType;
@@ -48,6 +49,8 @@ public class NotificationServiceTest {
     private FeignConfig feignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
+    @MockitoBean
+    private S3PathProperties s3PathProperties;
 
     @AfterEach
     void tearDown() {

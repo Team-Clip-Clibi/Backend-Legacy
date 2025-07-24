@@ -1,4 +1,4 @@
-package com.clip.notice.entity;
+package com.clip.banner.entity;
 
 import com.clip.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,27 +20,24 @@ public class Banner extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BannerType bannerType;
     private String text;
-    private String imageUrl;
-    private LocalDate exposureDate;
-    private boolean isExposure;
+    private String imgName;
+    private LocalDateTime exposureDatetime;
 
     @Builder
-    public Banner(BannerType bannerType, String text, String imageUrl, LocalDate exposureDate, boolean isExposure) {
+    public Banner(BannerType bannerType, String text, String imgName, LocalDateTime exposureDatetime) {
         this.bannerType = bannerType;
         this.text = text;
-        this.imageUrl = imageUrl;
-        this.exposureDate = exposureDate;
-        this.isExposure = isExposure;
+        this.imgName = imgName;
+        this.exposureDatetime = exposureDatetime;
     }
 
     public void updateImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        this.imgName = imageUrl;
     }
 
-    public void update(BannerType bannerType, String text, LocalDate exposureDate, boolean exposure) {
+    public void update(BannerType bannerType, String text, LocalDateTime exposureDate) {
         this.bannerType = bannerType;
         this.text = text;
-        this.exposureDate = exposureDate;
-        this.isExposure = exposure;
+        this.exposureDatetime = exposureDate;
     }
 }
