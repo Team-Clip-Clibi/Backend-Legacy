@@ -29,6 +29,10 @@ exclude-auth-path-patterns:
       method: POST
     - path-pattern: /users/signin
       method: POST
+    - path-pattern: /v2/users/signup
+      method: POST
+    - path-pattern: /v2/users/signin
+      method: POST
     - path-pattern: /swagger-ui/**
       method: GET
     - path-pattern: /swagger-resources/**
