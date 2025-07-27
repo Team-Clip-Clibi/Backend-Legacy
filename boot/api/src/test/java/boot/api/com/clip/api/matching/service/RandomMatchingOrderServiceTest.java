@@ -5,7 +5,7 @@ import com.clip.api.matching.controller.dto.RandomMatchingDuplicateCheckDto;
 import com.clip.api.matching.controller.dto.RandomMatchingOrderDto;
 import com.clip.api.matching.service.RandomMatchingOrderService;
 import com.clip.api.payment.feign.TossPaymentFeign;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -54,7 +54,7 @@ public class RandomMatchingOrderServiceTest {
     @MockitoBean
     private S3Config s3Config;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean

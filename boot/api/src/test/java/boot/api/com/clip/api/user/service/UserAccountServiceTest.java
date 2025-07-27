@@ -6,7 +6,7 @@ import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.entity.Token;
 import com.clip.auth.repository.TokenRepository;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.global.exception.ResourceAlreadyExistException;
@@ -74,7 +74,7 @@ public class UserAccountServiceTest {
     @MockitoBean
     private FcmConfig fcmConfig;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean

@@ -4,7 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.service.TokenService;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
 import com.clip.infra.aws.s3.config.S3Config;
@@ -56,7 +56,7 @@ public class UserAccountServiceTokenTest {
     @MockitoBean
     private FcmConfig fcmConfig;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean

@@ -2,7 +2,7 @@ package data.coredata.com.clip.notification.service;
 
 import com.clip.ApiApplication;
 import com.clip.api.payment.feign.TossPaymentFeign;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -46,7 +46,7 @@ public class NotificationServiceTest {
     @MockitoBean
     private FcmConfig fcmConfig;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean

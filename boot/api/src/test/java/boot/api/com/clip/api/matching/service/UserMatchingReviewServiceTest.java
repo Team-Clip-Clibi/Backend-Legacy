@@ -5,7 +5,7 @@ import com.clip.api.matching.controller.dto.MatchingReviewDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingReviewService;
 import com.clip.api.payment.feign.TossPaymentFeign;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -60,7 +60,7 @@ public class UserMatchingReviewServiceTest {
     @MockitoBean
     private FcmConfig fcmConfig;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
