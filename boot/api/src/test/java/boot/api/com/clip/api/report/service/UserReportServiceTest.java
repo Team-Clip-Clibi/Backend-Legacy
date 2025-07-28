@@ -4,7 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.report.controller.dto.ReportDto;
 import com.clip.api.report.service.UserReportService;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -47,7 +47,7 @@ public class UserReportServiceTest {
     @MockitoBean
     private FcmConfig fcmConfig;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
