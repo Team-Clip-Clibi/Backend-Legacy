@@ -7,7 +7,7 @@ import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.payment.feign.dto.PaymentObject;
 import com.clip.api.payment.service.PaymentServiceFacade;
 import com.clip.api.payment.service.event.PaymentExceptionEvent;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
 import com.clip.infra.aws.s3.S3ImgService;
@@ -66,7 +66,7 @@ public class PaymentServiceFacadeTest {
     @MockitoBean
     private FcmConfig fcmConfig;
     @MockitoBean
-    private FeignConfig feignConfig;
+    private TossFeignConfig tossFeignConfig;
     @MockitoBean
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean

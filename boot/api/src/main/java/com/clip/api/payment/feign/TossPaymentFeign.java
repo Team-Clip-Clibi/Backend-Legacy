@@ -1,17 +1,16 @@
 package com.clip.api.payment.feign;
 
-
 import com.clip.api.payment.feign.dto.PaymentCancelDto;
 import com.clip.api.payment.feign.dto.PaymentConfirmDto;
 import com.clip.api.payment.feign.dto.PaymentObject;
-import com.clip.global.config.feign.FeignConfig;
+import com.clip.global.config.feign.TossFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         value = "tossPayment",
         url = "https://api.tosspayments.com/v1/payments",
-        configuration = FeignConfig.class
+        configuration = TossFeignConfig.class
 )
 public interface TossPaymentFeign {
 

@@ -12,8 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Slf4j
-@Configuration
-public class FeignConfig {
+public class TossFeignConfig {
 
     @Value("${toss.secret-key}")
     private String tossSecretKey;
