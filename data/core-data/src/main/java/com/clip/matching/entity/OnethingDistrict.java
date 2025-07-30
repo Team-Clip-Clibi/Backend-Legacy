@@ -1,6 +1,6 @@
 package com.clip.matching.entity;
 
-public enum OneThingDistrict {
+public enum OnethingDistrict {
     HONGDAE_HAPJEONG,
     GANGNAM
 }
