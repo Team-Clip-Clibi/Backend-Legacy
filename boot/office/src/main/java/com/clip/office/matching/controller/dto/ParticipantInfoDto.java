@@ -10,6 +10,7 @@ public record ParticipantInfoDto(
         long userOnethingMatchingId,
         String nickname,
         String phoneNumber,
+        String dietaryOption,
         OnethingKeyword onethingKeyword,
         JobCategory job,
         String language,

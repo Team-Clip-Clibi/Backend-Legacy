@@ -51,6 +51,7 @@ public class MatchingMapper {
                 userOneThingMatching.getId(),
                 userOneThingMatching.getUser().getNickname(),
                 userOneThingMatching.getUser().getPhoneNumber(),
+                userOneThingMatching.getUser().getDietaryOption(),
                 userOneThingMatching.getOneThingKeyword(),
                 Objects.isNull(userOneThingMatching.getUser().getJob()) ? null : userOneThingMatching.getUser().getJob().getJobCategory(),
                 userOneThingMatching.getUser().getLanguage(),
