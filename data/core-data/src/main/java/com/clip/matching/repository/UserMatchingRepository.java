@@ -18,7 +18,7 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
             uotm.id,
             otm.id,
-            otm.meetingTime,
+            otm.dateTime,
             uotm.matchingStatus,
             'ONE_THING',
             uotm.onethingTopic,
@@ -28,17 +28,17 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         left join uotm.oneThingMatching otm
         left join OneThingMatchingReview otr on otr.oneThingMatching.id = otm.id and otr.user.id = :userId
         where (:matchingStatus is null or uotm.matchingStatus = :matchingStatus)
-        and (:lastMeetingTime is null or uotm.oneThingMatching.meetingTime < :lastMeetingTime)
+        and (:lastMeetingTime is null or uotm.oneThingMatching.dateTime < :lastMeetingTime)
         and uotm.user.id = :userId
         and uotm.matchingStatus != 'WAIT_FOR_PAYMENT'
-        order by uotm.oneThingMatching.meetingTime desc
+        order by uotm.oneThingMatching.dateTime desc
         
         union all
         
         select new com.clip.matching.repository.projection.MatchingProjectionDto(
             urm.id,
             rm.id,
-            rm.meetingTime,
+            rm.dateTime,
             urm.matchingStatus,
             'RANDOM',
             urm.onethingTopic,
@@ -50,8 +50,8 @@ public interface UserMatchingRepository extends JpaRepository<UserOneThingMatchi
         where urm.user.id = :userId
           and urm.matchingStatus != 'APPLIED'
           and (:matchingStatus is null or urm.matchingStatus = :matchingStatus)
-          and (:lastMeetingTime is null or rm.meetingTime < :lastMeetingTime)
-        order by urm.randomMatching.meetingTime desc
+          and (:lastMeetingTime is null or rm.dateTime < :lastMeetingTime)
+        order by urm.randomMatching.dateTime desc
         """)
     List<MatchingProjectionDto> findAllMatchingsByStatus(
             @Param("matchingStatus") RandomMatchingStatus matchingStatus,

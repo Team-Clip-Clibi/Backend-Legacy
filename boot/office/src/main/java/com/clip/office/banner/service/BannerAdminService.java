@@ -27,18 +27,12 @@ public class BannerAdminService {
 
     @Transactional(readOnly = true)
     public List<BannerInfo> getLoginBannerList() {
-        return bannerService.findAllLoginBanners()
-                .stream()
-                .map(bannerMapper::toBannerInfo)
-                .toList();
+        return bannerMapper.toBannerInfos(bannerService.findAllLoginBanners());
     }
 
     @Transactional(readOnly = true)
     public List<BannerInfo> getHomeBannerList() {
-        return bannerService.findAllHomeBanners()
-                .stream()
-                .map(bannerMapper::toBannerInfo)
-                .toList();
+        return bannerMapper.toBannerInfos(bannerService.findAllHomeBanners());
     }
 
     @Transactional

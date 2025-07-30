@@ -23,14 +23,14 @@ public interface MatchingReviewMapper {
         matchingReviewPopupDtos.addAll(oneThingMatchings.stream()
                 .map(userOneThingMatching -> MatchingReviewPopupDto.builder()
                         .matchingId(userOneThingMatching.getOneThingMatching().getId())
-                        .meetingTime(userOneThingMatching.getOneThingMatching().getMeetingTime())
+                        .meetingTime(userOneThingMatching.getOneThingMatching().getDateTime())
                         .matchingType(MatchingType.ONE_THING)
                         .build())
                 .toList());
         matchingReviewPopupDtos.addAll(randomMatchings.stream()
                 .map(userRandomMatching -> MatchingReviewPopupDto.builder()
                         .matchingId(userRandomMatching.getRandomMatching().getId())
-                        .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
+                        .meetingTime(userRandomMatching.getRandomMatching().getDateTime())
                         .matchingType(MatchingType.RANDOM)
                         .build())
                 .toList());

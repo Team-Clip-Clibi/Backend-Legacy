@@ -92,7 +92,7 @@ public class RandomMatchingProgressNotificationBatchConfig {
                         select um from UserRandomMatching um
                         join fetch um.randomMatching rm
                         join fetch um.user u
-                        where rm.meetingTime = :targetDateTime
+                        where rm.dateTime = :targetDateTime
                         and um.matchingStatus = 'CONFIRMED'
                         and u.fcmToken is not null
                         and u.isAllowNotify = true

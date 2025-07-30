@@ -1,7 +1,7 @@
 package com.clip.api.matching.controller.dto;
 
 import com.clip.matching.entity.OneThingCategory;
-import com.clip.matching.entity.OneThingDistrict;
+import com.clip.matching.entity.OnethingDistrict;
 import com.clip.matching.entity.OneThingBudgetRange;
 import com.clip.matching.entity.UserOneThingMatching;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +20,7 @@ public class OneThingOrderDto {
     @Schema(name = "OneThingOrderRequest")
     public static class Request{
         private final String topic;
-        private final OneThingDistrict district;
+        private final OnethingDistrict district;
         @Size(max = 3)
         private final List<UserOneThingMatching.PreferredDate> preferredDates;
         private final String tmiContent;
@@ -28,7 +28,7 @@ public class OneThingOrderDto {
         private final OneThingCategory oneThingCategory;
 
         @Builder
-        public Request(String topic, OneThingDistrict district, List<UserOneThingMatching.PreferredDate> preferredDates, String tmiContent, OneThingBudgetRange oneThingBudgetRange, OneThingCategory oneThingCategory) {
+        public Request(String topic, OnethingDistrict district, List<UserOneThingMatching.PreferredDate> preferredDates, String tmiContent, OneThingBudgetRange oneThingBudgetRange, OneThingCategory oneThingCategory) {
             this.topic = topic;
             this.district = district;
             this.preferredDates = preferredDates;

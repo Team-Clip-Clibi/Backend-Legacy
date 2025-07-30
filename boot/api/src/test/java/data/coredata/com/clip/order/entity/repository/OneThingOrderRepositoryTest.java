@@ -3,7 +3,7 @@ package data.coredata.com.clip.order.entity.repository;
 import com.clip.ApiApplication;
 import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.RandomMatching;
-import com.clip.matching.repository.OneThingMatchingRepository;
+import com.clip.matching.repository.OnethingMatchingRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
@@ -17,7 +17,6 @@ import com.clip.user.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class OneThingOrderRepositoryTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    OneThingMatchingRepository oneThingMatchingRepository;
+    OnethingMatchingRepository oneThingMatchingRepository;
     @Autowired
     OneThingOrderRepository oneThingOrderRepository;
     @Autowired

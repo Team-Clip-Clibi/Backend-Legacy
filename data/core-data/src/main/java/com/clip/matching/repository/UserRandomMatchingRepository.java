@@ -1,7 +1,10 @@
 package com.clip.matching.repository;
 
+import com.clip.matching.entity.OneThingMatching;
+import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserRandomMatching;
+import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.order.entity.RandomOrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,9 +23,9 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             from UserRandomMatching u
             join fetch u.randomMatching
             where u.user.id = :userId
-            and u.randomMatching.meetingTime >= :date
+            and u.randomMatching.dateTime >= :date
             and u.matchingStatus = :matchingStatus
-            order by u.randomMatching.meetingTime asc
+            order by u.randomMatching.dateTime asc
             """)
     List<UserRandomMatching> findUserRandomMatching(Long userId, LocalDateTime date,
                                                     RandomMatchingStatus matchingStatus);
@@ -41,9 +44,9 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             from UserRandomMatching u
             join fetch u.randomMatching
             where u.user.id = :userId
-            and u.randomMatching.meetingTime >= :dateTime
+            and u.randomMatching.dateTime >= :dateTime
             and u.isEnded = false
-            order by u.randomMatching.meetingTime
+            order by u.randomMatching.dateTime
             limit 1
             """)
     Optional<UserRandomMatching> findLatestNotEndedStatus(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
@@ -107,7 +110,7 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             select u
             from UserRandomMatching u
             where u.user.id = :userId
-            and u.randomMatching.meetingTime = :meetingTime
+            and u.randomMatching.dateTime = :meetingTime
             and u.matchingStatus = :matchingStatus
             """)
     Optional<UserRandomMatching> findUserRandomMatching(@Param("userId") long userId, @Param("meetingTime") LocalDateTime meetingTime,
@@ -179,4 +182,11 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             and u.randomMatching.id = :matchingId
             """)
     void postponeRandomMatchingReview(@Param("userId") long userId, @Param("matchingId") long matchingId);
+
+
+    @Query("SELECT new com.clip.matching.repository.projection.MatchingParticipantCntDto(u.randomMatching.id, COUNT(u)) " +
+            "FROM UserRandomMatching u " +
+            "WHERE u.randomMatching IN :randomMatchings " +
+            "GROUP BY u.randomMatching")
+    List<MatchingParticipantCntDto> findParticipantCntIn(@Param("randomMatchings") List<RandomMatching> randomMatchings);
 }

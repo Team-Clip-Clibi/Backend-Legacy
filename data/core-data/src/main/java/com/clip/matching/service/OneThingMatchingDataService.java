@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.clip.matching.entity.OneThingMatching;
-import com.clip.matching.repository.OneThingMatchingRepository;
+import com.clip.matching.repository.OnethingMatchingRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OneThingMatchingDataService {
 
-    private final OneThingMatchingRepository oneThingMatchingRepository;
+    private final OnethingMatchingRepository oneThingMatchingRepository;
 
     public OneThingMatching save(OneThingMatching oneThingMatching) {
         return oneThingMatchingRepository.save(oneThingMatching);

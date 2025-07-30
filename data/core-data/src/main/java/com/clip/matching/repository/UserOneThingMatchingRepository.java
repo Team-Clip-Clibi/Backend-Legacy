@@ -1,14 +1,23 @@
 package com.clip.matching.repository;
 
+import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.OneThingMatchingStatus;
+import com.clip.matching.entity.OnethingDistrict;
 import com.clip.matching.entity.UserOneThingMatching;
+import com.clip.matching.repository.projection.FirstParticipantKeywordDto;
+import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.order.entity.OneThingOrderStatus;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +29,9 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             from UserOneThingMatching u
             join fetch u.oneThingMatching
             where u.user.id = :userId
-            and u.oneThingMatching.meetingTime >= :date
+            and u.oneThingMatching.dateTime >= :date
             and u.matchingStatus = :matchingStatus
-            order by u.oneThingMatching.meetingTime asc
+            order by u.oneThingMatching.dateTime asc
             """)
     List<UserOneThingMatching> findUserOneThingMatching(@Param("userId") Long userId, @Param("date") LocalDateTime date,
                                                         @Param("matchingStatus") OneThingMatchingStatus matchingStatus);
@@ -41,9 +50,9 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             from UserOneThingMatching u
             join fetch u.oneThingMatching
             where u.user.id = :userId
-            and u.oneThingMatching.meetingTime >= :dateTime
+            and u.oneThingMatching.dateTime >= :dateTime
             and u.isEnded = false
-            order by u.oneThingMatching.meetingTime
+            order by u.oneThingMatching.dateTime
             limit 1
             """)
     Optional<UserOneThingMatching> findLatestNotEndedStatus(@Param("userId") long userId, @Param("dateTime") LocalDateTime dateTime);
@@ -168,4 +177,40 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             """)
     void postponeOneThingMatchingReview(@Param("userId") long userId, @Param("matchingId") long matchingId);
 
+    @Query("SELECT new com.clip.matching.repository.projection.MatchingParticipantCntDto(u.oneThingMatching.id, COUNT(u)) " +
+            "FROM UserOneThingMatching u " +
+            "WHERE u.oneThingMatching IN :onethingMatchings " +
+            "GROUP BY u.oneThingMatching")
+    List<MatchingParticipantCntDto> findParticipantCntIn(@Param("onethingMatchings") List<OneThingMatching> onethingMatchings);
+
+    @Query("SELECT new com.clip.matching.repository.projection.FirstParticipantKeywordDto(u.id, u.oneThingKeyword) " +
+            "FROM UserOneThingMatching u " +
+            "WHERE u.oneThingMatching.id IN :onethingMatchings " +
+            "AND u.id = ( SELECT MIN(u2.id) FROM UserOneThingMatching u2 WHERE u2.oneThingMatching = u.oneThingMatching)")
+    List<FirstParticipantKeywordDto> findFirstParticipantKeywords(@Param("onethingMatchings") List<OneThingMatching> oneThingMatchings);
+
+    @Query("SELECT u " +
+            "FROM UserOneThingMatching u " +
+//            "join fetch u.user.job.jobCategory " +
+            "join fetch u.oneThingMatching " +
+            "join u.preferredDates pd " +
+            "WHERE u.oneThingMatching is NOT NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
+            "ORDER BY u.id")
+    Slice<UserOneThingMatching> findAssignedParticipantsFetchUser(
+            @Param("onethingDistrict") OnethingDistrict onethingDistrict,
+            @Param("localDate") LocalDate localDate, PageRequest of);
+
+    @Query("SELECT u " +
+            "FROM UserOneThingMatching u " +
+//            "join fetch u.user.job.jobCategory " +
+            "join u.preferredDates pd " +
+            "WHERE u.oneThingMatching is NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
+            "ORDER BY u.id")
+    Slice<UserOneThingMatching> findUnassignedParticipantsFetchUser(
+            @Param("onethingDistrict") OnethingDistrict onethingDistrict,
+            @Param("localDate") LocalDate localDate, PageRequest of);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT u FROM UserOneThingMatching u WHERE u.id IN :ids")
+    List<UserOneThingMatching> findByIdsForUpdate(@Param("ids") List<Long> ids);
 }

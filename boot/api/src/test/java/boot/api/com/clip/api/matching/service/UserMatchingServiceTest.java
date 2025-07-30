@@ -47,7 +47,7 @@ public class UserMatchingServiceTest {
     @Autowired
     private UserMatchingService userMatchingService;
     @Autowired
-    private OneThingMatchingRepository oneThingMatchingRepository;
+    private OnethingMatchingRepository oneThingMatchingRepository;
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
     @Autowired
@@ -282,10 +282,10 @@ public class UserMatchingServiceTest {
         //given
         User user = userRepository.save(User.builder().build());
         OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
-                .meetingTime(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .dateTime(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.SECONDS))
                 .build());
         RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder()
-                .meetingTime(LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.SECONDS))
+                .dateTime(LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.SECONDS))
                 .build());
 
         OneThingOrder oneThingOrder = oneThingOrderRepository.save(
@@ -328,7 +328,7 @@ public class UserMatchingServiceTest {
         assertThat(matchingOverview.getAppliedMatchingCount()).isEqualTo(1);
         assertThat(matchingOverview.getConfirmedMatchingCount()).isEqualTo(1);
         assertThat(matchingOverview.getIsAllNoticeRead()).isFalse();
-        assertThat(matchingOverview.getNextMatchingDate()).isEqualTo(oneThingMatching.getMeetingTime().toLocalDate());
+        assertThat(matchingOverview.getNextMatchingDate()).isEqualTo(oneThingMatching.getDateTime().toLocalDate());
     }
 
     @DisplayName("userId로 매칭된 모임들을 상태에 따라 조회한다.")
@@ -338,10 +338,10 @@ public class UserMatchingServiceTest {
         User user = userRepository.save(User.builder().build());
         String oneThingContent = "oneThingContent";
         OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
-                .meetingTime(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .dateTime(LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.SECONDS))
                 .build());
         RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder()
-                .meetingTime(LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.SECONDS))
+                .dateTime(LocalDateTime.now().plusHours(2).truncatedTo(ChronoUnit.SECONDS))
                 .build());
 
         UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(
@@ -383,7 +383,7 @@ public class UserMatchingServiceTest {
         // 과거의 매칭 생성 (6개월 이전)
         LocalDateTime oldMeetingTime = LocalDateTime.now().plusMonths(7).truncatedTo(ChronoUnit.SECONDS);
         OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
-                .meetingTime(oldMeetingTime)
+                .dateTime(oldMeetingTime)
                 .build());
 
         UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.save(

@@ -26,44 +26,31 @@ public class OneThingMatching extends BaseEntity {
     private Long id;
 
     @Column
-    @Enumerated(EnumType.STRING)
-    private OneThingDistrict oneThingDistrict;
-
-    //추후 제거
-    @Column
-    @Enumerated(EnumType.STRING)
-    private OneThingKeyword oneThingKeyword;
-
-    @Column
-    private String location;
+    private String address;
 
     @Column
     private String restaurantName;
 
     @Column
-    private LocalDateTime meetingTime;
+    private LocalDateTime dateTime;
 
-    //추후 제거
     @Column
     @Enumerated(EnumType.STRING)
-    private OneThingBudgetRange oneThingPrice;
+    private OnethingDistrict onethingDistrict;
 
 
     @Builder
-    public OneThingMatching(OneThingDistrict oneThingDistrict, OneThingKeyword oneThingKeyword, String location, String restaurantName, LocalDateTime meetingTime, OneThingBudgetRange oneThingPrice) {
-        this.oneThingDistrict = oneThingDistrict;
-        this.oneThingKeyword = oneThingKeyword;
-        this.location = location;
+    public OneThingMatching(String address, String restaurantName, LocalDateTime dateTime, OnethingDistrict onethingDistrict) {
+        this.address = address;
         this.restaurantName = restaurantName;
-        this.meetingTime = meetingTime;
-        this.oneThingPrice = oneThingPrice;
+        this.dateTime = dateTime;
+        this.onethingDistrict = onethingDistrict;
     }
 
-    public void update(OneThingDistrict oneThingDistrict, String location, String restaurantName, LocalDateTime meetingTime, OneThingBudgetRange oneThingPrice) {
-        this.oneThingDistrict = oneThingDistrict;
-        this.location = location;
+    public void update(OnethingDistrict oneThingDistrict, String address, String restaurantName, LocalDateTime dateTime) {
+        this.onethingDistrict = oneThingDistrict;
+        this.address = address;
         this.restaurantName = restaurantName;
-        this.meetingTime = meetingTime;
-        this.oneThingPrice = oneThingPrice;
+        this.dateTime = dateTime;
     }
 }

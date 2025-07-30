@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MatchingService {
     private final int PAGE_SIZE = 50;
-    private final OneThingMatchingRepository oneThingMatchingRepository;
+    private final OnethingMatchingRepository oneThingMatchingRepository;
     private final RandomMatchingRepository randomMatchingRepository;
     private final UserOneThingMatchingRepository userOneThingMatchingRepository;
     private final UserRandomMatchingRepository userRandomMatchingRepository;

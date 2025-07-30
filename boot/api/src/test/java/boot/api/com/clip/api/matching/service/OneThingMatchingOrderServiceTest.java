@@ -26,7 +26,7 @@ class OneThingMatchingOrderServiceTest {
 
         OneThingOrderDto.Request request = OneThingOrderDto.Request.builder()
                 .topic("topic")
-                .district(OneThingDistrict.GANGNAM)
+                .district(OnethingDistrict.GANGNAM)
                 .preferredDates(List.of(new UserOneThingMatching.PreferredDate(preferredDate, OneThingTimeSlot.DINNER)))
                 .tmiContent("tmiContent")
                 .oneThingBudgetRange(OneThingBudgetRange.MEDIUM)

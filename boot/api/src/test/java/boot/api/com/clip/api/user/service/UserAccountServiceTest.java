@@ -17,7 +17,7 @@ import com.clip.infra.aws.s3.S3ImgService;
 import com.clip.infra.aws.s3.config.S3PathProperties;
 import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.*;
-import com.clip.matching.repository.OneThingMatchingRepository;
+import com.clip.matching.repository.OnethingMatchingRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
 import com.clip.matching.repository.UserRandomMatchingRepository;
@@ -80,7 +80,7 @@ public class UserAccountServiceTest {
     @MockitoBean
     private S3PathProperties s3PathProperties;
     @Autowired
-    private OneThingMatchingRepository oneThingMatchingRepository;
+    private OnethingMatchingRepository oneThingMatchingRepository;
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
     @Autowired
@@ -532,10 +532,10 @@ public class UserAccountServiceTest {
         void setUp() {
             User user = userRepository.save(User.builder().nickname("user").socialId("socialId").platform(Platform.APPLE).build());
             OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
-                    .meetingTime(LocalDateTime.now().plusDays(1))
+                    .dateTime(LocalDateTime.now().plusDays(1))
                     .build());
             RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder()
-                    .meetingTime(LocalDateTime.now().plusDays(1))
+                    .dateTime(LocalDateTime.now().plusDays(1))
                     .build());
         }
 

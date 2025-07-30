@@ -37,8 +37,8 @@ public class MatchingNotificationService {
                 templateType,
                 "ONE_THING",
                 item -> item.getUser(),
-                item -> item.getOneThingMatching().getMeetingTime().getDayOfWeek().name(),
-                item -> String.valueOf(item.getOneThingMatching().getMeetingTime().getHour()),
+                item -> item.getOneThingMatching().getDateTime().getDayOfWeek().name(),
+                item -> String.valueOf(item.getOneThingMatching().getDateTime().getHour()),
                 item -> item.getOneThingMatching().getId()
         );
     }
@@ -52,8 +52,8 @@ public class MatchingNotificationService {
                 templateType,
                 "RANDOM",
                 item -> item.getUser(),
-                item -> item.getRandomMatching().getMeetingTime().getDayOfWeek().name(),
-                item -> String.valueOf(item.getRandomMatching().getMeetingTime().getHour()),
+                item -> item.getRandomMatching().getDateTime().getDayOfWeek().name(),
+                item -> String.valueOf(item.getRandomMatching().getDateTime().getHour()),
                 item -> item.getRandomMatching().getId()
         );
     }
