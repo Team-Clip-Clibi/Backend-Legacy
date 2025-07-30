@@ -42,11 +42,11 @@ public class RandomMatching extends BaseEntity {
         this.totalCapacity = totalCapacity;
     }
 
-    public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
+    public void update(RandomDistrict randomDistrict, String address, String restaurantName, LocalDateTime dateTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
-        this.address = location;
+        this.address = address;
         this.restaurantName = restaurantName;
-        this.dateTime = meetingTime;
+        this.dateTime = dateTime;
         this.totalCapacity = totalCapacity;
     }
 }

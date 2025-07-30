@@ -47,10 +47,10 @@ public class OneThingMatching extends BaseEntity {
         this.onethingDistrict = onethingDistrict;
     }
 
-    public void update(OnethingDistrict oneThingDistrict, String location, String restaurantName, LocalDateTime meetingTime) {
+    public void update(OnethingDistrict oneThingDistrict, String address, String restaurantName, LocalDateTime dateTime) {
         this.onethingDistrict = oneThingDistrict;
-        this.address = location;
+        this.address = address;
         this.restaurantName = restaurantName;
-        this.dateTime = meetingTime;
+        this.dateTime = dateTime;
     }
 }

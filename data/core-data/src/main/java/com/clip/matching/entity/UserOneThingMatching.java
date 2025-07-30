@@ -54,7 +54,7 @@ public class UserOneThingMatching extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private OnethingDistrict oneThingDistrict;
+    private OnethingDistrict onethingDistrict;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -80,7 +80,7 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isReviewPopupDismissed;
 
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String onethingTopic, String tmi, boolean isEnded, OnethingDistrict oneThingDistrict,
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String onethingTopic, String tmi, boolean isEnded, OnethingDistrict onethingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
                                 OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes,
                                 OnethingKeyword onethingKeyword, boolean isReviewPopupDismissed) {
@@ -91,7 +91,7 @@ public class UserOneThingMatching extends BaseEntity {
         this.onethingTopic = onethingTopic;
         this.tmi = tmi;
         this.isEnded = isEnded;
-        this.oneThingDistrict = oneThingDistrict;
+        this.onethingDistrict = onethingDistrict;
         this.preferredDates = preferredDates;
         this.oneThingBudgetRange = oneThingBudgetRange;
         this.matchingStatus = matchingStatus;

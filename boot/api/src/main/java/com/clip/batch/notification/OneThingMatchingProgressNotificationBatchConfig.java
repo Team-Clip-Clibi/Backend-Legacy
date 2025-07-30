@@ -93,7 +93,7 @@ public class OneThingMatchingProgressNotificationBatchConfig {
                         select um from UserOneThingMatching um
                         join fetch um.oneThingMatching om
                         join fetch um.user u
-                        where om.meetingTime = :targetDate
+                        where om.dateTime = :targetDate
                         and um.matchingStatus = 'CONFIRMED'
                         and u.fcmToken is not null
                         and u.isAllowNotify = true

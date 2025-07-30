@@ -185,7 +185,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 
     @Query("SELECT new com.clip.matching.repository.projection.FirstParticipantKeywordDto(u.id, u.oneThingKeyword) " +
             "FROM UserOneThingMatching u " +
-            "WHERE u.oneThingMatching.id = :matchingId " +
+            "WHERE u.oneThingMatching.id IN :onethingMatchings " +
             "AND u.id = ( SELECT MIN(u2.id) FROM UserOneThingMatching u2 WHERE u2.oneThingMatching = u.oneThingMatching)")
     List<FirstParticipantKeywordDto> findFirstParticipantKeywords(@Param("onethingMatchings") List<OneThingMatching> oneThingMatchings);
 
@@ -194,7 +194,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 //            "join fetch u.user.job.jobCategory " +
             "join fetch u.oneThingMatching " +
             "join u.preferredDates pd " +
-            "WHERE u.oneThingMatching is NOT NULL AND u.oneThingDistrict = :onethingDistrict AND pd.date = :localDate " +
+            "WHERE u.oneThingMatching is NOT NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
             "ORDER BY u.id")
     Slice<UserOneThingMatching> findAssignedParticipantsFetchUser(
             @Param("onethingDistrict") OnethingDistrict onethingDistrict,
@@ -204,7 +204,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             "FROM UserOneThingMatching u " +
 //            "join fetch u.user.job.jobCategory " +
             "join u.preferredDates pd " +
-            "WHERE u.oneThingMatching is NULL AND u.oneThingDistrict = :onethingDistrict AND pd.date = :localDate " +
+            "WHERE u.oneThingMatching is NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
             "ORDER BY u.id")
     Slice<UserOneThingMatching> findUnassignedParticipantsFetchUser(
             @Param("onethingDistrict") OnethingDistrict onethingDistrict,

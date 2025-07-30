@@ -54,7 +54,7 @@ public interface MatchingMapper {
                 .matchingType(MatchingType.ONE_THING)
                 .myOneThingContent(matchingInfo.getOnethingTopic())
                 .applicationInfo(OneThingMatchingDetailDto.ApplicationInfo.builder()
-                        .district(matchingInfo.getOneThingDistrict().name())
+                        .district(matchingInfo.getOnethingDistrict().name())
                         .preferredDates(matchingInfo.getPreferredDates())
                         .oneThingBudgetRange(matchingInfo.getOneThingBudgetRange())
                         .oneThingCategory(matchingInfo.getOneThingCategory())
