@@ -14,7 +14,7 @@ import com.clip.infra.fcm.config.FcmConfig;
 import com.clip.matching.entity.Mood;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.entity.RandomMatchingReview;
-import com.clip.matching.repository.OneThingMatchingRepository;
+import com.clip.matching.repository.OnethingMatchingRepository;
 import com.clip.matching.repository.OneThingMatchingReviewRepository;
 import com.clip.matching.repository.RandomMatchingRepository;
 import com.clip.matching.repository.RandomMatchingReviewRepository;
@@ -42,7 +42,7 @@ public class UserMatchingReviewServiceTest {
     @Autowired
     private MatchingReviewService matchingReviewService;
     @Autowired
-    private OneThingMatchingRepository oneThingMatchingRepository;
+    private OnethingMatchingRepository oneThingMatchingRepository;
     @Autowired
     private RandomMatchingRepository randomMatchingRepository;
     @Autowired

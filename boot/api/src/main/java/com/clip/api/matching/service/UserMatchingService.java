@@ -165,10 +165,10 @@ public class UserMatchingService {
 
         // 다음 매칭 날짜 계산
         Optional<LocalDate> oneThingDate = matchingService.findOptLatestUserOneThingMatchingNotEndedStatus(userId, LocalDateTime.now())
-                .map(match -> match.getOneThingMatching().getMeetingTime().toLocalDate());
+                .map(match -> match.getOneThingMatching().getDateTime().toLocalDate());
 
         Optional<LocalDate> randomDate = matchingService.findOptLatestUserRandomMatchingNotEndedStatus(userId, LocalDateTime.now())
-                .map(match -> match.getRandomMatching().getMeetingTime().toLocalDate());
+                .map(match -> match.getRandomMatching().getDateTime().toLocalDate());
 
         // 두 날짜 중 더 이른 날짜 선택
         LocalDate nextMatchingDate = Stream.of(oneThingDate, randomDate)

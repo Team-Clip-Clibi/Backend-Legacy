@@ -22,18 +22,18 @@ public interface MatchingMapper {
     default OnethingMatchingSummaryDto toDto(final UserOneThingMatching matchingInfo){
         return OnethingMatchingSummaryDto.builder()
                 .matchingId(matchingInfo.getOneThingMatching().getId())
-                .daysUntilMeeting(matchingInfo.getOneThingMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
-                .meetingTime(matchingInfo.getOneThingMatching().getMeetingTime())
-                .meetingPlace(matchingInfo.getOneThingMatching().getLocation())
+                .daysUntilMeeting(matchingInfo.getOneThingMatching().getDateTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
+                .meetingTime(matchingInfo.getOneThingMatching().getDateTime())
+                .meetingPlace(matchingInfo.getOneThingMatching().getAddress())
                 .build();
     }
 
     default RandomMatchingSummaryDto toDto(final UserRandomMatching userRandomMatching){
         return RandomMatchingSummaryDto.builder()
                 .matchingId(userRandomMatching.getRandomMatching().getId())
-                .daysUntilMeeting(userRandomMatching.getRandomMatching().getMeetingTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
-                .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
-                .meetingPlace(userRandomMatching.getRandomMatching().getLocation())
+                .daysUntilMeeting(userRandomMatching.getRandomMatching().getDateTime().toLocalDate().toEpochDay() - LocalDate.now().toEpochDay())
+                .meetingTime(userRandomMatching.getRandomMatching().getDateTime())
+                .meetingPlace(userRandomMatching.getRandomMatching().getAddress())
                 .build();
     }
 
@@ -49,7 +49,7 @@ public interface MatchingMapper {
 
         return OneThingMatchingDetailDto.builder()
                 .matchingId(matchingInfo.getOneThingMatching().getId())
-                .meetingTime(matchingInfo.getOneThingMatching().getMeetingTime())
+                .meetingTime(matchingInfo.getOneThingMatching().getDateTime())
                 .matchingStatus(matchingInfo.getMatchingStatus())
                 .matchingType(MatchingType.ONE_THING)
                 .myOneThingContent(matchingInfo.getOnethingTopic())
@@ -92,7 +92,7 @@ public interface MatchingMapper {
 
         return RandomMatchingDetailDto.builder()
                 .matchingId(userRandomMatching.getRandomMatching().getId())
-                .meetingTime(userRandomMatching.getRandomMatching().getMeetingTime())
+                .meetingTime(userRandomMatching.getRandomMatching().getDateTime())
                 .matchingStatus(userRandomMatching.getMatchingStatus())
                 .matchingType(MatchingType.RANDOM)
                 .myOneThingContent(userRandomMatching.getOnethingTopic())

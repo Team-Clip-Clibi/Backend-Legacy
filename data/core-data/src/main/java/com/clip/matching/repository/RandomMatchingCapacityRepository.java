@@ -16,8 +16,8 @@ public interface RandomMatchingCapacityRepository extends JpaRepository<RandomMa
             select rmc from RandomMatchingCapacity rmc
             join fetch rmc.randomMatching rm
             where rm.randomDistrict = :district
-            and rm.meetingTime >= :matchingTime
-            and rm.meetingTime < :matchingTimeEnd
+            and rm.dateTime >= :matchingTime
+            and rm.dateTime < :matchingTimeEnd
             order by rmc.availableCapacity desc
         """)
     List<RandomMatchingCapacity> findRandomMatchingCapacitiesWithDistrict(@Param("district") RandomDistrict district, @Param("matchingTime") LocalDateTime matchingTime,

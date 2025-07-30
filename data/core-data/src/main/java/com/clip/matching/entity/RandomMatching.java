@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -23,31 +22,31 @@ public class RandomMatching extends BaseEntity {
     private RandomDistrict randomDistrict;
 
     @Column
-    private String location;
+    private String address;
 
     @Column
     private String restaurantName;
 
     @Column
-    private LocalDateTime meetingTime;
+    private LocalDateTime dateTime;
 
     @Column
     private Integer totalCapacity;
 
     @Builder
-    public RandomMatching(RandomDistrict randomDistrict ,String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
+    public RandomMatching(RandomDistrict randomDistrict , String address, String restaurantName, LocalDateTime dateTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
-        this.location = location;
+        this.address = address;
         this.restaurantName = restaurantName;
-        this.meetingTime = meetingTime;
+        this.dateTime = dateTime;
         this.totalCapacity = totalCapacity;
     }
 
     public void update(RandomDistrict randomDistrict, String location, String restaurantName, LocalDateTime meetingTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
-        this.location = location;
+        this.address = location;
         this.restaurantName = restaurantName;
-        this.meetingTime = meetingTime;
+        this.dateTime = meetingTime;
         this.totalCapacity = totalCapacity;
     }
 }

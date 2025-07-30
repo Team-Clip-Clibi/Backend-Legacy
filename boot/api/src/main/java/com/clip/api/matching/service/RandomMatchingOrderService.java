@@ -110,9 +110,9 @@ public class RandomMatchingOrderService {
         return RandomMatchingOrderDto.Response.builder()
                 .orderId(order.getOrderId())
                 .amount(order.getDiscountedPrice().intValue())
-                .meetingTime(assignedMatching.getMeetingTime())
+                .meetingTime(assignedMatching.getDateTime())
                 .meetingPlace(assignedMatching.getRestaurantName())
-                .meetingLocation(assignedMatching.getLocation())
+                .meetingLocation(assignedMatching.getAddress())
                 .matchingId(assignedMatching.getId())
                 .build();
     }

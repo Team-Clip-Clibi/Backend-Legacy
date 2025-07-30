@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -53,7 +54,11 @@ public class UserOneThingMatching extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private OneThingDistrict oneThingDistrict;
+    private OnethingDistrict oneThingDistrict;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private OnethingKeyword oneThingKeyword;
 
     @ElementCollection(targetClass = PreferredDate.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "id"))
@@ -75,9 +80,10 @@ public class UserOneThingMatching extends BaseEntity {
     private boolean isReviewPopupDismissed;
 
     @Builder
-    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String onethingTopic, String tmi, boolean isEnded, OneThingDistrict oneThingDistrict,
+    public UserOneThingMatching(User user, OneThingMatching oneThingMatching, OneThingOrder oneThingOrder, OneThingCategory oneThingCategory, String onethingTopic, String tmi, boolean isEnded, OnethingDistrict oneThingDistrict,
                                 List<PreferredDate> preferredDates, OneThingBudgetRange oneThingBudgetRange,
-                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes, boolean isReviewPopupDismissed) {
+                                OneThingMatchingStatus matchingStatus, boolean isNoticeRead, Integer lateMinutes,
+                                OnethingKeyword onethingKeyword, boolean isReviewPopupDismissed) {
         this.user = user;
         this.oneThingMatching = oneThingMatching;
         this.oneThingOrder = oneThingOrder;
@@ -91,6 +97,7 @@ public class UserOneThingMatching extends BaseEntity {
         this.matchingStatus = matchingStatus;
         this.isNoticeRead = isNoticeRead;
         this.lateMinutes = lateMinutes;
+        this.oneThingKeyword = onethingKeyword;
         this.isReviewPopupDismissed = isReviewPopupDismissed;
     }
 
@@ -116,5 +123,19 @@ public class UserOneThingMatching extends BaseEntity {
 
     public void updateLateMinutes(int lastMinutes) {
         this.lateMinutes = lateMinutes;
+    }
+
+    public void deleteOnethingMatching() {
+        if (Objects.isNull(this.oneThingMatching)) {
+            throw new IllegalStateException("매칭이 등록되어 있지 않습니다.");
+        }
+        this.oneThingMatching = null;
+    }
+
+    public void updateOneThingMatching(OneThingMatching oneThingMatching) {
+        if (!Objects.isNull(this.oneThingMatching)) {
+            throw new IllegalStateException("이미 매칭이 등록되어 있습니다.");
+        }
+        this.oneThingMatching = oneThingMatching;
     }
 }
