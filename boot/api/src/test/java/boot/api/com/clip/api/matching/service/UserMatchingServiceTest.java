@@ -1,10 +1,7 @@
 package boot.api.com.clip.api.matching.service;
 
 import com.clip.ApiApplication;
-import com.clip.api.matching.controller.dto.MatchingDto;
-import com.clip.api.matching.controller.dto.MatchingOverviewDto;
-import com.clip.api.matching.controller.dto.MatchingProgressInfoDto;
-import com.clip.api.matching.controller.dto.MatchingType;
+import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.service.UserMatchingService;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.global.config.feign.TossFeignConfig;
@@ -22,7 +19,10 @@ import com.clip.order.entity.RandomOrder;
 import com.clip.order.entity.RandomOrderStatus;
 import com.clip.order.repository.OneThingOrderRepository;
 import com.clip.order.repository.RandomOrderRepository;
+import com.clip.user.entity.Job;
+import com.clip.user.entity.JobCategory;
 import com.clip.user.entity.User;
+import com.clip.user.repository.UserJobRepository;
 import com.clip.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -78,6 +78,8 @@ public class UserMatchingServiceTest {
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
     private S3PathProperties s3PathProperties;
+    @Autowired
+    private UserJobRepository userJobRepository;
 
     @AfterEach
     void tearDown() {
@@ -400,6 +402,104 @@ public class UserMatchingServiceTest {
         //when & then
         assertThatThrownBy(() -> userMatchingService.getMatchings(null, lastMatchingDateTime, user.getId()))
                 .isInstanceOf(NoContentAvailableException.class);
+    }
+
+    @DisplayName("userId로 매칭 안내문을 조회한다.")
+    @Test
+    void getMatchingNotice() {
+        //given
+        Job job = userJobRepository.save(Job.builder().jobCategory(JobCategory.ART).build());
+        User user1 = userRepository.save(User.builder().job(job).dietaryOption("베지테리언에요").build());
+        User user2 = userRepository.save(User.builder().job(job).dietaryOption("비건이에요").build());
+        User user3 = userRepository.save(User.builder().job(job).dietaryOption("글루텐프리를 지켜요").build());
+        User user4 = userRepository.save(User.builder().job(job).dietaryOption("다 잘먹어요").build());
+        User user5 = userRepository.save(User.builder().job(job).dietaryOption("다 잘 안먹어").build());
+        User user6 = userRepository.save(User.builder().job(job).dietaryOption("베지테리언에요").build());
+        User user7 = userRepository.save(User.builder().job(job).dietaryOption("생선 싫어요").build());
+
+        OneThingMatching oneThingMatching = oneThingMatchingRepository.save(OneThingMatching.builder()
+                .address("onethingAddress1")
+                .restaurantName("onethingRestaurant1")
+                .dateTime(LocalDateTime.now().minusMonths(1))
+                .build());
+        RandomMatching randomMatching = randomMatchingRepository.save(RandomMatching.builder()
+                .restaurantName("randomRestaurant1")
+                .address("randomAddress1")
+                .dateTime(LocalDateTime.now().minusDays(15))
+                .build());
+
+        UserOneThingMatching userOneThingMatching1 = userOneThingMatchingRepository.save(
+                UserOneThingMatching.builder()
+                        .user(user1)
+                        .oneThingMatching(oneThingMatching)
+                        .matchingStatus(OneThingMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        UserOneThingMatching userOneThingMatching2 = userOneThingMatchingRepository.save(
+                UserOneThingMatching.builder()
+                        .user(user2)
+                        .oneThingMatching(oneThingMatching)
+                        .matchingStatus(OneThingMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        UserOneThingMatching userOneThingMatching3 = userOneThingMatchingRepository.save(
+                UserOneThingMatching.builder()
+                        .user(user3)
+                        .oneThingMatching(oneThingMatching)
+                        .matchingStatus(OneThingMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        UserOneThingMatching userOneThingMatching4 = userOneThingMatchingRepository.save(
+                UserOneThingMatching.builder()
+                        .user(user4)
+                        .oneThingMatching(oneThingMatching)
+                        .matchingStatus(OneThingMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+
+
+        UserRandomMatching userRandomMatching1 = userRandomMatchingRepository.save(
+                UserRandomMatching.builder()
+                        .user(user1)
+                        .randomMatching(randomMatching)
+                        .matchingStatus(RandomMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        UserRandomMatching userRandomMatching2 = userRandomMatchingRepository.save(
+                UserRandomMatching.builder()
+                        .user(user5)
+                        .randomMatching(randomMatching)
+                        .matchingStatus(RandomMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        UserRandomMatching userRandomMatching3 = userRandomMatchingRepository.save(
+                UserRandomMatching.builder()
+                        .user(user6)
+                        .randomMatching(randomMatching)
+                        .matchingStatus(RandomMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        UserRandomMatching userRandomMatching4 = userRandomMatchingRepository.save(
+                UserRandomMatching.builder()
+                        .user(user7)
+                        .randomMatching(randomMatching)
+                        .matchingStatus(RandomMatchingStatus.CONFIRMED)
+                        .build()
+        );
+
+        //when
+        List<MatchingNoticeDto> response = userMatchingService.getMatchingNotice(null, user1.getId());
+
+        //then
+        System.out.println("response = " + response);
+        assertThat(response).hasSize(2);
     }
 
 }
