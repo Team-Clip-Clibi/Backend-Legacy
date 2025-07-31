@@ -4,8 +4,7 @@ public enum RandomMatchingStatus implements MatchingStatus {
     APPLIED("신청완료"),
     CONFIRMED("매칭확정"),
     COMPLETED("모임종료"),
-    CANCELED("취소"),
-    NO_SHOW("노쇼");
+    CANCELED("취소");
 
     private final String MatchingStatusName;
     RandomMatchingStatus(String MatchingStatusName) {

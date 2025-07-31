@@ -6,6 +6,7 @@ import com.clip.matching.entity.OnethingDistrict;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.repository.projection.FirstParticipantKeywordDto;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
+import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
 import com.clip.order.entity.OneThingOrderStatus;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.PageRequest;
@@ -191,7 +192,6 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 
     @Query("SELECT u " +
             "FROM UserOneThingMatching u " +
-//            "join fetch u.user.job.jobCategory " +
             "join fetch u.oneThingMatching " +
             "join u.preferredDates pd " +
             "WHERE u.oneThingMatching is NOT NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
@@ -202,7 +202,6 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 
     @Query("SELECT u " +
             "FROM UserOneThingMatching u " +
-//            "join fetch u.user.job.jobCategory " +
             "join u.preferredDates pd " +
             "WHERE u.oneThingMatching is NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
             "ORDER BY u.id")
@@ -213,4 +212,41 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT u FROM UserOneThingMatching u WHERE u.id IN :ids")
     List<UserOneThingMatching> findByIdsForUpdate(@Param("ids") List<Long> ids);
+
+    @Query("SELECT u " +
+            "FROM UserOneThingMatching u " +
+            "JOIN FETCH u.oneThingMatching " +
+            "WHERE u.user.id = :userId " +
+            "AND (u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.CONFIRMED " +
+                "OR u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.COMPLETED) " +
+            "ORDER BY u.id")
+    List<UserOneThingMatching> findTop5ConfirmedOrCompletedStatus(@Param("userId") long userId, PageRequest page);
+
+    @Query("SELECT u " +
+            "FROM UserOneThingMatching u " +
+            "WHERE u.id = :userId " +
+            "AND u.oneThingMatching.dateTime > :startDateTime " +
+            "AND u.oneThingMatching.dateTime <= :endDateTime " +
+            "ORDER BY u.id ")
+    List<UserOneThingMatching> findDateTimeBetween(@Param("userId") long userId,
+                                                   @Param("startDateTime") LocalDateTime startDateTime,
+                                                   @Param("endDateTime") LocalDateTime endDateTime);
+
+    @Query("SELECT u " +
+            "FROM UserOneThingMatching u " +
+            "JOIN FETCH u.oneThingMatching " +
+            "WHERE u.user.id = :userId " +
+            "AND u.oneThingMatching.dateTime > :lastMatchingTime " +
+            "AND (u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.CONFIRMED " +
+            "OR u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.COMPLETED) " +
+            "ORDER BY u.id")
+    List<UserOneThingMatching> findTop5ConfirmedOrCompletedStatus(@Param("userId") long userId,
+                                                                  @Param("lastMatchingTime") LocalDateTime lastMatchingTime,
+                                                                  PageRequest pageRequest);
+
+    @Query("SELECT new com.clip.matching.repository.projection.ParticipantJobAndDietaryDto(u.oneThingMatching.id, j.jobCategory, u.user.dietaryOption) " +
+            "FROM UserOneThingMatching u " +
+            "JOIN u.user.job j " +
+            "WHERE u.oneThingMatching IN :onethingMatchings ")
+    List<ParticipantJobAndDietaryDto> findJobAndDietaryIn(@Param("onethingMatchings") List<OneThingMatching> onethingMatchings);
 }

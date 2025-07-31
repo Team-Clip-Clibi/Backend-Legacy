@@ -2,15 +2,21 @@ package com.clip.api.matching.service;
 
 import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.mapper.MatchingMapper;
+import com.clip.api.matching.mapper.MatchingNoticeMapper;
+import com.clip.global.exception.NoContentAvailableException;
 import com.clip.infra.fcm.event.FcmNotificationEvent;
 import com.clip.infra.fcm.service.MessageParams;
 import com.clip.infra.fcm.service.MessageTemplateType;
 import com.clip.matching.entity.*;
+import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
 import com.clip.matching.service.MatchingService;
+import com.clip.matching.service.UserOneThingMatchingService;
+import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.notification.entity.Notification;
 import com.clip.notification.entity.NotificationType;
 import com.clip.notification.service.NotificationService;
 import com.clip.user.entity.User;
+import com.clip.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -31,6 +37,10 @@ public class UserMatchingService {
     private final MatchingMapper matchingMapper;
     private final ApplicationEventPublisher sendFCMEventPublisher;
     private final NotificationService notificationService;
+    private final UserService userService;
+    private final UserOneThingMatchingService userOneThingMatchingService;
+    private final UserRandomMatchingService userRandomMatchingService;
+    private final MatchingNoticeMapper matchingNoticeMapper;
 
 
     public MatchingSummaryDto getUserMatchings(final long userId) {
@@ -284,5 +294,57 @@ public class UserMatchingService {
                 matchingType,
                 userDataMap
         ));
+    }
+
+    public List<MatchingNoticeDto> getMatchingNotice(LocalDateTime lastMatchingTime, long userId) {
+        List<UserOneThingMatching> userOnethings;
+        List<UserRandomMatching> userRandoms;
+
+        if (isFirstRequest(lastMatchingTime)) {
+            userOnethings = userOneThingMatchingService.findTop5ConfirmedOrCompletedStatus(userId);
+            userRandoms = userRandomMatchingService.findTop5ConfirmedOrCompletedStatus(userId);
+        }else {
+            userOnethings = userOneThingMatchingService.findTop5ConfirmedOrCompletedStatus(userId, lastMatchingTime);
+            userRandoms = userRandomMatchingService.findTop5ConfirmedOrCompletedStatus(userId, lastMatchingTime);
+        }
+
+        if (userOnethings.isEmpty() && userRandoms.isEmpty()) {
+            throw new NoContentAvailableException("Matching Notice", userId);
+        }
+
+        if (!userOnethings.isEmpty() && !userRandoms.isEmpty()) {
+            syncMatchingDateTimeRange(userId, userOnethings, userRandoms);
+        }
+        List<ParticipantJobAndDietaryDto> onethingParticipantJobAndDietary = userOneThingMatchingService.findJobAndDietaryIn(
+                userOnethings.stream()
+                        .map(UserOneThingMatching::getOneThingMatching)
+                        .toList()
+        );
+        List<ParticipantJobAndDietaryDto> randomParticipantJobAndDietary = userRandomMatchingService.findJobAndDietaryIn(
+                userRandoms.stream()
+                        .map(UserRandomMatching::getRandomMatching)
+                        .toList()
+        );
+
+        return matchingNoticeMapper.toMatchingNoticeDtoList(userOnethings, onethingParticipantJobAndDietary, userRandoms, randomParticipantJobAndDietary);
+    }
+
+    private static boolean isFirstRequest(LocalDateTime lastMatchingTime) {
+        return Objects.isNull(lastMatchingTime);
+    }
+
+    private void syncMatchingDateTimeRange(
+            long userId,
+            List<UserOneThingMatching> userOnethingList,
+            List<UserRandomMatching> userRandomList
+    ) {
+        LocalDateTime onethingLastDateTime = userOnethingList.getLast().getOneThingMatching().getDateTime();
+        LocalDateTime randomLastDateTime = userRandomList.getLast().getRandomMatching().getDateTime();
+
+        if (onethingLastDateTime.isAfter(randomLastDateTime)) {
+            userRandomList.addAll(userRandomMatchingService.findDateTimeBetween(userId, randomLastDateTime, onethingLastDateTime));
+        } else {
+            userOnethingList.addAll(userOneThingMatchingService.findDateTimeBetween(userId, onethingLastDateTime, randomLastDateTime));
+        }
     }
 }

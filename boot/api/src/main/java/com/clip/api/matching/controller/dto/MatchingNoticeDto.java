@@ -19,7 +19,7 @@ public class MatchingNoticeDto {
     private String location;
     private String menuCategory;
     private List<JobInfo> jobInfos;
-    private List<DietaryInfo> dietaryInfos;
+    private List<String> dietaryList;
 
     @Getter
     @Builder
@@ -29,18 +29,6 @@ public class MatchingNoticeDto {
 
         public JobInfo(String jobName, int count) {
             this.jobName = jobName;
-            this.count = count;
-        }
-    }
-
-    @Getter
-    @Builder
-    public static class DietaryInfo {
-        private String dietaryOption;
-        private int count;
-
-        public DietaryInfo(String dietaryOption, int count) {
-            this.dietaryOption = dietaryOption;
             this.count = count;
         }
     }

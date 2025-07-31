@@ -1,11 +1,10 @@
 package com.clip.matching.repository;
 
-import com.clip.matching.entity.OneThingMatching;
-import com.clip.matching.entity.RandomMatching;
-import com.clip.matching.entity.RandomMatchingStatus;
-import com.clip.matching.entity.UserRandomMatching;
+import com.clip.matching.entity.*;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
+import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
 import com.clip.order.entity.RandomOrderStatus;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -189,4 +188,41 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             "WHERE u.randomMatching IN :randomMatchings " +
             "GROUP BY u.randomMatching")
     List<MatchingParticipantCntDto> findParticipantCntIn(@Param("randomMatchings") List<RandomMatching> randomMatchings);
+
+    @Query("SELECT u " +
+            "FROM UserRandomMatching u " +
+            "JOIN FETCH u.randomMatching " +
+            "WHERE u.user.id = :userId " +
+            "AND (u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.CONFIRMED " +
+            "OR u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.COMPLETED) " +
+            "ORDER BY u.id")
+    List<UserRandomMatching> findTop5ConfirmedOrCompletedStatus(@Param("userId") long userId, PageRequest page);
+
+    @Query("SELECT u " +
+            "FROM UserRandomMatching u " +
+            "WHERE u.id = :userId " +
+            "AND u.randomMatching.dateTime > :startDateTime " +
+            "AND u.randomMatching.dateTime <= :endDateTime " +
+            "ORDER BY u.id ")
+    List<UserRandomMatching> findDateTimeBetween(@Param("userId") long userId,
+                                                 @Param("startDateTime") LocalDateTime startDateTime,
+                                                 @Param("endDateTime") LocalDateTime endDateTime);
+
+    @Query("SELECT u " +
+            "FROM UserRandomMatching u " +
+            "JOIN FETCH u.randomMatching " +
+            "WHERE u.user.id = :userId " +
+            "AND u.randomMatching.dateTime > :lastMatchingTime " +
+            "AND (u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.CONFIRMED " +
+            "OR u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.COMPLETED) " +
+            "ORDER BY u.id")
+    List<UserRandomMatching> findTop5ConfirmedOrCompletedStatus(@Param("userId") long userId,
+                                                                @Param("lastMatchingTime") LocalDateTime lastMatchingTime,
+                                                                PageRequest pageRequest);
+
+    @Query("SELECT new com.clip.matching.repository.projection.ParticipantJobAndDietaryDto(u.randomMatching.id, j.jobCategory, u.user.dietaryOption) " +
+            "FROM UserRandomMatching u " +
+            "JOIN u.user.job j " +
+            "WHERE u.randomMatching IN :randomMatchings " )
+    List<ParticipantJobAndDietaryDto> findJobAndDietaryIn(@Param("randomMatchings") List<RandomMatching> randomMatchings);
 }
