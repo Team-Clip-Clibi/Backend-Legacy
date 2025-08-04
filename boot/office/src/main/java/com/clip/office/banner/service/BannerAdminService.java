@@ -44,7 +44,7 @@ public class BannerAdminService {
 
     public ImgUrlInfo getBannerUploadUrl() {
         String imgName = UUID.randomUUID() + ".svg";
-        String getPresignedUrl = s3ImgService.generateGetPresignedUrl(s3PathProperties.getBANNER_IMG_PATH(), imgName);
+        String getPresignedUrl = s3ImgService.generatePutPresignedUrl(s3PathProperties.getBANNER_IMG_PATH(), imgName);
         return new ImgUrlInfo(imgName, getPresignedUrl);
     }
 

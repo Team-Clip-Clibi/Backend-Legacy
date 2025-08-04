@@ -35,11 +35,11 @@ public class S3ImgService {
                 .toString();
     }
 
-    public String generatePutPresignedUrl(String filePath, String imgName) {
+    public String generatePutPresignedUrl(String imgPathPrefix, String imgName) {
         return s3Presigner.presignPutObject(PutObjectPresignRequest.builder()
                         .putObjectRequest(PutObjectRequest.builder()
                                 .bucket(bucket)
-                                .key(filePath + imgName)
+                                .key(imgPathPrefix + imgName)
                                 .build())
                         .signatureDuration(EXPIRY_TIME)
                         .build())
