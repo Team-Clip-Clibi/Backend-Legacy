@@ -15,6 +15,7 @@ import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.notification.entity.Notification;
 import com.clip.notification.entity.NotificationType;
 import com.clip.notification.service.NotificationService;
+import com.clip.question.entity.Question;
 import com.clip.user.entity.User;
 import com.clip.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -61,23 +62,26 @@ public class UserMatchingService {
 
         switch (matchingType) {
             case RANDOM -> {
-                Long userRandomMatchingId = matchingService.findUserRandomMatchingNotEndedStatus(matchingId, userId)
-                        .getRandomMatching()
-                        .getId();
 
-                List<UserRandomMatching> allUserRandomMatchings = matchingService.findAllUserRandomMatchings(userRandomMatchingId);
+                RandomMatching randomMatching = matchingService.findUserRandomMatchingNotEndedStatus(matchingId, userId)
+                        .getRandomMatching();
+                List<UserRandomMatching> allUserRandomMatchings = matchingService.findAllUserRandomMatchings(randomMatching.getId());
+                List<Question> questions;
+                if (Objects.isNull(randomMatching.getQuestionSheet())) questions = List.of();
+                else questions = randomMatching.getQuestionSheet().getQuestions();
 
-                return getRandomMatchingProgressStatusDto(allUserRandomMatchings);
+                return getRandomMatchingProgressStatusDto(allUserRandomMatchings, questions);
             }
 
             case ONE_THING -> {
-                Long userOneThingMatchingId = matchingService.findUserOnethingMatchingNotEndedStatus(matchingId, userId)
-                        .getOneThingMatching()
-                        .getId();
+                OneThingMatching oneThingMatching = matchingService.findUserOnethingMatchingNotEndedStatus(matchingId, userId)
+                        .getOneThingMatching();
+                List<UserOneThingMatching> allUserOneThingMatchings = matchingService.findAllUserOneThingMatchings(oneThingMatching.getId());
+                List<Question> questions;
+                if (Objects.isNull(oneThingMatching.getQuestionSheet())) questions = List.of();
+                else questions = oneThingMatching.getQuestionSheet().getQuestions();
 
-                List<UserOneThingMatching> allUserOneThingMatchings = matchingService.findAllUserOneThingMatchings(userOneThingMatchingId);
-
-                return getOneThingMatchingProgressStatusDto(allUserOneThingMatchings);
+                return getOneThingMatchingProgressStatusDto(allUserOneThingMatchings, questions);
             }
 
             default -> throw new IllegalStateException("지원하지 않는 매칭 타입입니다.: " + matchingType);
@@ -85,7 +89,8 @@ public class UserMatchingService {
     }
 
     private static MatchingProgressInfoDto getRandomMatchingProgressStatusDto(
-            List<UserRandomMatching> myRandomMatchingGroup
+            List<UserRandomMatching> myRandomMatchingGroup,
+            List<Question> questions
     ) {
 
         List<String> shuffledNicknames = getShuffledResult(
@@ -108,11 +113,13 @@ public class UserMatchingService {
                 .nicknameList(shuffledNicknames)
                 .tmiList(shuffledTmi)
                 .nicknameOnethingMap(nicknameOneThingContentMap)
+                .questions(questions)
                 .build();
     }
 
     private static MatchingProgressInfoDto getOneThingMatchingProgressStatusDto(
-            List<UserOneThingMatching> myOneThingMatchingGroup
+            List<UserOneThingMatching> myOneThingMatchingGroup,
+            List<Question> questions
     ) {
 
         List<String> shuffledNicknames = getShuffledResult(
@@ -135,6 +142,7 @@ public class UserMatchingService {
                 .nicknameList(shuffledNicknames)
                 .tmiList(shuffledTmi)
                 .nicknameOnethingMap(nicknameOneThingContentMap)
+                .questions(questions)
                 .build();
     }
 

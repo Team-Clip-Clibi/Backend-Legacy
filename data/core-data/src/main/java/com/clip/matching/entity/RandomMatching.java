@@ -1,6 +1,7 @@
 package com.clip.matching.entity;
 
 import com.clip.common.entity.BaseEntity;
+import com.clip.question.entity.QuestionSheet;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +34,10 @@ public class RandomMatching extends BaseEntity {
     @Column
     private Integer totalCapacity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private QuestionSheet questionSheet;
+
     @Builder
     public RandomMatching(RandomDistrict randomDistrict , String address, String restaurantName, LocalDateTime dateTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
@@ -48,5 +53,10 @@ public class RandomMatching extends BaseEntity {
         this.restaurantName = restaurantName;
         this.dateTime = dateTime;
         this.totalCapacity = totalCapacity;
+    }
+
+    public RandomMatching updateQuestionSheet(QuestionSheet questionSheet) {
+        this.questionSheet = questionSheet;
+        return this;
     }
 }

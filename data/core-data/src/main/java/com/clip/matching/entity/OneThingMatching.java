@@ -3,16 +3,11 @@ package com.clip.matching.entity;
 import java.time.LocalDateTime;
 
 import com.clip.common.entity.BaseEntity;
+import com.clip.question.entity.QuestionSheet;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +33,9 @@ public class OneThingMatching extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OnethingDistrict onethingDistrict;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private QuestionSheet questionSheet;
 
     @Builder
     public OneThingMatching(String address, String restaurantName, LocalDateTime dateTime, OnethingDistrict onethingDistrict) {
@@ -52,5 +50,10 @@ public class OneThingMatching extends BaseEntity {
         this.address = address;
         this.restaurantName = restaurantName;
         this.dateTime = dateTime;
+    }
+
+    public OneThingMatching updateQuestionSheet(QuestionSheet questionSheet) {
+        this.questionSheet = questionSheet;
+        return this;
     }
 }

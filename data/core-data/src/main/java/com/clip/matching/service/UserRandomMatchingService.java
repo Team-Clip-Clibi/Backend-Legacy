@@ -5,6 +5,7 @@ import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.entity.RandomMatchingStatus;
 import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.UserRandomMatchingRepository;
+import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -53,5 +54,9 @@ public class UserRandomMatchingService {
 
     public List<ParticipantJobAndDietaryDto> findJobAndDietaryIn(List<RandomMatching> randomMatchings) {
         return userRandomMatchingRepository.findJobAndDietaryIn(randomMatchings);
+    }
+
+    public List<MatchingParticipantCntDto> findParticipantCntIn(List<RandomMatching> randomMatchings) {
+        return userRandomMatchingRepository.findParticipantCntIn(randomMatchings);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface OnethingMatchingRepository extends JpaRepository<OneThingMatching, Long> {
     @Transactional
@@ -28,4 +29,7 @@ public interface OnethingMatchingRepository extends JpaRepository<OneThingMatchi
                                              @Param("endDateTime") LocalDateTime endDateTime,
                                              @Param("district") OnethingDistrict district,
                                              Pageable page);
+
+    @Query("SELECT o FROM OneThingMatching o WHERE o.id IN :ids")
+    List<OneThingMatching> findAllByIds(@Param("ids") List<Long> ids);
 }

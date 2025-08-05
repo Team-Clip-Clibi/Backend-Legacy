@@ -1,16 +1,15 @@
 package com.clip.office.matching.service;
 
 import com.clip.matching.entity.*;
-import com.clip.matching.repository.OnethingMatchingRepository;
-import com.clip.matching.repository.RandomMatchingRepository;
-import com.clip.matching.repository.UserOneThingMatchingRepository;
-import com.clip.matching.repository.UserRandomMatchingRepository;
 import com.clip.matching.repository.projection.FirstParticipantKeywordDto;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
+import com.clip.matching.service.OnethingMatchingService;
+import com.clip.matching.service.RandomMatchingService;
+import com.clip.matching.service.UserOneThingMatchingService;
+import com.clip.matching.service.UserRandomMatchingService;
 import com.clip.office.matching.controller.dto.*;
 import com.clip.office.matching.controller.mapper.MatchingMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +25,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminMatchingService {
     private final static int MAX_CAPACITY = 6;
-    private final static int PAGE_SIZE = 30;
-    private final OnethingMatchingRepository onethingMatchingRepository;
-    private final UserOneThingMatchingRepository userOneThingMatchingRepository;
-    private final RandomMatchingRepository randomMatchingRepository;
-    private final UserRandomMatchingRepository userRandomMatchingRepository;
+    private final OnethingMatchingService onethingMatchingService;
+    private final UserOneThingMatchingService userOneThingMatchingService;
+    private final RandomMatchingService randomMatchingService;
+    private final UserRandomMatchingService userRandomMatchingService;
     private final MatchingMapper matchingMapper;
 
     @Transactional
@@ -42,7 +40,7 @@ public class AdminMatchingService {
                 .dateTime(request.dateTime())
                 .build();
 
-        return onethingMatchingRepository.save(oneThingMatching);
+        return onethingMatchingService.save(oneThingMatching);
     }
 
     @Transactional
@@ -55,7 +53,7 @@ public class AdminMatchingService {
                 .restaurantName(request.restaurantName())
                 .build();
 
-        return randomMatchingRepository.save(randomMatching);
+        return randomMatchingService.save(randomMatching);
     }
 
     @Transactional(readOnly = true)
@@ -66,13 +64,14 @@ public class AdminMatchingService {
         LocalDateTime startDateTime = date.atStartOfDay();
         LocalDateTime endDateTime = date.plusDays(1).atStartOfDay();
 
-        Slice<OneThingMatching> matchingList = onethingMatchingRepository.findMatchingList(
+        Slice<OneThingMatching> matchingList = onethingMatchingService.findMatchingList(
                 startDateTime,
                 endDateTime,
                 district,
-                PageRequest.of(page, PAGE_SIZE));
+                page);
 
-        Map<Long, Long> idToParticipantCnt = userOneThingMatchingRepository.findParticipantCntIn(matchingList.getContent())
+
+        Map<Long, Long> idToParticipantCnt = userOneThingMatchingService.findParticipantCntIn(matchingList.getContent())
                 .stream()
                 .collect(Collectors.toMap(
                                 MatchingParticipantCntDto::matchingId,
@@ -80,7 +79,7 @@ public class AdminMatchingService {
                         )
                 );
 
-        Map<Long, OnethingKeyword> idToKeywords = userOneThingMatchingRepository.findFirstParticipantKeywords(matchingList.getContent())
+        Map<Long, OnethingKeyword> idToKeywords = userOneThingMatchingService.findFirstParticipantKeywords(matchingList.getContent())
                 .stream()
                 .collect(Collectors.toMap(
                                 FirstParticipantKeywordDto::matchingId,
@@ -98,13 +97,10 @@ public class AdminMatchingService {
         LocalDateTime startDateTime = date.atStartOfDay();
         LocalDateTime endDateTime = date.plusDays(1).atStartOfDay();
 
-        Slice<RandomMatching> matchingList = randomMatchingRepository.findMatchingList(
-                startDateTime,
-                endDateTime,
-                district,
-                PageRequest.of(page, PAGE_SIZE));
 
-        Map<Long, Long> idToParticipantCnt = userRandomMatchingRepository.findParticipantCntIn(matchingList.getContent())
+        Slice<RandomMatching> matchingList = randomMatchingService.findMatchingList(startDateTime, endDateTime, district, page);
+
+        Map<Long, Long> idToParticipantCnt = userRandomMatchingService.findParticipantCntIn(matchingList.getContent())
                 .stream()
                 .collect(Collectors.toMap(
                         MatchingParticipantCntDto::matchingId,
@@ -121,10 +117,11 @@ public class AdminMatchingService {
             Integer page
     ) {
         if (Objects.isNull(page)) page = 0;
-        Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingRepository.findAssignedParticipantsFetchUser(
+
+        Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingService.findAssignedParticipantsFetchUser(
                 onethingDistrict,
                 localDate,
-                PageRequest.of(page, PAGE_SIZE)
+                page
         );
         return matchingMapper.toParticipantInfos(participantsFetchUser);
     }
@@ -136,27 +133,25 @@ public class AdminMatchingService {
             Integer page
     ) {
         if (Objects.isNull(page)) page = 0;
-        Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingRepository.findUnassignedParticipantsFetchUser(
+        Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingService.findUnassignedParticipantsFetchUser(
                 onethingDistrict,
                 localDate,
-                PageRequest.of(page, PAGE_SIZE)
+                page
         );
         return matchingMapper.toParticipantInfos(participantsFetchUser);
     }
 
     @Transactional
     public void deleteParticipantFromOnethingMatching(long userOnethingMatchingId) {
-        UserOneThingMatching userOneThingMatching = userOneThingMatchingRepository.findById(userOnethingMatchingId)
-                .orElseThrow(IllegalArgumentException::new);
+        UserOneThingMatching userOneThingMatching = userOneThingMatchingService.findById(userOnethingMatchingId);
         userOneThingMatching.deleteOnethingMatching();
-        userOneThingMatchingRepository.save(userOneThingMatching);
+        userOneThingMatchingService.save(userOneThingMatching);
     }
 
     @Transactional
     public void registerOnethingMatchingParticipants(RegisterOnethingParticipantDto request) {
-        OneThingMatching oneThingMatching = onethingMatchingRepository.findById(request.onethingMatchingId())
-                .orElseThrow(IllegalArgumentException::new);
-        List<UserOneThingMatching> userOnethingMatchings = userOneThingMatchingRepository.findByIdsForUpdate(
+        OneThingMatching oneThingMatching = onethingMatchingService.findById(request.onethingMatchingId());
+        List<UserOneThingMatching> userOnethingMatchings = userOneThingMatchingService.findByIdsForUpdate(
                 request.userOnethingMatchingIdList()
         );
 
@@ -164,6 +159,6 @@ public class AdminMatchingService {
                 userOneThingMatching.updateOneThingMatching(oneThingMatching)
         );
 
-        userOneThingMatchingRepository.saveAll(userOnethingMatchings);
+        userOneThingMatchingService.saveAll(userOnethingMatchings);
     }
 }
