@@ -66,7 +66,9 @@ public class UserMatchingService {
                 RandomMatching randomMatching = matchingService.findUserRandomMatchingNotEndedStatus(matchingId, userId)
                         .getRandomMatching();
                 List<UserRandomMatching> allUserRandomMatchings = matchingService.findAllUserRandomMatchings(randomMatching.getId());
-                List<Question> questions = randomMatching.getQuestionSheet().getQuestions();
+                List<Question> questions;
+                if (Objects.isNull(randomMatching.getQuestionSheet())) questions = List.of();
+                else questions = randomMatching.getQuestionSheet().getQuestions();
 
                 return getRandomMatchingProgressStatusDto(allUserRandomMatchings, questions);
             }
@@ -75,7 +77,9 @@ public class UserMatchingService {
                 OneThingMatching oneThingMatching = matchingService.findUserOnethingMatchingNotEndedStatus(matchingId, userId)
                         .getOneThingMatching();
                 List<UserOneThingMatching> allUserOneThingMatchings = matchingService.findAllUserOneThingMatchings(oneThingMatching.getId());
-                List<Question> questions = oneThingMatching.getQuestionSheet().getQuestions();
+                List<Question> questions;
+                if (Objects.isNull(oneThingMatching.getQuestionSheet())) questions = List.of();
+                else questions = oneThingMatching.getQuestionSheet().getQuestions();
 
                 return getOneThingMatchingProgressStatusDto(allUserOneThingMatchings, questions);
             }
