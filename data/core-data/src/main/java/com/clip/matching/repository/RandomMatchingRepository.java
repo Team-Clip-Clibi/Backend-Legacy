@@ -1,6 +1,5 @@
 package com.clip.matching.repository;
 
-import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.RandomDistrict;
 import com.clip.matching.entity.RandomMatching;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface RandomMatchingRepository extends JpaRepository<RandomMatching, Long> {
     @Transactional
@@ -28,4 +28,7 @@ public interface RandomMatchingRepository extends JpaRepository<RandomMatching, 
                                            @Param("endDateTime") LocalDateTime endDateTime,
                                            @Param("district") RandomDistrict district,
                                            PageRequest page);
+
+    @Query("SELECT r FROM RandomMatching r WHERE r.id IN :ids")
+    List<RandomMatching> findAllByIds(@Param("ids") List<Long> ids);
 }
