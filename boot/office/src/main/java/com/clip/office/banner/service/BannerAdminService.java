@@ -49,7 +49,7 @@ public class BannerAdminService {
     }
 
     public void saveLoginBanner(LoginBannerRequest request) {
-        if (s3ImgService.isImgSaved(s3PathProperties.getBANNER_IMG_PATH(), request.imgName())) {
+        if (!s3ImgService.isImgSaved(s3PathProperties.getBANNER_IMG_PATH(), request.imgName())) {
             throw new IllegalArgumentException("이미지 파일이 존재하지 않습니다.");
         }
 
@@ -62,7 +62,7 @@ public class BannerAdminService {
     }
 
     public void saveHomeBanner(HomeBannerRequest request) {
-        if (s3ImgService.isImgSaved(s3PathProperties.getBANNER_IMG_PATH(), request.imgName())) {
+        if (!s3ImgService.isImgSaved(s3PathProperties.getBANNER_IMG_PATH(), request.imgName())) {
             throw new IllegalArgumentException("이미지 파일이 존재하지 않습니다.");
         }
 
