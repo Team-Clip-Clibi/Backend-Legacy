@@ -17,12 +17,20 @@ public class QuestionSheet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @Column
+    private String title;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<Question> questions = new ArrayList<>();
 
     @Builder
-    public QuestionSheet(List<Question> questions) {
+    public QuestionSheet(String title, List<Question> questions) {
+        this.title = title;
+        this.questions = questions;
+    }
+
+    public void updateQuestions(List<Question> questions) {
         this.questions = questions;
     }
 }

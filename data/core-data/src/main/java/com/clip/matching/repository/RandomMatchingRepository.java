@@ -33,5 +33,8 @@ public interface RandomMatchingRepository extends JpaRepository<RandomMatching, 
     List<RandomMatching> findAllByIds(@Param("ids") List<Long> ids);
 
     @Query("SELECT r FROM RandomMatching r WHERE r.questionSheet IS NOT NULL ORDER BY r.id DESC ")
-    Slice<RandomMatching> findMatchingListFetchQuestion(PageRequest of);
+    Slice<RandomMatching> findMatchingQuestionIsNotNullList(PageRequest of);
+
+    @Query("SELECT r FROM RandomMatching r WHERE r.questionSheet IS NULL ORDER BY r.id DESC ")
+    Slice<RandomMatching> findMatchingQuestionIsNullList(PageRequest of);
 }

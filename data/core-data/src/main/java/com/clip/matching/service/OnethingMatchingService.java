@@ -51,7 +51,11 @@ public class OnethingMatchingService {
         return oneThingMatchingRepository.saveAll(oneThingMatchings);
     }
 
-    public Slice<OneThingMatching> findMatchingListFetchQuestion(int page) {
-        return oneThingMatchingRepository.findMatchingListFetchQuestion(PageRequest.of(page, 30));
+    public Slice<OneThingMatching> findMatchingQuestionIsNotNullList(int page) {
+        return oneThingMatchingRepository.findMatchingQuestionIsNotNullList(PageRequest.of(page, 30));
+    }
+
+    public Slice<OneThingMatching> findMatchingQuestionIsNullList(int page) {
+        return oneThingMatchingRepository.findMatchingQuestionIsNullList(PageRequest.of(page, 30));
     }
 }
