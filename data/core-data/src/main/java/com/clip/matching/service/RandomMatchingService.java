@@ -42,8 +42,12 @@ public class RandomMatchingService {
         return randomMatchingRepository.saveAll(randomMatchings);
     }
 
-    public Slice<RandomMatching> findMatchingListFetchQuestion(int page) {
-        return randomMatchingRepository.findMatchingListFetchQuestion(PageRequest.of(page, 30));
+    public Slice<RandomMatching> findMatchingQuestionIsNotNullList(int page) {
+        return randomMatchingRepository.findMatchingQuestionIsNotNullList(PageRequest.of(page, 30));
+    }
+
+    public Slice<RandomMatching> findMatchingQuestionIsNullList(int page) {
+        return randomMatchingRepository.findMatchingQuestionIsNullList(PageRequest.of(page, 30));
     }
 
     public RandomMatching findById(Long id) {

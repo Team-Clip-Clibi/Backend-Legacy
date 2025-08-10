@@ -4,6 +4,9 @@ import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.RandomMatching;
 import com.clip.office.matching.controller.dto.MatchingType;
 import com.clip.office.question.controller.dto.MatchingQuestionInfoDto;
+import com.clip.office.question.controller.dto.QuestionInfoDto;
+import com.clip.question.entity.Question;
+import com.clip.question.entity.QuestionSheet;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +31,16 @@ public class MatchingQuestionMapper {
                         r.getAddress(),
                         r.getDateTime(),
                         MatchingType.RANDOM)
+        );
+    }
+
+    public Slice<QuestionInfoDto> toQuestionInfoDto(Slice<QuestionSheet> questionSheets) {
+        return questionSheets.map(questionSheet -> new QuestionInfoDto(
+                questionSheet.getId(),
+                questionSheet.getTitle(),
+                questionSheet.getQuestions().stream()
+                        .map(Question::getContent)
+                        .toList())
         );
     }
 }

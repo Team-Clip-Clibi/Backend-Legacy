@@ -23,7 +23,7 @@ public interface OnethingMatchingRepository extends JpaRepository<OneThingMatchi
     @Query("SELECT o " +
             "FROM OneThingMatching o " +
             "WHERE (:startDateTime IS NULL OR o.dateTime >= :startDateTime) " +
-            "AND (:endDatetime IS NULL OR o.dateTime < :endDateTime) " +
+            "AND (:endDateTime IS NULL OR o.dateTime < :endDateTime) " +
             "AND (:district IS NULL OR o.onethingDistrict = :district) " +
             "ORDER BY o.id")
     Slice<OneThingMatching> findMatchingList(@Param("startDateTime") LocalDateTime startDateTime,
@@ -35,5 +35,8 @@ public interface OnethingMatchingRepository extends JpaRepository<OneThingMatchi
     List<OneThingMatching> findAllByIds(@Param("ids") List<Long> ids);
 
     @Query("SELECT o FROM OneThingMatching o WHERE o.questionSheet IS NOT NULL ORDER BY o.id DESC ")
-    Slice<OneThingMatching> findMatchingListFetchQuestion(PageRequest of);
+    Slice<OneThingMatching> findMatchingQuestionIsNotNullList(PageRequest of);
+
+    @Query("SELECT o FROM OneThingMatching o WHERE o.questionSheet IS NULL ORDER BY o.id DESC ")
+    Slice<OneThingMatching> findMatchingQuestionIsNullList(PageRequest of);
 }

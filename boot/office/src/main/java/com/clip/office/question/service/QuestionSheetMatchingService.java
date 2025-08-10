@@ -6,6 +6,7 @@ import com.clip.matching.service.OnethingMatchingService;
 import com.clip.matching.service.RandomMatchingService;
 import com.clip.office.question.controller.dto.AssignQuestionSheetRequest;
 import com.clip.office.question.controller.dto.MatchingQuestionInfoDto;
+import com.clip.office.question.controller.dto.QuestionInfoDto;
 import com.clip.office.question.controller.mapper.MatchingQuestionMapper;
 import com.clip.question.entity.Question;
 import com.clip.question.entity.QuestionSheet;
@@ -34,6 +35,7 @@ public class QuestionSheetMatchingService {
 
         QuestionSheet questionSheet = questionSheetService.saveQuestionSheet(
                 QuestionSheet.builder()
+                        .title(request.title())
                         .questions(questions)
                         .build()
         );
@@ -54,6 +56,7 @@ public class QuestionSheetMatchingService {
 
         QuestionSheet questionSheet = questionSheetService.saveQuestionSheet(
                 QuestionSheet.builder()
+                        .title(request.title())
                         .questions(questions)
                         .build()
         );
@@ -72,12 +75,35 @@ public class QuestionSheetMatchingService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<MatchingQuestionInfoDto> getOnethingMatchingsFetchQuestion(int page) {
-        return matchingQuestionMapper.onethingToMatchingQuestionInfoDto(onethingMatchingService.findMatchingListFetchQuestion(page));
+    public Slice<MatchingQuestionInfoDto> getOnethingMatchings(boolean hasQuestion, int page) {
+        return matchingQuestionMapper.onethingToMatchingQuestionInfoDto(
+                hasQuestion
+                        ? onethingMatchingService.findMatchingQuestionIsNotNullList(page)
+                        : onethingMatchingService.findMatchingQuestionIsNullList(page)
+        );
     }
 
     @Transactional(readOnly = true)
-    public Slice<MatchingQuestionInfoDto> getRandomMatchingsFetchQuestion(int page) {
-        return matchingQuestionMapper.randomToMatchingQuestionInfoDto(randomMatchingService.findMatchingListFetchQuestion(page));
+    public Slice<MatchingQuestionInfoDto> getRandomMatchings(boolean hasQuestion, int page) {
+        return matchingQuestionMapper.randomToMatchingQuestionInfoDto(
+                hasQuestion
+                        ? randomMatchingService.findMatchingQuestionIsNotNullList(page)
+                        : randomMatchingService.findMatchingQuestionIsNullList(page)
+        );
+    }
+
+    public Slice<QuestionInfoDto> getQuestionSheetsFetchQuestions(int page) {
+        Slice<QuestionSheet> questionSheets = questionSheetService.getQuestionSheetsFetchQuestions(page);
+        return matchingQuestionMapper.toQuestionInfoDto(questionSheets);
+    }
+
+    @Transactional
+    public void updateQuestionSheet(long id, QuestionInfoDto request) {
+        QuestionSheet questionSheet = questionSheetService.findById(id);
+        List<Question> questionList = request.questions().stream()
+                .map(q -> Question.builder().content(q).build())
+                .toList();
+        questionSheet.updateQuestions(questionList);
+        questionSheetService.saveQuestionSheet(questionSheet);
     }
 }

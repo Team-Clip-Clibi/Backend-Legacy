@@ -2,9 +2,9 @@ package com.clip.office.question.controller.dto;
 
 import java.util.List;
 
-public record AssignQuestionSheetRequest(
+public record QuestionInfoDto(
+        long id,
         String title,
-        List<Long> targetMatchingIds,
         List<String> questions
 ) {
 }
