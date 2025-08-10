@@ -1,12 +1,12 @@
 package com.clip.office.question.controller;
 
 import com.clip.office.question.controller.dto.AssignQuestionSheetRequest;
+import com.clip.office.question.controller.dto.MatchingQuestionInfoDto;
 import com.clip.office.question.service.QuestionSheetMatchingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Slice;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/question-sheets")
@@ -14,9 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionSheetController {
     private final QuestionSheetMatchingService questionSheetMatchingService;
 
+    @GetMapping("/onethings/{page}")
+    public Slice<MatchingQuestionInfoDto> getOnethingMatchings(@PathVariable int page) {
+        return questionSheetMatchingService.getOnethingMatchingsFetchQuestion(page);
+    }
+
     @PostMapping("/onethings")
     public void assignToOnethingMatchings(@RequestBody AssignQuestionSheetRequest request) {
         questionSheetMatchingService.assignToOnethingMatchings(request);
+    }
+
+    @GetMapping("/randoms/{page}")
+    public Slice<MatchingQuestionInfoDto> getRandomMatchings(@PathVariable int page) {
+        return questionSheetMatchingService.getRandomMatchingsFetchQuestion(page);
     }
 
     @PostMapping("/randoms")

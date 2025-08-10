@@ -50,4 +50,8 @@ public class OnethingMatchingService {
     public List<OneThingMatching> saveAll(List<OneThingMatching> oneThingMatchings) {
         return oneThingMatchingRepository.saveAll(oneThingMatchings);
     }
+
+    public Slice<OneThingMatching> findMatchingListFetchQuestion(int page) {
+        return oneThingMatchingRepository.findMatchingListFetchQuestion(PageRequest.of(page, 30));
+    }
 }

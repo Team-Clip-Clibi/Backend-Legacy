@@ -2,6 +2,7 @@ package com.clip.matching.repository;
 
 import com.clip.matching.entity.OneThingMatching;
 import com.clip.matching.entity.OnethingDistrict;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,9 +22,9 @@ public interface OnethingMatchingRepository extends JpaRepository<OneThingMatchi
 
     @Query("SELECT o " +
             "FROM OneThingMatching o " +
-            "WHERE o.dateTime >= :startDateTime " +
-            "AND o.dateTime < :endDateTime " +
-            "AND o.onethingDistrict = :district " +
+            "WHERE (:startDateTime IS NULL OR o.dateTime >= :startDateTime) " +
+            "AND (:endDatetime IS NULL OR o.dateTime < :endDateTime) " +
+            "AND (:district IS NULL OR o.onethingDistrict = :district) " +
             "ORDER BY o.id")
     Slice<OneThingMatching> findMatchingList(@Param("startDateTime") LocalDateTime startDateTime,
                                              @Param("endDateTime") LocalDateTime endDateTime,
@@ -32,4 +33,7 @@ public interface OnethingMatchingRepository extends JpaRepository<OneThingMatchi
 
     @Query("SELECT o FROM OneThingMatching o WHERE o.id IN :ids")
     List<OneThingMatching> findAllByIds(@Param("ids") List<Long> ids);
+
+    @Query("SELECT o FROM OneThingMatching o WHERE o.questionSheet IS NOT NULL ORDER BY o.id DESC ")
+    Slice<OneThingMatching> findMatchingListFetchQuestion(PageRequest of);
 }
