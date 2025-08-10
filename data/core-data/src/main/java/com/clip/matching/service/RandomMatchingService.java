@@ -41,4 +41,17 @@ public class RandomMatchingService {
     public List<RandomMatching> saveAll(List<RandomMatching> randomMatchings) {
         return randomMatchingRepository.saveAll(randomMatchings);
     }
+
+    public Slice<RandomMatching> findMatchingListFetchQuestion(int page) {
+        return randomMatchingRepository.findMatchingListFetchQuestion(PageRequest.of(page, 30));
+    }
+
+    public RandomMatching findById(Long id) {
+        return randomMatchingRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public void delete(RandomMatching randomMatching) {
+        randomMatchingRepository.delete(randomMatching);
+    }
 }

@@ -18,6 +18,22 @@ public class MatchingController {
     private final AdminMatchingService adminMatchingService;
 
     /**
+     * 원띵 모임 삭제 API
+     */
+    @DeleteMapping("/onethings/{id}")
+    public void deleteOnethingMatching(@PathVariable Long id) {
+        adminMatchingService.deleteOnethingMatching(id);
+    }
+
+    /**
+     * 랜덤 모임 삭제 API
+     */
+    @DeleteMapping("/randoms/{id}")
+    public void deleteRandomMatching(@PathVariable Long id) {
+        adminMatchingService.deleteRandomMatching(id);
+    }
+
+    /**
      * 원띵 모임 생성 API
      */
     @PostMapping("/onethings")
@@ -36,11 +52,11 @@ public class MatchingController {
     /**
      * 원띵 모임 목록 조회 API
      */
-    @GetMapping({"/onethings", "/onethings/{page}"})
+    @GetMapping("/onethings/{page}")
     public Slice<MatchingInfoDto> getOnethingMatchingList(
-            @PathVariable(required = false) Integer page,
-            @RequestParam LocalDate date,
-            @RequestParam OnethingDistrict district
+            @PathVariable Integer page,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) OnethingDistrict district
     ) {
         return adminMatchingService.getOnethingMatchingList(date, district, page);
     }
@@ -48,11 +64,11 @@ public class MatchingController {
     /**
      * 랜덤 모임 목록 조회 API
      */
-    @GetMapping({"/randoms","/randoms/{page}"})
+    @GetMapping("/randoms/{page}")
     public Slice<MatchingInfoDto> getRandomMatchingList(
-            @PathVariable(required = false) Integer page,
-            @RequestParam LocalDate date,
-            @RequestParam RandomDistrict district
+            @PathVariable Integer page,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) RandomDistrict district
     ) {
         return adminMatchingService.getRandomMatchingList(date, district, page);
     }
@@ -60,9 +76,9 @@ public class MatchingController {
     /**
      * 원띵 매칭에 배정된 참여자 목록 조회 API
      */
-    @GetMapping({"/onethings/participants/assigned", "/onethings/participants/assigned/{page}"})
+    @GetMapping("/onethings/participants/assigned/{page}")
     public Slice<ParticipantInfoDto> getAssignedOnethingParticipantList(
-            @PathVariable(required = false) Integer page,
+            @PathVariable Integer page,
             @RequestParam OnethingDistrict onethingDistrict,
             @RequestParam LocalDate date
     ) {
@@ -72,9 +88,9 @@ public class MatchingController {
     /**
      * 원띵 매칭에 배정되지 않은 참여자 목록 조회 API
      */
-    @GetMapping({"/onethings/participants/unassigned", "/onethings/participants/unassigned/{page}"})
+    @GetMapping("/onethings/participants/unassigned/{page}")
     public Slice<ParticipantInfoDto> getUnassignedOnethingParticipantList(
-            @PathVariable(required = false) Integer page,
+            @PathVariable Integer page,
             @RequestParam OnethingDistrict onethingDistrict,
             @RequestParam LocalDate date
     ) {

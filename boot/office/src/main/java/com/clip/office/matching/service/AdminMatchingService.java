@@ -58,11 +58,8 @@ public class AdminMatchingService {
 
     @Transactional(readOnly = true)
     public Slice<MatchingInfoDto> getOnethingMatchingList(LocalDate date, OnethingDistrict district, Integer page) {
-        if (Objects.isNull(page)) page = 0;
-
-
-        LocalDateTime startDateTime = date.atStartOfDay();
-        LocalDateTime endDateTime = date.plusDays(1).atStartOfDay();
+        LocalDateTime startDateTime = Objects.isNull(date) ? null : date.atStartOfDay();
+        LocalDateTime endDateTime = Objects.isNull(date) ? null : date.plusDays(1).atStartOfDay();
 
         Slice<OneThingMatching> matchingList = onethingMatchingService.findMatchingList(
                 startDateTime,
@@ -92,10 +89,8 @@ public class AdminMatchingService {
 
     @Transactional(readOnly = true)
     public Slice<MatchingInfoDto> getRandomMatchingList(LocalDate date, RandomDistrict district, Integer page) {
-        if (Objects.isNull(page)) page = 0;
-
-        LocalDateTime startDateTime = date.atStartOfDay();
-        LocalDateTime endDateTime = date.plusDays(1).atStartOfDay();
+        LocalDateTime startDateTime = Objects.isNull(date) ? null : date.atStartOfDay();
+        LocalDateTime endDateTime = Objects.isNull(date) ? null : date.plusDays(1).atStartOfDay();
 
 
         Slice<RandomMatching> matchingList = randomMatchingService.findMatchingList(startDateTime, endDateTime, district, page);
@@ -116,8 +111,6 @@ public class AdminMatchingService {
             LocalDate localDate,
             Integer page
     ) {
-        if (Objects.isNull(page)) page = 0;
-
         Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingService.findAssignedParticipantsFetchUser(
                 onethingDistrict,
                 localDate,
@@ -132,7 +125,6 @@ public class AdminMatchingService {
             LocalDate localDate,
             Integer page
     ) {
-        if (Objects.isNull(page)) page = 0;
         Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingService.findUnassignedParticipantsFetchUser(
                 onethingDistrict,
                 localDate,
@@ -160,5 +152,13 @@ public class AdminMatchingService {
         );
 
         userOneThingMatchingService.saveAll(userOnethingMatchings);
+    }
+
+    public void deleteOnethingMatching(Long onethingMatchingId) {
+        onethingMatchingService.delete(onethingMatchingService.findById(onethingMatchingId));
+    }
+
+    public void deleteRandomMatching(Long randomMatchingId) {
+        randomMatchingService.delete(randomMatchingService.findById(randomMatchingId));
     }
 }

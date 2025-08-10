@@ -5,11 +5,15 @@ import com.clip.matching.entity.RandomMatching;
 import com.clip.matching.service.OnethingMatchingService;
 import com.clip.matching.service.RandomMatchingService;
 import com.clip.office.question.controller.dto.AssignQuestionSheetRequest;
+import com.clip.office.question.controller.dto.MatchingQuestionInfoDto;
+import com.clip.office.question.controller.mapper.MatchingQuestionMapper;
 import com.clip.question.entity.Question;
 import com.clip.question.entity.QuestionSheet;
 import com.clip.question.service.QuestionSheetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +23,7 @@ public class QuestionSheetMatchingService {
     private final QuestionSheetService questionSheetService;
     private final OnethingMatchingService onethingMatchingService;
     private final RandomMatchingService randomMatchingService;
+    private final MatchingQuestionMapper matchingQuestionMapper;
 
     public void assignToOnethingMatchings(AssignQuestionSheetRequest request) {
         validateQuestionCntUnder10(request);
@@ -64,5 +69,15 @@ public class QuestionSheetMatchingService {
         if (request.questions().size() > 10) {
             throw new IllegalArgumentException("질문지는 최대 10개까지 등록할 수 있습니다.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<MatchingQuestionInfoDto> getOnethingMatchingsFetchQuestion(int page) {
+        return matchingQuestionMapper.onethingToMatchingQuestionInfoDto(onethingMatchingService.findMatchingListFetchQuestion(page));
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<MatchingQuestionInfoDto> getRandomMatchingsFetchQuestion(int page) {
+        return matchingQuestionMapper.randomToMatchingQuestionInfoDto(randomMatchingService.findMatchingListFetchQuestion(page));
     }
 }
