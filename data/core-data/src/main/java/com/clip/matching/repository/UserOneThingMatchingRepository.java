@@ -186,7 +186,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 
     @Query("SELECT new com.clip.matching.repository.projection.FirstParticipantKeywordDto(u.id, u.oneThingKeyword) " +
             "FROM UserOneThingMatching u " +
-            "WHERE u.oneThingMatching.id IN :onethingMatchings " +
+            "WHERE u.oneThingMatching IN :onethingMatchings " +
             "AND u.id = ( SELECT MIN(u2.id) FROM UserOneThingMatching u2 WHERE u2.oneThingMatching = u.oneThingMatching)")
     List<FirstParticipantKeywordDto> findFirstParticipantKeywords(@Param("onethingMatchings") List<OneThingMatching> oneThingMatchings);
 
