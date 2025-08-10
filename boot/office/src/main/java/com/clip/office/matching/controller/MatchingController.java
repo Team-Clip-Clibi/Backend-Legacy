@@ -21,7 +21,7 @@ public class MatchingController {
      * 원띵 모임 생성 API
      */
     @PostMapping("/onethings")
-    public void saveOnethingMatching(CreateOnethingMatchingDto request) {
+    public void saveOnethingMatching(@RequestBody CreateOnethingMatchingDto request) {
         adminMatchingService.createOnethingMatching(request);
     }
 
@@ -29,14 +29,14 @@ public class MatchingController {
      * 랜덤 모임 생성 API
      */
     @PostMapping("/randoms")
-    public void saveRandomMatching(CreateRandomMatchingDto request) {
+    public void saveRandomMatching(@RequestBody CreateRandomMatchingDto request) {
         adminMatchingService.createRandomMatching(request);
     }
 
     /**
      * 원띵 모임 목록 조회 API
      */
-    @GetMapping("/onethings/{page}")
+    @GetMapping({"/onethings", "/onethings/{page}"})
     public Slice<MatchingInfoDto> getOnethingMatchingList(
             @PathVariable(required = false) Integer page,
             @RequestParam LocalDate date,
@@ -48,7 +48,7 @@ public class MatchingController {
     /**
      * 랜덤 모임 목록 조회 API
      */
-    @GetMapping("/randoms/{page}")
+    @GetMapping({"/randoms","/randoms/{page}"})
     public Slice<MatchingInfoDto> getRandomMatchingList(
             @PathVariable(required = false) Integer page,
             @RequestParam LocalDate date,
@@ -60,7 +60,7 @@ public class MatchingController {
     /**
      * 원띵 매칭에 배정된 참여자 목록 조회 API
      */
-    @GetMapping("/onethings/participants/assigned/{page}")
+    @GetMapping({"/onethings/participants/assigned", "/onethings/participants/assigned/{page}"})
     public Slice<ParticipantInfoDto> getAssignedOnethingParticipantList(
             @PathVariable(required = false) Integer page,
             @RequestParam OnethingDistrict onethingDistrict,
@@ -72,7 +72,7 @@ public class MatchingController {
     /**
      * 원띵 매칭에 배정되지 않은 참여자 목록 조회 API
      */
-    @GetMapping("/onethings/participants/unassigned/{page}")
+    @GetMapping({"/onethings/participants/unassigned", "/onethings/participants/unassigned/{page}"})
     public Slice<ParticipantInfoDto> getUnassignedOnethingParticipantList(
             @PathVariable(required = false) Integer page,
             @RequestParam OnethingDistrict onethingDistrict,
