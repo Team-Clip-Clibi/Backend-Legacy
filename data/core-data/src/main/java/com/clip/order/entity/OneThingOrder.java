@@ -61,6 +61,9 @@ public class OneThingOrder extends BaseEntity {
     }
 
     public OneThingOrder addTossPayment(TossPayment tossPayment) {
+        if (Objects.isNull(tossPayment)) {
+            throw new IllegalArgumentException("TossPayment cannot be null");
+        }
         if (Objects.isNull(this.tossPayment)) {
             this.tossPayment = new ArrayList<>();
         }

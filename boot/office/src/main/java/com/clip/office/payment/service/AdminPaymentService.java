@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,8 +41,10 @@ public class AdminPaymentService {
         tossPaymentService.saveAll(new ArrayList<>(orderIdToTossPayment.values()));
         List<OneThingOrder> oneThingOrders = userOneThingMatchingService.updateOrderStatusToCancel(onethingMatchingId).stream()
                 .map(onethingOrder -> {
-                    onethingOrder.addTossPayment(orderIdToTossPayment.get(onethingOrder.getOrderId()));
-                    onethingOrder.updateStatus(OneThingOrderStatus.CANCELED);
+                    if (!Objects.isNull(orderIdToTossPayment.get(onethingOrder.getOrderId()))) {
+                        onethingOrder.addTossPayment(orderIdToTossPayment.get(onethingOrder.getOrderId()));
+                        onethingOrder.updateStatus(OneThingOrderStatus.CANCELED);
+                    }
                     return onethingOrder;
                 })
                 .toList();
