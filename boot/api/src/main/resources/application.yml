@@ -49,3 +49,5 @@ exclude-auth-path-patterns:
       method: POST
     - path-pattern: /displays/banners/**
       method: GET
+    - path-pattern: /app/version/{type}
+      method: GET

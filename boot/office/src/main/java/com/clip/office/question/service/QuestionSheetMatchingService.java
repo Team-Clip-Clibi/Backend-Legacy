@@ -10,6 +10,7 @@ import com.clip.office.question.controller.dto.QuestionInfoDto;
 import com.clip.office.question.controller.mapper.MatchingQuestionMapper;
 import com.clip.question.entity.Question;
 import com.clip.question.entity.QuestionSheet;
+import com.clip.question.service.QuestionService;
 import com.clip.question.service.QuestionSheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
@@ -25,6 +26,7 @@ public class QuestionSheetMatchingService {
     private final OnethingMatchingService onethingMatchingService;
     private final RandomMatchingService randomMatchingService;
     private final MatchingQuestionMapper matchingQuestionMapper;
+    private final QuestionService questionService;
 
     @Transactional
     public void assignToOnethingMatchings(AssignQuestionSheetRequest request) {
@@ -101,9 +103,11 @@ public class QuestionSheetMatchingService {
     @Transactional
     public void updateQuestionSheet(long id, QuestionInfoDto request) {
         QuestionSheet questionSheet = questionSheetService.findById(id);
+        questionSheet.updateTitle(request.title());
         List<Question> questionList = request.questions().stream()
                 .map(q -> Question.builder().content(q).build())
                 .toList();
+        questionService.saveAll(questionList);
         questionSheet.updateQuestions(questionList);
         questionSheetService.saveQuestionSheet(questionSheet);
     }
