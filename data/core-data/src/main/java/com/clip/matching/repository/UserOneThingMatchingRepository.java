@@ -7,6 +7,7 @@ import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.repository.projection.FirstParticipantKeywordDto;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
+import com.clip.order.entity.OneThingOrder;
 import com.clip.order.entity.OneThingOrderStatus;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.PageRequest;
@@ -249,4 +250,19 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
             "JOIN u.user.job j " +
             "WHERE u.oneThingMatching IN :onethingMatchings ")
     List<ParticipantJobAndDietaryDto> findJobAndDietaryIn(@Param("onethingMatchings") List<OneThingMatching> onethingMatchings);
+
+    @Query("SELECT u " +
+            "FROM UserOneThingMatching u " +
+            "join fetch u.oneThingOrder " +
+            "WHERE u.oneThingMatching.id = :onethingMatchingId " +
+            "AND (u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.COMPLETED " +
+            "   OR u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.CANCELED_MATCHING_FAIL) " +
+            "AND u.oneThingOrder.status = com.clip.order.entity.OneThingOrderStatus.DONE ")
+    List<UserOneThingMatching> findAllCompletedOrMatchingFailStatus(@Param("onethingMatchingId") long onethingMatchingId);
+
+    @Query("SELECT u.oneThingOrder " +
+            "FROM UserOneThingMatching u " +
+            "WHERE u.matchingStatus = com.clip.matching.entity.OneThingMatchingStatus.CANCELED_MATCHING_FAIL " +
+            "AND u.oneThingMatching.id = :onethingMatchingId ")
+    List<OneThingOrder> findAllMatchingFailStatus(@Param("onethingMatchingId") Long onethingMatchingId);
 }

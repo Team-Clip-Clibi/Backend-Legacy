@@ -1,16 +1,21 @@
 package com.clip.matching.service;
 
 import com.clip.matching.entity.OneThingMatching;
+import com.clip.matching.entity.OneThingMatchingStatus;
 import com.clip.matching.entity.OnethingDistrict;
 import com.clip.matching.entity.UserOneThingMatching;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
 import com.clip.matching.repository.projection.FirstParticipantKeywordDto;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
+import com.clip.order.entity.OneThingOrder;
+import com.clip.order.entity.OneThingOrderStatus;
+import com.clip.order.repository.OneThingOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserOneThingMatchingService {
     private final UserOneThingMatchingRepository userOneThingMatchingRepository;
+    private final OneThingOrderRepository oneThingOrderRepository;
 
     public UserOneThingMatching save(UserOneThingMatching userOneThingMatching) {
         return userOneThingMatchingRepository.save(userOneThingMatching);
@@ -85,5 +91,24 @@ public class UserOneThingMatchingService {
     public UserOneThingMatching findById(long id) {
         return userOneThingMatchingRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Transactional
+    public List<UserOneThingMatching> updateMatchingStatusToMatchingFail(long onethingMatchingId) {
+        List<UserOneThingMatching> userOnethingMatchings = userOneThingMatchingRepository.findAllCompletedOrMatchingFailStatus(onethingMatchingId).stream()
+                .filter(userOneThingMatching ->
+                        userOneThingMatching.getMatchingStatus().equals(OneThingMatchingStatus.COMPLETED))
+                .map(userOneThingMatching ->
+                        userOneThingMatching.updateMatchingStatus(OneThingMatchingStatus.CANCELED_MATCHING_FAIL))
+                .toList();
+        return userOneThingMatchingRepository.saveAll(userOnethingMatchings);
+    }
+
+    @Transactional
+    public List<OneThingOrder> updateOrderStatusToCancel(Long onethingMatchingId) {
+        List<OneThingOrder> oneThingOrders = userOneThingMatchingRepository.findAllMatchingFailStatus(onethingMatchingId).stream()
+                .map(oneThingOrder -> oneThingOrder.updateStatus(OneThingOrderStatus.CANCELED))
+                .toList();
+        return oneThingOrderRepository.saveAll(oneThingOrders);
     }
 }
