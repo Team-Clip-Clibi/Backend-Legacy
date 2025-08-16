@@ -14,9 +14,9 @@ import com.clip.matching.repository.OnethingMatchingRepository;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
 import com.clip.office.matching.controller.dto.RegisterOnethingParticipantDto;
 import com.clip.office.matching.service.AdminMatchingService;
+import com.clip.office.payment.feign.TossPaymentFeign;
 import com.clip.user.entity.User;
 import com.clip.user.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,8 @@ public class MatchingTest {
     private S3FCMService s3FCMService;
     @MockitoBean
     private FcmConfig fcmConfig;
+    @MockitoBean
+    private TossPaymentFeign tossPaymentFeign;
 
     @Autowired
     private UserRepository userRepository;

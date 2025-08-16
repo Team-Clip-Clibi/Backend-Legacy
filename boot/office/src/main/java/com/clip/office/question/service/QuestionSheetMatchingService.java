@@ -26,6 +26,7 @@ public class QuestionSheetMatchingService {
     private final RandomMatchingService randomMatchingService;
     private final MatchingQuestionMapper matchingQuestionMapper;
 
+    @Transactional
     public void assignToOnethingMatchings(AssignQuestionSheetRequest request) {
         validateQuestionCntUnder10(request);
 

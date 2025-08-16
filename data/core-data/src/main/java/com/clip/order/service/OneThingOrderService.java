@@ -10,6 +10,7 @@ import com.clip.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,5 +32,9 @@ public class OneThingOrderService {
     public OneThingOrder findOneThingOrder(long userId, UUID orderId) {
         return oneThingOrderRepository.findOneThingOrder(userId, orderId)
                 .orElseThrow(()-> new ResourceNotFoundException("onethingOrder", orderId.toString()));
+    }
+
+    public List<OneThingOrder> saveAll(List<OneThingOrder> oneThingOrders) {
+        return oneThingOrderRepository.saveAll(oneThingOrders);
     }
 }

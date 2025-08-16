@@ -1,4 +1,4 @@
-package com.clip.global.config.feign;
+package com.clip.global.config;
 
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
@@ -34,4 +34,5 @@ public class TossFeignConfig {
         String key = tossSecretKey + ":";
         return "Basic " + Base64.getEncoder().encodeToString(key.getBytes(StandardCharsets.UTF_8));
     }
+
 }

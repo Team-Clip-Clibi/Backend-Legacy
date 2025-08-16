@@ -14,3 +14,6 @@ spring:
     login:
       max-fail-count: 10
       block-duration-seconds: 3600 # 1 시간
+
+toss:
+  secret-key: ${TOSS_KEY}

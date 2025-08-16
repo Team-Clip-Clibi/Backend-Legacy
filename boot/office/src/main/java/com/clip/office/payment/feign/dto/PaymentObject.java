@@ -1,0 +1,92 @@
+package com.clip.office.payment.feign.dto;
+
+import com.clip.toss.entity.TossPaymentStatus;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+@Builder
+@Data
+@ToString
+public class PaymentObject {
+    private String mId;
+    private String lastTransactionKey;
+    private String paymentKey;
+    private UUID orderId;
+    private String orderName;
+    private Integer taxExemptionAmount;
+    private String status;
+    private OffsetDateTime requestedAt;
+    private OffsetDateTime approvedAt;
+    private Boolean useEscrow;
+    private Boolean cultureExpense;
+    private Card card;
+    private EasyPay easyPay;
+    private String country;
+    private Boolean isPartialCancelable;
+    private Receipt receipt;
+    private Checkout checkout;
+    private String currency;
+    private Integer totalAmount;
+    private Integer balanceAmount;
+    private Integer suppliedAmount;
+    private Integer vat;
+    private Integer taxFreeAmount;
+    private String method;
+    private String version;
+    private Cancels cancels;
+
+    @Data
+    public static class Cancels {
+        private Integer cancelAmount;
+        private String cancelReason;
+        private Integer taxFreeAmount;
+        private Integer taxExemptionAmount;
+        private Integer refundableAmount;
+        private Integer cardDiscountAmount;
+        private Integer transferDiscountAmount;
+        private Integer easyPayDiscountAmount;
+        private OffsetDateTime canceledAt;
+        private String transactionKey;
+        private String receiptKey;
+        private TossPaymentStatus cancelStatus;
+        private String cancelRequestId;
+
+    }
+
+    @Data
+    public static class Card {
+        private String issuerCode;
+        private String acquirerCode;
+        private String number;
+        private Integer installmentPlanMonths;
+        private Boolean isInterestFree;
+        private String interestPayer;
+        private String approveNo;
+        private Boolean useCardPoint;
+        private String cardType;
+        private String ownerType;
+        private String acquireStatus;
+        private Integer amount;
+    }
+
+    @Data
+    public static class EasyPay {
+        private String provider;
+        private Integer amount;
+        private Integer discountAmount;
+    }
+
+    @Data
+    public static class Receipt {
+        private String url;
+    }
+
+    @Data
+    public static class Checkout {
+        private String url;
+    }
+}

@@ -137,5 +137,11 @@ public class UserOneThingMatching extends BaseEntity {
             throw new IllegalStateException("이미 매칭이 등록되어 있습니다.");
         }
         this.oneThingMatching = oneThingMatching;
+        this.matchingStatus = OneThingMatchingStatus.CONFIRMED;
+    }
+
+    public UserOneThingMatching updateMatchingStatus(OneThingMatchingStatus matchingStatus) {
+        this.matchingStatus = matchingStatus;
+        return this;
     }
 }

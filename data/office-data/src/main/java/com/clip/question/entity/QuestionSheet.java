@@ -31,6 +31,7 @@ public class QuestionSheet {
     }
 
     public void updateQuestions(List<Question> questions) {
-        this.questions = questions;
+        this.questions.clear();
+        this.questions.addAll(questions);
     }
 }

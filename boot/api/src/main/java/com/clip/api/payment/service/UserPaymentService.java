@@ -12,6 +12,7 @@ import com.clip.order.entity.RandomOrder;
 import com.clip.order.entity.RandomOrderStatus;
 import com.clip.order.service.OneThingOrderService;
 import com.clip.order.service.RandomOrderService;
+import com.clip.toss.TossPaymentService;
 import com.clip.toss.entity.TossPayment;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class UserPaymentService {
     private final OneThingOrderService oneThingOrderService;
     private final RandomOrderService randomOrderService;
     private final UserRandomMatchingService userRandomMatchingService;
+    private final TossPaymentService tossPaymentService;
     private final ApplicationEventPublisher eventPublisher;
 
     public OneThingOrder findOneThingOrder(long userId, UUID orderId) {
@@ -63,6 +65,7 @@ public class UserPaymentService {
 
         RandomOrder randomOrder = randomOrderService.findRandomOrder(userId, paymentObject.getOrderId());
         TossPayment tossPayment = tossPaymentMapper.toTossPayment(paymentObject);
+        tossPaymentService.save(tossPayment);
         randomOrder.updateStatus(RandomOrderStatus.DONE);
         randomOrder.addTossPayment(tossPayment);
 
