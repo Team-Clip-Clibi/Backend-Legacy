@@ -30,6 +30,10 @@ public class QuestionSheet {
         this.questions = questions;
     }
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
     public void updateQuestions(List<Question> questions) {
         this.questions.clear();
         this.questions.addAll(questions);
