@@ -21,9 +21,10 @@ public interface RandomMatchingRepository extends JpaRepository<RandomMatching, 
 
     @Query("SELECT r " +
             "FROM RandomMatching r " +
-            "WHERE r.dateTime >= :startDateTime " +
-            "AND r.dateTime < :endDateTime " +
-            "AND r.randomDistrict = :district")
+            "WHERE (:startDateTime IS NULL OR r.dateTime >= :startDateTime)" +
+            "AND (:endDateTime IS NULL OR r.dateTime < :endDateTime) " +
+            "AND (:district IS NULL OR r.randomDistrict = :district)" +
+            "ORDER BY r.id")
     Slice<RandomMatching> findMatchingList(@Param("startDateTime") LocalDateTime startDateTime,
                                            @Param("endDateTime") LocalDateTime endDateTime,
                                            @Param("district") RandomDistrict district,
