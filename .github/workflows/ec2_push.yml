@@ -172,4 +172,5 @@ jobs:
             --env-file ./.env \
             --restart always \
             -p ${{ inputs.host-port }}:8080 \
+            -e JAVA_OPTS="-Xlog:gc*:file=/var/log/gc.log" \
             ${{ inputs.ecr-repository }}
