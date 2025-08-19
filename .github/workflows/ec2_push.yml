@@ -172,5 +172,5 @@ jobs:
             --env-file ./.env \
             --restart always \
             -p ${{ inputs.host-port }}:8080 \
-            -e JAVA_OPTS="-Xlog:gc*:file=/var/log/gc.log:time,uptime,level,tags" \
+            -e JAVA_OPTS="-Xlog:gc*:file=/var/log/gc.log:time,uptime,level,tags:filecount=5,filesize=100m" \
             ${{ inputs.ecr-repository }}
