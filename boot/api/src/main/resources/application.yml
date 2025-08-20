@@ -12,13 +12,10 @@ spring:
 
 server:
   shutdown: graceful
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
 
 
+discord:
+  webhook-url: ${DISCORD_WEBHOOK_URL}
 
 jwt:
   access-token-expiration-period-day: 1
@@ -55,6 +52,4 @@ exclude-auth-path-patterns:
     - path-pattern: /displays/banners/**
       method: GET
     - path-pattern: /app/version/{type}
-      method: GET
-    - path-pattern: /actuator/**
       method: GET
