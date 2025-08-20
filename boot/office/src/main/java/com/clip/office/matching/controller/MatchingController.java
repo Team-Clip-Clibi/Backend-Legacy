@@ -79,10 +79,9 @@ public class MatchingController {
     @GetMapping("/onethings/participants/assigned/{page}")
     public Slice<ParticipantInfoDto> getAssignedOnethingParticipantList(
             @PathVariable Integer page,
-            @RequestParam OnethingDistrict onethingDistrict,
-            @RequestParam LocalDate date
+            @RequestParam Long onethingMatchingId
     ) {
-        return adminMatchingService.getAssignedOnethingParticipantList(onethingDistrict, date, page);
+        return adminMatchingService.getAssignedOnethingParticipantList(onethingMatchingId, page);
     }
 
     /**

@@ -107,13 +107,11 @@ public class AdminMatchingService {
 
     @Transactional(readOnly = true)
     public Slice<ParticipantInfoDto> getAssignedOnethingParticipantList(
-            OnethingDistrict onethingDistrict,
-            LocalDate localDate,
+            Long onethingMatchingId,
             Integer page
     ) {
         Slice<UserOneThingMatching> participantsFetchUser = userOneThingMatchingService.findAssignedParticipantsFetchUser(
-                onethingDistrict,
-                localDate,
+                onethingMatchingId,
                 page
         );
         return matchingMapper.toParticipantInfos(participantsFetchUser);

@@ -65,11 +65,10 @@ public class UserOneThingMatchingService {
     }
 
     public Slice<UserOneThingMatching> findAssignedParticipantsFetchUser(
-            OnethingDistrict onethingDistrict,
-            LocalDate localDate,
+            Long onethingMatchingId,
             int page
     ) {
-        return userOneThingMatchingRepository.findAssignedParticipantsFetchUser(onethingDistrict, localDate, PageRequest.of(page, 30));
+        return userOneThingMatchingRepository.findAssignedParticipantsFetchUser(onethingMatchingId, PageRequest.of(page, 30));
     }
 
     public Slice<UserOneThingMatching> findUnassignedParticipantsFetchUser(
