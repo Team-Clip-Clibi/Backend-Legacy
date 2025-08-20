@@ -194,12 +194,10 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
     @Query("SELECT u " +
             "FROM UserOneThingMatching u " +
             "join fetch u.oneThingMatching " +
-            "join u.preferredDates pd " +
-            "WHERE u.oneThingMatching is NOT NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
+            "WHERE u.oneThingMatching is NOT NULL AND u.oneThingMatching.id = :onethingMatchingId " +
             "ORDER BY u.id")
     Slice<UserOneThingMatching> findAssignedParticipantsFetchUser(
-            @Param("onethingDistrict") OnethingDistrict onethingDistrict,
-            @Param("localDate") LocalDate localDate, PageRequest of);
+            @Param("onethingMatchingId") Long onethingMatchingId, PageRequest of);
 
     @Query("SELECT u " +
             "FROM UserOneThingMatching u " +
