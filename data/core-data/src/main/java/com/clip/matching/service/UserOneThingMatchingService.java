@@ -1,10 +1,8 @@
 package com.clip.matching.service;
 
-import com.clip.matching.entity.OneThingMatching;
-import com.clip.matching.entity.OneThingMatchingStatus;
-import com.clip.matching.entity.OnethingDistrict;
-import com.clip.matching.entity.UserOneThingMatching;
+import com.clip.matching.entity.*;
 import com.clip.matching.repository.UserOneThingMatchingRepository;
+import com.clip.matching.repository.UserRandomMatchingRepository;
 import com.clip.matching.repository.projection.FirstParticipantKeywordDto;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
@@ -27,6 +25,7 @@ import java.util.List;
 public class UserOneThingMatchingService {
     private final UserOneThingMatchingRepository userOneThingMatchingRepository;
     private final OneThingOrderRepository oneThingOrderRepository;
+    private final UserRandomMatchingRepository userRandomMatchingRepository;
 
     public UserOneThingMatching save(UserOneThingMatching userOneThingMatching) {
         return userOneThingMatchingRepository.save(userOneThingMatching);
@@ -93,7 +92,7 @@ public class UserOneThingMatchingService {
     }
 
     @Transactional
-    public List<UserOneThingMatching> updateMatchingStatusToMatchingFail(long onethingMatchingId) {
+    public List<UserOneThingMatching> updateOnethingMatchingStatusToMatchingFail(long onethingMatchingId) {
         List<UserOneThingMatching> userOnethingMatchings = userOneThingMatchingRepository.findAllCompletedOrMatchingFailStatus(onethingMatchingId).stream()
                 .filter(userOneThingMatching ->
                         userOneThingMatching.getMatchingStatus().equals(OneThingMatchingStatus.COMPLETED))
@@ -104,7 +103,18 @@ public class UserOneThingMatchingService {
     }
 
     @Transactional
-    public List<OneThingOrder> updateOrderStatusToCancel(Long onethingMatchingId) {
+    public List<UserRandomMatching> updateRandomMatchingStatusToMatchingFail(long randomMatchingId) {
+        List<UserRandomMatching> userRandomMatchings = userRandomMatchingRepository.findAllCompletedOrMatchingFailStatus(randomMatchingId).stream()
+                .filter(userRandomMatching ->
+                        userRandomMatching.getMatchingStatus().equals(RandomMatchingStatus.COMPLETED))
+                .map(userRandomMatching ->
+                        userRandomMatching.updateMatchingStatus(RandomMatchingStatus.CANCELED_MATCHING_FAIL))
+                .toList();
+        return userRandomMatchingRepository.saveAll(userRandomMatchings);
+    }
+
+    @Transactional
+    public List<OneThingOrder> updateOrderStatusToCancel(long onethingMatchingId) {
         List<OneThingOrder> oneThingOrders = userOneThingMatchingRepository.findAllMatchingFailStatus(onethingMatchingId).stream()
                 .map(oneThingOrder -> oneThingOrder.updateStatus(OneThingOrderStatus.CANCELED))
                 .toList();

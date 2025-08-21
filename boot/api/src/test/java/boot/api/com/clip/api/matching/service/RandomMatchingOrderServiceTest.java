@@ -45,7 +45,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.assertj.core.api.Assertions.assertThat;;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(classes = ApiApplication.class)
 @SpringBootTest
@@ -115,9 +115,9 @@ public class RandomMatchingOrderServiceTest {
 
             // 2개 지역의 랜덤 매칭 생성
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 20), 20));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", "mune","korean", meetingDateTime, 20), 20));
             RandomMatchingCapacity hongdaeCapacity = randomMatchingCapacityRepository.save(
-                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", meetingDateTime, 20), 20));
+                    new RandomMatchingCapacity(new RandomMatching(RandomDistrict.HONGDAE_HAPJEONG, "홍대입구역", "홍대 맛집", "mune","korean", meetingDateTime, 20), 20));
 
             int threadCount = 400;
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
@@ -215,7 +215,7 @@ public class RandomMatchingOrderServiceTest {
                     : now.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
             LocalDateTime meetingDateTime = matchingDate.atTime(19, 0);
 
-            RandomMatching randomMatching = new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집", meetingDateTime, 6);
+            RandomMatching randomMatching = new RandomMatching(RandomDistrict.GANGNAM, "역삼역", "강남 맛집","mune","korean", meetingDateTime, 6);
             RandomMatchingCapacity gangnamCapacity = randomMatchingCapacityRepository.save(
                     new RandomMatchingCapacity(randomMatching, 6));
 

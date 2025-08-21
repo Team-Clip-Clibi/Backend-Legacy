@@ -30,6 +30,12 @@ public class OneThingMatching extends BaseEntity {
     private LocalDateTime dateTime;
 
     @Column
+    private String cuisineType;
+
+    @Column
+    private String menu;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private OnethingDistrict onethingDistrict;
 
@@ -38,9 +44,11 @@ public class OneThingMatching extends BaseEntity {
     private QuestionSheet questionSheet;
 
     @Builder
-    public OneThingMatching(String address, String restaurantName, LocalDateTime dateTime, OnethingDistrict onethingDistrict) {
+    public OneThingMatching(String address, String restaurantName, String menu, String cuisineType, LocalDateTime dateTime, OnethingDistrict onethingDistrict) {
         this.address = address;
         this.restaurantName = restaurantName;
+        this.menu = menu;
+        this.cuisineType = cuisineType;
         this.dateTime = dateTime;
         this.onethingDistrict = onethingDistrict;
     }

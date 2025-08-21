@@ -8,6 +8,8 @@ public record CreateRandomMatchingDto(
         RandomDistrict randomDistrict,
         String restaurantName,
         String address,
+        String menu,
+        String cuisineType,
         LocalDateTime dateTime
 ) {
 }

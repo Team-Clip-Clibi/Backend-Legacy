@@ -8,6 +8,8 @@ public record CreateOnethingMatchingDto(
         OnethingDistrict onethingDistrict,
         String restaurantName,
         String address,
+        String menu,
+        String cuisineType,
         LocalDateTime dateTime
 ) {
 }

@@ -78,8 +78,9 @@ public class RandomOrder extends BaseEntity {
         this.tossPayment.add(tossPayment);
     }
 
-    public void updateStatus(RandomOrderStatus randomOrderStatus) {
+    public RandomOrder updateStatus(RandomOrderStatus randomOrderStatus) {
         this.status = randomOrderStatus;
+        return this;
     }
 
     @Transient
