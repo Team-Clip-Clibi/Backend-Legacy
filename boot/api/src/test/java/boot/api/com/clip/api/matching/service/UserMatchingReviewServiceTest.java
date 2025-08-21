@@ -5,6 +5,7 @@ import com.clip.api.matching.controller.dto.MatchingReviewDto;
 import com.clip.api.matching.controller.dto.MatchingType;
 import com.clip.api.matching.service.UserMatchingReviewService;
 import com.clip.api.payment.feign.TossPaymentFeign;
+import com.clip.batch.actuator.feign.DiscordFeign;
 import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
@@ -65,6 +66,8 @@ public class UserMatchingReviewServiceTest {
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
     private S3PathProperties s3PathProperties;
+    @MockitoBean
+    private DiscordFeign discordFeign;
 
     @AfterEach
     void tearDown() {

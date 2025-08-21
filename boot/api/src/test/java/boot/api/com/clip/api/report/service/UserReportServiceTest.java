@@ -4,6 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.report.controller.dto.ReportDto;
 import com.clip.api.report.service.UserReportService;
+import com.clip.batch.actuator.feign.DiscordFeign;
 import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
@@ -52,6 +53,8 @@ public class UserReportServiceTest {
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
     private S3PathProperties s3PathProperties;
+    @MockitoBean
+    private DiscordFeign discordFeign;
 
     @AfterEach
     void tearDown() {

@@ -5,6 +5,8 @@ spring:
   batch:
     job:
         enabled: false
+discord:
+  webhook-url: Https://localhost:123/mock
 
 exclude-auth-path-patterns:
   paths:

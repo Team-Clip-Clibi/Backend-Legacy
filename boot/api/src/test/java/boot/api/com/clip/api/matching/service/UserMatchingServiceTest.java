@@ -4,6 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.api.matching.controller.dto.*;
 import com.clip.api.matching.service.UserMatchingService;
 import com.clip.api.payment.feign.TossPaymentFeign;
+import com.clip.batch.actuator.feign.DiscordFeign;
 import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.global.exception.NoContentAvailableException;
 import com.clip.infra.aws.s3.config.S3Config;
@@ -78,6 +79,8 @@ public class UserMatchingServiceTest {
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
     private S3PathProperties s3PathProperties;
+    @MockitoBean
+    private DiscordFeign discordFeign;
     @Autowired
     private UserJobRepository userJobRepository;
 

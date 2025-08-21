@@ -7,6 +7,7 @@ import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.payment.feign.dto.PaymentObject;
 import com.clip.api.payment.service.PaymentServiceFacade;
 import com.clip.api.payment.service.event.PaymentExceptionEvent;
+import com.clip.batch.actuator.feign.DiscordFeign;
 import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.infra.aws.s3.config.S3Config;
 import com.clip.infra.aws.s3.S3FCMService;
@@ -73,6 +74,8 @@ public class PaymentServiceFacadeTest {
     private S3PathProperties s3PathProperties;
     @MockitoSpyBean
     private OneThingOrderService oneThingOrderService;
+    @MockitoBean
+    private DiscordFeign discordFeign;
     @Autowired
     private ApplicationEvents applicationEvents;
 
