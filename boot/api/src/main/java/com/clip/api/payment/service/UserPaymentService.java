@@ -70,6 +70,6 @@ public class UserPaymentService {
         randomOrder.addTossPayment(tossPayment);
 
         UserRandomMatching userRandomMatching = userRandomMatchingService.findUserRandomMatching(userId, randomOrder.getId());
-        userRandomMatching.updateStatus(RandomMatchingStatus.CONFIRMED);
+        userRandomMatching.updateMatchingStatus(RandomMatchingStatus.CONFIRMED);
     }
 }

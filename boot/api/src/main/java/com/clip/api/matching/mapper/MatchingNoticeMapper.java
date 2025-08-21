@@ -56,6 +56,8 @@ public class MatchingNoticeMapper {
                 .myOneThingContent(userRandomMatching.getOnethingTopic())
                 .restaurantName(userRandomMatching.getRandomMatching().getRestaurantName())
                 .location(userRandomMatching.getRandomMatching().getAddress())
+                .menu(userRandomMatching.getRandomMatching().getMenu())
+                .cuisineType(userRandomMatching.getRandomMatching().getCuisineType())
                 .jobInfos(jobInfoList)
                 .dietaryList(dietaryList)
                 .build();
@@ -89,6 +91,8 @@ public class MatchingNoticeMapper {
                 .myOneThingContent(userOneThingMatching.getOnethingTopic())
                 .restaurantName(userOneThingMatching.getOneThingMatching().getRestaurantName())
                 .location(userOneThingMatching.getOneThingMatching().getAddress())
+                .menu(userOneThingMatching.getOneThingMatching().getMenu())
+                .cuisineType(userOneThingMatching.getOneThingMatching().getCuisineType())
                 .jobInfos(jobInfoList)
                 .dietaryList(dietaryList)
                 .build();

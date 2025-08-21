@@ -7,6 +7,9 @@ import com.clip.matching.entity.UserRandomMatching;
 import com.clip.matching.repository.UserRandomMatchingRepository;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
+import com.clip.order.entity.RandomOrder;
+import com.clip.order.entity.RandomOrderStatus;
+import com.clip.order.repository.RandomOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserRandomMatchingService {
     private final UserRandomMatchingRepository userRandomMatchingRepository;
+    private final RandomOrderRepository randomOrderRepository;
 
     public UserRandomMatching save(UserRandomMatching userRandomMatching) {
         return userRandomMatchingRepository.save(userRandomMatching);
@@ -58,5 +62,12 @@ public class UserRandomMatchingService {
 
     public List<MatchingParticipantCntDto> findParticipantCntIn(List<RandomMatching> randomMatchings) {
         return userRandomMatchingRepository.findParticipantCntIn(randomMatchings);
+    }
+
+    public List<RandomOrder> updateOrderStatusToCancel(long randomMatchingId) {
+        List<RandomOrder> randomOrders = userRandomMatchingRepository.findAllMatchingFailStatus(randomMatchingId).stream()
+                .map(randomOrder -> randomOrder.updateStatus(RandomOrderStatus.CANCELED))
+                .toList();
+        return randomOrderRepository.saveAll(randomOrders);
     }
 }

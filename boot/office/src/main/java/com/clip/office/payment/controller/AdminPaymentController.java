@@ -12,8 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminPaymentController {
     private final AdminPaymentFacade adminPaymentFacade;
+
+    /**
+     * 원띵 결제 취소 API
+     * @param id 원띵 ID
+     */
     @PostMapping("/onethings/{id}/cancel")
     public void cancelOnethingPayment(@PathVariable Long id) {
         adminPaymentFacade.cancelAllOnethingOrder(id);
+    }
+
+    /**
+     * 랜덤 결제 취소 API
+     * @param id 랜덤 ID
+     */
+    @PostMapping("/randoms/{id}/cancel")
+    public void cancelRandomPayment(@PathVariable Long id) {
+        adminPaymentFacade.cancelAllRandomOrder(id);
     }
 }

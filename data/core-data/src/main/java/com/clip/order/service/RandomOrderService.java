@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -33,5 +34,9 @@ public class RandomOrderService {
     public RandomOrder findRandomOrder(long userId, UUID orderId) {
         return randomOrderRepository.findRandomOrder(userId, orderId)
                 .orElseThrow(()-> new ResourceNotFoundException("randomOrder", orderId.toString()));
+    }
+
+    public List<RandomOrder> saveAll(List<RandomOrder> randomOrders) {
+        return randomOrderRepository.saveAll(randomOrders);
     }
 }

@@ -1,6 +1,7 @@
 package com.clip.office.payment.service;
 
 import com.clip.matching.entity.UserOneThingMatching;
+import com.clip.matching.entity.UserRandomMatching;
 import com.clip.office.payment.feign.TossPaymentFeign;
 import com.clip.office.payment.feign.dto.PaymentCancelDto;
 import com.clip.office.payment.feign.dto.PaymentObject;
@@ -19,7 +20,7 @@ public class AdminPaymentFacade {
     private final AdminPaymentService adminPaymentService;
 
     public void cancelAllOnethingOrder(Long onethingMatchingId) {
-        List<UserOneThingMatching> usrOnethingMatchings = adminPaymentService.updateMatchingStatusToMatchingFail(onethingMatchingId);
+        List<UserOneThingMatching> usrOnethingMatchings = adminPaymentService.updateOnethingMatchingStatusToMatchingFail(onethingMatchingId);
         List<PaymentObject> paymentObjects = usrOnethingMatchings.stream()
                 .map(usrOnethingMatching -> tossPaymentFeign.cancelPayment(
                         usrOnethingMatching.getOneThingOrder()
@@ -32,6 +33,18 @@ public class AdminPaymentFacade {
                         new PaymentCancelDto(CANCEL_REASON))
                 ).toList();
 
-        adminPaymentService.updateAllOrdersStatusAndTossPayment(onethingMatchingId, paymentObjects);
+        adminPaymentService.updateAllOnethingOrdersStatusAndTossPayment(onethingMatchingId, paymentObjects);
+    }
+
+    public void cancelAllRandomOrder(Long randomMatchingId) {
+        List<UserRandomMatching> usrRandomMatchings = adminPaymentService.updateRandomMatchingStatusToMatchingFail(randomMatchingId);
+        List<PaymentObject> paymentObjects = usrRandomMatchings.stream()
+                .map(usrRandomMatching -> tossPaymentFeign.cancelPayment(
+                        usrRandomMatching.getRandomOrder().getTossPayment().stream().filter(tossPayment -> tossPayment.getTossPaymentStatus().equals(TossPaymentStatus.DONE))
+                                .map(TossPayment::getPaymentId)
+                                .findFirst().orElseThrow(IllegalStateException::new),
+                        new PaymentCancelDto(CANCEL_REASON)
+                )).toList();
+        adminPaymentService.updateAllRandomOrdersStatusAndTossPayment(randomMatchingId, paymentObjects);
     }
 }

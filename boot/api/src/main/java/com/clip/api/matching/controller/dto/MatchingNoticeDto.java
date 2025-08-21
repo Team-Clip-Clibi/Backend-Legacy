@@ -17,7 +17,8 @@ public class MatchingNoticeDto {
     private String myOneThingContent;
     private String restaurantName;
     private String location;
-    private String menuCategory;
+    private String menu;
+    private String cuisineType;
     private List<JobInfo> jobInfos;
     private List<String> dietaryList;
 

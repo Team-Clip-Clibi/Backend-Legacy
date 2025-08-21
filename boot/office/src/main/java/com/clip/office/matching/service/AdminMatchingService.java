@@ -38,6 +38,8 @@ public class AdminMatchingService {
                 .restaurantName(request.restaurantName())
                 .address(request.address())
                 .dateTime(request.dateTime())
+                .menu(request.menu())
+                .cuisineType(request.cuisineType())
                 .build();
 
         return onethingMatchingService.save(oneThingMatching);
@@ -51,6 +53,8 @@ public class AdminMatchingService {
                 .randomDistrict(request.randomDistrict())
                 .totalCapacity(MAX_CAPACITY)
                 .restaurantName(request.restaurantName())
+                .menu(request.menu())
+                .cuisineType(request.cuisineType())
                 .build();
 
         return randomMatchingService.save(randomMatching);

@@ -29,6 +29,12 @@ public class RandomMatching extends BaseEntity {
     private String restaurantName;
 
     @Column
+    private String cuisineType;
+
+    @Column
+    private String menu;
+
+    @Column
     private LocalDateTime dateTime;
 
     @Column
@@ -39,10 +45,12 @@ public class RandomMatching extends BaseEntity {
     private QuestionSheet questionSheet;
 
     @Builder
-    public RandomMatching(RandomDistrict randomDistrict , String address, String restaurantName, LocalDateTime dateTime, Integer totalCapacity) {
+    public RandomMatching(RandomDistrict randomDistrict , String address, String restaurantName, String menu, String cuisineType, LocalDateTime dateTime, Integer totalCapacity) {
         this.randomDistrict = randomDistrict;
         this.address = address;
         this.restaurantName = restaurantName;
+        this.menu = menu;
+        this.cuisineType = cuisineType;
         this.dateTime = dateTime;
         this.totalCapacity = totalCapacity;
     }

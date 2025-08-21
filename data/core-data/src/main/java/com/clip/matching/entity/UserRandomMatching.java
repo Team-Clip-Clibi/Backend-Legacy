@@ -67,8 +67,9 @@ public class UserRandomMatching extends BaseEntity {
         this.isReviewPopupDismissed = isReviewPopupDismissed;
     }
 
-    public void updateStatus(RandomMatchingStatus matchingStatus) {
+    public UserRandomMatching updateMatchingStatus(RandomMatchingStatus matchingStatus) {
         this.matchingStatus = matchingStatus;
+        return this;
     }
 
     public void updateLateMinutes(int lateMinutes) {

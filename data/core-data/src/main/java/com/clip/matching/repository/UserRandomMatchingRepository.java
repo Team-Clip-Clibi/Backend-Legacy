@@ -3,6 +3,7 @@ package com.clip.matching.repository;
 import com.clip.matching.entity.*;
 import com.clip.matching.repository.projection.MatchingParticipantCntDto;
 import com.clip.matching.repository.projection.ParticipantJobAndDietaryDto;
+import com.clip.order.entity.RandomOrder;
 import com.clip.order.entity.RandomOrderStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -225,4 +226,17 @@ public interface UserRandomMatchingRepository extends JpaRepository<UserRandomMa
             "JOIN u.user.job j " +
             "WHERE u.randomMatching IN :randomMatchings " )
     List<ParticipantJobAndDietaryDto> findJobAndDietaryIn(@Param("randomMatchings") List<RandomMatching> randomMatchings);
+
+    @Query("SELECT u FROM UserRandomMatching u " +
+            "WHERE u.randomMatching.id = :randomMatchingId " +
+            "AND (u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.COMPLETED " +
+            "   OR u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.CANCELED_MATCHING_FAIL) " +
+            "AND u.randomOrder.status = com.clip.order.entity.RandomOrderStatus.DONE ")
+    List<UserRandomMatching> findAllCompletedOrMatchingFailStatus(@Param("randomMatchingId") long randomMatchingId);
+
+    @Query("SELECT u.randomOrder " +
+            "FROM UserRandomMatching u " +
+            "WHERE u.matchingStatus = com.clip.matching.entity.RandomMatchingStatus.CANCELED_MATCHING_FAIL " +
+            "AND u.randomMatching.id = :randomMatchingId ")
+    List<RandomOrder> findAllMatchingFailStatus(@Param("randomMatchingId") long randomMatchingId);
 }
