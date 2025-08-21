@@ -201,7 +201,7 @@ public interface UserOneThingMatchingRepository extends JpaRepository<UserOneThi
 
     @Query("SELECT u " +
             "FROM UserOneThingMatching u " +
-            "join u.preferredDates pd " +
+            "join fetch u.preferredDates pd " +
             "WHERE u.oneThingMatching is NULL AND u.onethingDistrict = :onethingDistrict AND pd.date = :localDate " +
             "ORDER BY u.id")
     Slice<UserOneThingMatching> findUnassignedParticipantsFetchUser(
