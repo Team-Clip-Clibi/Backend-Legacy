@@ -60,9 +60,8 @@ public class UserOneThingMatching extends BaseEntity {
     @Column
     private OnethingKeyword oneThingKeyword;
 
-    @ElementCollection(targetClass = PreferredDate.class)
+    @ElementCollection(targetClass = PreferredDate.class, fetch =  FetchType.EAGER)
     @CollectionTable(joinColumns = @JoinColumn(name = "id"))
-    @Column
     private List<PreferredDate> preferredDates = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
