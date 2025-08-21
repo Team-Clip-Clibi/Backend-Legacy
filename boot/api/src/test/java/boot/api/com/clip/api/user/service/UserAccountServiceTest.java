@@ -6,6 +6,7 @@ import com.clip.api.user.controller.dto.*;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.entity.Token;
 import com.clip.auth.repository.TokenRepository;
+import com.clip.batch.actuator.feign.DiscordFeign;
 import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
@@ -79,6 +80,8 @@ public class UserAccountServiceTest {
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
     private S3PathProperties s3PathProperties;
+    @MockitoBean
+    private DiscordFeign discordFeign;
     @Autowired
     private OnethingMatchingRepository oneThingMatchingRepository;
     @Autowired

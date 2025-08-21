@@ -4,6 +4,7 @@ import com.clip.ApiApplication;
 import com.clip.api.payment.feign.TossPaymentFeign;
 import com.clip.api.user.service.UserAccountService;
 import com.clip.auth.service.TokenService;
+import com.clip.batch.actuator.feign.DiscordFeign;
 import com.clip.global.config.feign.TossFeignConfig;
 import com.clip.global.config.jwt.JWTProperties;
 import com.clip.global.config.jwt.TokenProvider;
@@ -61,6 +62,8 @@ public class UserAccountServiceTokenTest {
     private TossPaymentFeign tossPaymentFeign;
     @MockitoBean
     private S3PathProperties s3PathProperties;
+    @MockitoBean
+    private DiscordFeign discordFeign;
 
 
     @DisplayName("RefreshToken의 기간이 유요하며 TokenType이 RefreshToken이면 1일간 유효한 AccessToken이 발급된다.")
