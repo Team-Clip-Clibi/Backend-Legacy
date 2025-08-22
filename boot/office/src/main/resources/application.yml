@@ -17,12 +17,3 @@ spring:
 
 toss:
   secret-key: ${TOSS_KEY}
-
-server:
-  tomcat:
-    accesslog:
-      enabled: true
-      pattern: "%h %l %u %t \"%r\" %s %b %D"
-      directory: logs
-      prefix: access_log
-      suffix: .log
