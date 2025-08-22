@@ -60,12 +60,12 @@ public class SecurityConfig {
                 ).requiresChannel(rcc -> rcc.anyRequest().requiresInsecure());
 
         http.authorizeHttpRequests(request -> request
-                        .requestMatchers(
-                                "/office/admin/login",
-                                "/office/admin/register",
-                                "/css/**", "/js/**", "/icon/**", "/images/**"
-                        ).permitAll()
-                        .anyRequest().authenticated());
+//                        .requestMatchers(
+//                                "/office/admin/login",
+//                                "/office/admin/register",
+//                                "/css/**", "/js/**", "/icon/**", "/images/**"
+//                        ).permitAll()
+                        .anyRequest().permitAll());
 
         http.httpBasic(Customizer.withDefaults()).formLogin(Customizer.withDefaults());
 
