@@ -73,7 +73,7 @@ public class CpuObservationTasklet implements Tasklet {
 
         Process process = null;
         try {
-            process = new ProcessBuilder("bash", "-c", command)
+            process = new ProcessBuilder("sh", "-c", command)
                     .redirectErrorStream(true)
                     .start();
 
@@ -115,7 +115,7 @@ public class CpuObservationTasklet implements Tasklet {
 
         Process process = null;
         try {
-            process = new ProcessBuilder("bash", "-c", command)
+            process = new ProcessBuilder("sh", "-c", command)
                     .redirectErrorStream(true)
                     .start();
 
