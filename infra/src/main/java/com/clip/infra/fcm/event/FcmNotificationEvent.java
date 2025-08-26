@@ -11,11 +11,9 @@ import java.util.Map;
 
 @Getter
 public class FcmNotificationEvent extends ApplicationEvent {
-    // 일반 사용자 대상 배치 FCM 이벤트 (매칭 관련 알림 등)
-
-        private final MessageTemplateType messageTemplateType;
-        private final String matchingType;
-        private final Map<Long, UserFcmData> userDataMap;
+    private final MessageTemplateType messageTemplateType;
+    private final String matchingType;
+    private final Map<Long, UserFcmData> userDataMap;
 
     public FcmNotificationEvent(Object source,
                                 MessageTemplateType messageTemplateType,
@@ -37,6 +35,7 @@ public class FcmNotificationEvent extends ApplicationEvent {
             String targetDeviceType,
             String fcmToken,
             MessageParams params
-    ) {}
+    ) {
+    }
 
 }
