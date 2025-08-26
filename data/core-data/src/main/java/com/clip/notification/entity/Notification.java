@@ -24,23 +24,30 @@ public class Notification extends BaseEntity {
     @Column
     private boolean isRead;
 
-    @Column
-    private String content;
-
     @Enumerated(EnumType.STRING)
     @Column
     private SendStatus sendStatus;
+
+    private String messageTemplateType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     User user;
 
+    @Column
+    private Long matchingId;
+
+    @Column
+    private String matchingType;
+
     @Builder
-    public Notification(NotificationType notificationType, boolean isRead, String content, User user) {
+    public Notification(NotificationType notificationType, boolean isRead, String messageTemplateType, User user, Long matchingId, String matchingType) {
         this.notificationType = notificationType;
         this.isRead = isRead;
-        this.content = content;
+        this.messageTemplateType = messageTemplateType;
         this.user = user;
         this.sendStatus = SendStatus.SENT;
+        this.matchingId = matchingId;
+        this.matchingType = matchingType;
     }
 }

@@ -40,7 +40,7 @@ public class RandomMatchingInfoNotificationBatchConfig {
     private static final int CHUNK_SIZE = 100;
     private static final int PAGE_SIZE = 100;
 
-    @Scheduled(cron = "0 0 19 * * THU") // 1일 전 알림 스케줄러 (목)
+//    @Scheduled(cron = "0 0 19 * * THU") // 1일 전 알림 스케줄러 (목)
     @SchedulerLock(name = "randomMatchingInfo_oneDayPrior", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runOneDayPriorJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -51,7 +51,7 @@ public class RandomMatchingInfoNotificationBatchConfig {
         jobLauncher.run(sendRandomMatchingInfoFcmJob(), params);
     }
 
-    @Scheduled(cron = "0 0 9 * * FRI") // 당일 알림 스케줄러 (금)
+//    @Scheduled(cron = "0 0 9 * * FRI") // 당일 알림 스케줄러 (금)
     @SchedulerLock(name = "randomMatchingInfo_today", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runTodayJob() throws Exception {
         JobParameters params = new JobParametersBuilder()

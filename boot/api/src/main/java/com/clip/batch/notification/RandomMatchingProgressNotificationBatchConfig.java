@@ -42,7 +42,7 @@ public class RandomMatchingProgressNotificationBatchConfig {
     private static final int CHUNK_SIZE = 100;
     private static final int PAGE_SIZE = 100;
 
-    @Scheduled(cron = "0 0 19 * * FRI") // 랜덤 매칭 당일(매주 금요일 오후 7시)
+//    @Scheduled(cron = "0 0 19 * * FRI") // 랜덤 매칭 당일(매주 금요일 오후 7시)
     @SchedulerLock(name = "randomMatchingInfo_matchingStart", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runMatchingStartJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
@@ -53,7 +53,7 @@ public class RandomMatchingProgressNotificationBatchConfig {
         jobLauncher.run(sendRandomMatchingProgressFcmJob(), params);
     }
 
-    @Scheduled(cron = "0 0 22 * * FRI") // 랜덤 매칭 종료일(매주 금요일 오후 10시)
+//    @Scheduled(cron = "0 0 22 * * FRI") // 랜덤 매칭 종료일(매주 금요일 오후 10시)
     @SchedulerLock(name = "randomMatchingInfo_matchingEnd", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void runMatchingEndJob() throws Exception {
         JobParameters params = new JobParametersBuilder()

@@ -275,7 +275,7 @@ public class UserMatchingService {
                 .map(user -> Notification.builder()
                         .user(user)
                         .notificationType(NotificationType.MEETING)
-                        .content(message)
+//                        .content(message)
                         .build())
                 .toList();
 

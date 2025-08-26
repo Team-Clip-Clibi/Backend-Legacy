@@ -110,7 +110,10 @@ public class MatchingProgressNotificationService {
                         NotificationType.MEETING,
                         false,
                         message,
-                        user
+                        user,
+                        0L,
+                        "ONETHING"
+
                 ));
 
                 if (templateType.equals(MessageTemplateType.MATCHING_ENDED)) {
