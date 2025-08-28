@@ -1,11 +1,13 @@
 package com.clip.global.config.feign;
 
 import feign.RequestInterceptor;
+import feign.Util;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
@@ -24,7 +26,12 @@ public class TossFeignConfig {
     @Bean
     public ErrorDecoder errorDecoder() {
         return (methodKey, response) -> {
-            String errorMessage = Objects.isNull(response.body()) ? "No response body" : response.body().toString();
+            String errorMessage;
+            try {
+                errorMessage = Objects.isNull(response.body()) ? "No response body" : Util.toString(response.body().asReader(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             log.error("Feign client error: Method Key - {}, Status Code - {}, Response Body - {}", methodKey, response.status(), errorMessage);
             return new ErrorDecoder.Default().decode(methodKey, response);
         };
