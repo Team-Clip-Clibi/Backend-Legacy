@@ -28,26 +28,29 @@ public class Notification extends BaseEntity {
     @Column
     private SendStatus sendStatus;
 
-    private String messageTemplateType;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     User user;
 
     @Column
-    private Long matchingId;
+    private String content;
+
+    @Column
+    private String batchKey;
 
     @Column
     private String matchingType;
 
+    @Column
+    private String matchingId;
+
     @Builder
-    public Notification(NotificationType notificationType, boolean isRead, String messageTemplateType, User user, Long matchingId, String matchingType) {
+    public Notification(NotificationType notificationType, boolean isRead, User user, String content, String batchKey) {
         this.notificationType = notificationType;
         this.isRead = isRead;
-        this.messageTemplateType = messageTemplateType;
         this.user = user;
         this.sendStatus = SendStatus.SENT;
-        this.matchingId = matchingId;
-        this.matchingType = matchingType;
+        this.content = content;
+        this.batchKey = batchKey;
     }
 }

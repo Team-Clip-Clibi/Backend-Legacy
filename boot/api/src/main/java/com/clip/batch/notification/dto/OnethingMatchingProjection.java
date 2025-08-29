@@ -1,8 +1,5 @@
-package com.clip.batch.notification.projection;
+package com.clip.batch.notification.dto;
 
-import com.clip.user.entity.DeviceType;
-
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 public record OnethingMatchingProjection(
@@ -10,7 +7,7 @@ public record OnethingMatchingProjection(
         String fcmToken,
         String deviceType,
         Long oneThingMatchingId,
-        DayOfWeek dayOfWeek,
-        LocalDateTime dateTime
+        LocalDateTime dateTime,
+        String place
 ) {
 }
