@@ -2,10 +2,9 @@ package com.clip.infra.fcm.event;
 
 import com.clip.infra.fcm.service.SendFCMService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 
 @Component
@@ -14,8 +13,8 @@ public class FcmNotificationEventListener {
     private final SendFCMService sendFCMService;
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
+    @EventListener
     public void sendGeneralFCM(FcmNotificationEvent fcmEvent) {
-        sendFCMService.sendMsg(fcmEvent);
+        sendFCMService.sendMsg(fcmEvent.getMessageTemplateType(), fcmEvent.getMatchingType(), fcmEvent.getUserDataMap());
     }
 }

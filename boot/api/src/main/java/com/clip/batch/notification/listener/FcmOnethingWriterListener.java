@@ -1,26 +1,25 @@
 package com.clip.batch.notification.listener;
 
-import com.clip.batch.notification.projection.OnethingMatchingProjection;
-import com.clip.infra.fcm.event.FcmNotificationEvent;
-import com.clip.infra.fcm.service.SendFCMService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.ItemWriteListener;
-import org.springframework.batch.core.annotation.AfterWrite;
-import org.springframework.batch.item.Chunk;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
-
-@Component
-@RequiredArgsConstructor
-public class FcmOnethingWriterListener{
-    private final ApplicationEventPublisher sendFCMEventPublisher;
-
-//    @AfterWrite
-//    public void afterWrite(Chunk<? extends OnethingMatchingProjection> items) {
-//        sendFCMEventPublisher.publishEvent(new FcmNotificationEvent(
-//                this,
-//                templateType,
-//                matchingType,
-//                userDataMap));
-//    }
-}
+//
+//@Component
+//@RequiredArgsConstructor
+//@StepScope
+//@Slf4j
+//public class FcmOnethingWriterListener{
+//    private final SendFCMService sendFCMService;
+//
+////    @AfterWrite
+////    public void afterWrite(Chunk<? extends OnethingMatchingProjection> items, @Value("#{jobParameters['messageTemplateType']}") String messageTemplateType) {
+////        log.info("FcmOnethingWriterListener" + messageTemplateType);
+////        sendFCMService.sendMsg(MessageTemplateType.valueOf(messageTemplateType), "ONE_THING", null);
+////    }
+//}
+//
+//public record UserFcmData(
+//        Long matchingId,
+//        String targetDeviceType,
+//        String fcmToken,
+//        MessageParams params
+//) {
+//}
+//final MessageTemplateType messageTemplateType, final String matchingType, final Map<Long, FcmNotificationEvent.UserFcmData> userDataMap
