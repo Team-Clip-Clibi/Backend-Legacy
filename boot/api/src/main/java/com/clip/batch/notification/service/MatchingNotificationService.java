@@ -89,10 +89,9 @@ public class MatchingNotificationService {
             notifications.add(new Notification(
                     NotificationType.MEETING,
                     false,
-                    message,
                     user,
-                    0L,
-                    "ONETHING"
+                    message,
+                    null // batchKey는 필요에 따라 설정
             ));
 
             if(templateType.equals(MessageTemplateType.MATCHING_TOMORROW)) {
