@@ -37,17 +37,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/***
- * 원띵 매칭 정보 알림 배치 설정
- step1:
- Reader: targetUser retrieve
- processer: msg content generate(writer에서 한번에 해도 됨)
- writer: notification table insert(이때 Batch key 추가하면 좋음: 추가는 jobParameterbuilder.addString(uuid.toString)으로. 이유는 실패시 해당 키로 재현가능)
-
- step2:
- reader: where batch_key = :batch_key and status = :pending and 블라블라(배치키 필수 x)
- compositeitemwriter: status = sent하고 fcm 호출
- */
 @RequiredArgsConstructor
 @Configuration
 @Slf4j
