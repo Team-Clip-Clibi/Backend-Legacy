@@ -11,17 +11,17 @@ import java.util.Map;
 class FCMMsgGenerator {
     private static final String TITLE = "OneThing";
 
-    public Map<Long, Message> generateGeneralMsg(final FcmNotificationEvent.GeneralFcmMultiSendEvent fcmEvent) {
+    public Map<Long, Message> generateGeneralMsg(final MessageTemplateType messageTemplateType, final String matchingType, final Map<Long, FcmNotificationEvent.UserFcmData> userDataMap) {
         Map<Long, Message> messageMap = new HashMap<>();
 
-        for (Map.Entry<Long, FcmNotificationEvent.UserFcmData> entry : fcmEvent.getUserDataMap().entrySet()) {
+        for (Map.Entry<Long, FcmNotificationEvent.UserFcmData> entry : userDataMap.entrySet()) {
             Long notificationId = entry.getKey();
             FcmNotificationEvent.UserFcmData userData = entry.getValue();
 
             Message message = generateMessage(
                     notificationId,
-                    fcmEvent.getMessageTemplateType(),
-                    fcmEvent.getMatchingType(),
+                    messageTemplateType,
+                    matchingType,
                     userData
             );
 

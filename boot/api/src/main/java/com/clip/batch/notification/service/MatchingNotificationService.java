@@ -89,8 +89,9 @@ public class MatchingNotificationService {
             notifications.add(new Notification(
                     NotificationType.MEETING,
                     false,
+                    user,
                     message,
-                    user
+                    null // batchKey는 필요에 따라 설정
             ));
 
             if(templateType.equals(MessageTemplateType.MATCHING_TOMORROW)) {
@@ -133,7 +134,7 @@ public class MatchingNotificationService {
 
         // FCM 이벤트 발행
         if (!userDataMap.isEmpty()) {
-            sendFCMEventPublisher.publishEvent(new FcmNotificationEvent.GeneralFcmMultiSendEvent(
+            sendFCMEventPublisher.publishEvent(new FcmNotificationEvent(
                     this,
                     templateType,
                     matchingType,

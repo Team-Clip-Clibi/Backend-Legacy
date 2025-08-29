@@ -275,7 +275,7 @@ public class UserMatchingService {
                 .map(user -> Notification.builder()
                         .user(user)
                         .notificationType(NotificationType.MEETING)
-                        .content(message)
+//                        .content(message)
                         .build())
                 .toList();
 
@@ -296,7 +296,7 @@ public class UserMatchingService {
         }
 
         // FCM 이벤트 발행
-        sendFCMEventPublisher.publishEvent(new FcmNotificationEvent.GeneralFcmMultiSendEvent(
+        sendFCMEventPublisher.publishEvent(new FcmNotificationEvent(
                 this,
                 MessageTemplateType.LATE_ARRIVAL,
                 matchingType,

@@ -12,3 +12,8 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
+
+  sql:
+    init:
+      mode: always
+#      schema-locations: classpath:org/springframework/batch/core/schema-drop-mysql.sql

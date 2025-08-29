@@ -24,7 +24,7 @@ public class ActuatorAlertConfig {
     private final CpuObservationTasklet cpuObservationTasklet;
 
 
-    @Scheduled(cron = "0 */5 * * * *")
+//    @Scheduled(cron = "0 */5 * * * *")
     public void cpuObservation() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder(jobExplorer)
                 .getNextJobParameters(cpuObservationJob())

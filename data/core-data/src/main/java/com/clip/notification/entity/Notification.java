@@ -24,9 +24,6 @@ public class Notification extends BaseEntity {
     @Column
     private boolean isRead;
 
-    @Column
-    private String content;
-
     @Enumerated(EnumType.STRING)
     @Column
     private SendStatus sendStatus;
@@ -35,12 +32,25 @@ public class Notification extends BaseEntity {
     @JoinColumn(name = "user_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     User user;
 
+    @Column
+    private String content;
+
+    @Column
+    private String batchKey;
+
+    @Column
+    private String matchingType;
+
+    @Column
+    private String matchingId;
+
     @Builder
-    public Notification(NotificationType notificationType, boolean isRead, String content, User user) {
+    public Notification(NotificationType notificationType, boolean isRead, User user, String content, String batchKey) {
         this.notificationType = notificationType;
         this.isRead = isRead;
-        this.content = content;
         this.user = user;
         this.sendStatus = SendStatus.SENT;
+        this.content = content;
+        this.batchKey = batchKey;
     }
 }

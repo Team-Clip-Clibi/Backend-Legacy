@@ -4,7 +4,9 @@ public sealed interface MessageParams
         permits MessageParams.NicknameParams,
         MessageParams.DayOfWeekAndTimeParams,
         MessageParams.TimeAndPlaceParams,
-        MessageParams.NicknameAndTimeParams {
+        MessageParams.NicknameAndTimeParams,
+        MessageParams.EmptyParams
+{
 
     record NicknameParams(String nickname) implements MessageParams {}
 
@@ -13,4 +15,6 @@ public sealed interface MessageParams
     record TimeAndPlaceParams(String time, String place) implements MessageParams {}
 
     record NicknameAndTimeParams(String nickname, int time) implements MessageParams {}
+
+    record EmptyParams() implements MessageParams {}
 }

@@ -25,7 +25,7 @@ public class ExpiredOrderBatchConfig {
     private final HandleExpiredOrderService handleExpiredOrderService;
     private final PlatformTransactionManager transactionManager;
 
-    @Scheduled(cron = "0 */1 * * * *")
+//    @Scheduled(cron = "0 */1 * * * *")
     public void runExpiredOrderJob() throws Exception {
         JobParameters params = new JobParametersBuilder()
                 .addLong("run.id", System.currentTimeMillis())
